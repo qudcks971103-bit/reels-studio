@@ -1,0 +1,2163 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5" />
+<meta name="theme-color" content="#0b0b12" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="format-detection" content="telephone=no" />
+<title>릴스 딜 스튜디오 · 직구 핫딜 릴스</title>
+<style>
+:root{
+  --bg:#0b0b12;
+  --bg2:#12121c;
+  --surface:#171724;
+  --surface2:#1f1f30;
+  --line:#2c2c40;
+  --text:#f2f3f8;
+  --muted:#9b9db4;
+  --accent:#ff2d55;
+  --accent2:#ff6b35;
+  --accent3:#ffd60a;
+  --ok:#34d399;
+  --radius:18px;
+  --safe-b:env(safe-area-inset-bottom, 0px);
+  --safe-t:env(safe-area-inset-top, 0px);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Malgun Gothic",system-ui,"Segoe UI",Roboto,sans-serif;
+  line-height:1.55; letter-spacing:-0.01em;
+  padding-bottom:calc(28px + var(--safe-b));
+  overflow-x:hidden;
+}
+.hidden{display:none !important;}
+.muted{color:var(--muted);}
+.small{font-size:13px;}
+h1,h2,h3{margin:0; letter-spacing:-0.03em;}
+button{font-family:inherit;}
+
+/* ---------- top ---------- */
+.topbar{
+  position:sticky; top:0; z-index:30;
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  padding:calc(10px + var(--safe-t)) 14px 10px;
+  background:rgba(11,11,18,.86);
+  backdrop-filter:saturate(150%) blur(14px);
+  -webkit-backdrop-filter:saturate(150%) blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex; align-items:center; gap:8px; font-weight:800; font-size:16px;}
+.logo{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:28px; height:28px; border-radius:9px; font-size:15px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  box-shadow:0 4px 14px rgba(255,45,85,.4);
+}
+.top-tag{font-size:11px; font-weight:700; color:var(--accent3); border:1px solid rgba(255,214,10,.35); padding:2px 8px; border-radius:999px;}
+
+main{max-width:1180px; margin:0 auto; padding:0 14px;}
+section{margin-top:30px;}
+section:first-of-type{margin-top:18px;}
+
+/* ---------- hero ---------- */
+.hero{text-align:center;}
+.hero h1{font-size:clamp(22px,6.2vw,34px); line-height:1.25;}
+.hero h1 em{font-style:normal; background:linear-gradient(135deg,var(--accent),var(--accent3)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.hero p{color:var(--muted); margin:8px 0 16px; font-size:14px;}
+.dropzone{
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  padding:26px 16px; cursor:pointer;
+  border:2px dashed var(--line); border-radius:var(--radius);
+  background:linear-gradient(180deg,var(--surface),var(--bg2));
+  transition:.18s;
+}
+.dropzone:active,.dropzone.drag{border-color:var(--accent); background:rgba(255,45,85,.08); transform:scale(.995);}
+.dz-icon{font-size:30px;}
+.dz-title{font-weight:800; font-size:16px;}
+.dz-sub{color:var(--muted); font-size:12.5px; text-align:center;}
+.dz-chips{display:flex; gap:6px; flex-wrap:wrap; justify-content:center; margin-top:6px;}
+.chip{font-size:11.5px; font-weight:700; color:var(--muted); border:1px solid var(--line); padding:3px 9px; border-radius:999px;}
+
+.hero-actions{display:flex; gap:8px; justify-content:center; margin-top:12px; flex-wrap:wrap;}
+
+/* media bar */
+.mediabar{margin-top:14px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:12px;}
+.mediabar-head{display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:13px; font-weight:700;}
+.mediabar-head span{font-weight:600; color:var(--muted); font-size:12px;}
+.thumbs{display:flex; gap:8px; overflow-x:auto; padding-top:10px; -webkit-overflow-scrolling:touch;}
+.thumbs img{width:62px; height:62px; border-radius:12px; object-fit:cover; border:1px solid var(--line); flex:0 0 auto; background:#000;}
+.thumbs .num{position:relative; flex:0 0 auto;}
+.thumbs .num b{position:absolute; left:4px; top:4px; background:rgba(0,0,0,.7); font-size:10px; padding:0 5px; border-radius:6px;}
+
+/* ---------- section head + tabs ---------- */
+.section-head{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:6px;}
+.section-head h2{font-size:18px;}
+.tabs{display:flex; gap:2px; background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:3px;}
+.tab{border:0; background:none; color:var(--muted); padding:6px 12px; border-radius:999px; font-size:13px; font-weight:700; cursor:pointer;}
+.tab.active{background:var(--text); color:var(--bg);}
+
+/* ---------- template grid ---------- */
+.grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-top:12px;}
+@media(min-width:720px){.grid{grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px;}}
+@media(min-width:1024px){.grid{grid-template-columns:repeat(4,minmax(0,1fr));}}
+.card{
+  position:relative; display:flex; flex-direction:column; gap:7px;
+  background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:9px;
+  cursor:pointer; transition:.16s;
+}
+.card:active{transform:scale(.985);}
+.card.selected{border-color:var(--accent); box-shadow:0 0 0 2px rgba(255,45,85,.35);}
+.card .thumb{position:relative; aspect-ratio:9/16; background:#000; border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center;}
+.card .thumb.landscape{aspect-ratio:16/9;}
+.card .thumb canvas{width:100%; height:100%; display:block; object-fit:cover;}
+.card h3{font-size:13.5px; line-height:1.3;}
+.card .desc{font-size:11px; color:var(--muted); margin:0; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+.card .tag{position:absolute; right:6px; bottom:6px; font-size:10px; font-weight:800; padding:2px 6px; border-radius:6px; background:rgba(0,0,0,.72); color:#fff; border:1px solid rgba(255,255,255,.25);}
+.card .badge{position:absolute; right:6px; top:6px; z-index:2; font-size:10px; font-weight:800; padding:3px 8px; border-radius:999px; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff;}
+.card .badge.deal{background:linear-gradient(135deg,#ff2d55,#ffd60a); color:#1a0d00;}
+
+/* ---------- editor ---------- */
+.editor-body{display:grid; grid-template-columns:minmax(0,1fr); gap:14px;}
+@media(min-width:880px){
+  .editor-body{grid-template-columns:minmax(0,420px) minmax(0,1fr); align-items:start;}
+  .editor-body > .panel{order:1;}
+  .editor-body > .preview-wrap{order:2; position:sticky; top:70px;}
+}
+.preview-wrap{display:flex; flex-direction:column; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:12px;}
+.preview-wrap canvas,.preview-wrap video{width:100%; max-width:330px; border-radius:14px; background:#000; display:block; aspect-ratio:9/16;}
+.preview-wrap video{aspect-ratio:auto;}
+.preview-controls{display:flex; align-items:center; gap:10px; font-size:12px;}
+.pv-wrap{position:relative; width:100%; max-width:330px;}
+
+.panel{display:flex; flex-direction:column; gap:14px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px;}
+fieldset{border:1px solid var(--line); border-radius:14px; padding:12px; margin:0; display:flex; flex-direction:column; gap:10px; background:rgba(255,255,255,.015);}
+legend{padding:0 6px; font-size:12px; font-weight:800; color:var(--accent3); letter-spacing:.02em;}
+label{display:flex; flex-direction:column; gap:5px; font-weight:700; font-size:13px;}
+label small{color:var(--muted); font-weight:500; font-size:11.5px;}
+input,textarea,select{
+  font:inherit; font-size:16px; font-weight:500; color:var(--text);
+  background:var(--bg2); border:1px solid var(--line); border-radius:11px;
+  padding:10px 12px; width:100%; -webkit-appearance:none; appearance:none;
+}
+textarea{resize:vertical; min-height:64px; line-height:1.5;}
+input:focus,textarea:focus,select:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(255,45,85,.18);}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%); background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%; background-size:5px 5px,5px 5px; background-repeat:no-repeat;}
+.row{display:flex; gap:10px;}
+.row > *{flex:1; min-width:0;}
+.hint{font-size:11.5px; color:var(--muted); margin:0;}
+.warn{color:#ffb020; font-size:12px; margin:0;}
+
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  font-weight:800; font-size:14px; border:1px solid transparent; border-radius:12px;
+  padding:12px 16px; cursor:pointer; text-decoration:none; text-align:center;
+  transition:.15s; white-space:nowrap;
+}
+.btn:active{transform:scale(.98);}
+.btn:disabled{opacity:.5; cursor:not-allowed;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; box-shadow:0 8px 22px rgba(255,45,85,.3);}
+.btn-accent{background:var(--accent3); color:#1a1200;}
+.btn-ghost{background:transparent; color:var(--text); border-color:var(--line);}
+.btn-soft{background:var(--surface2); color:var(--text); border-color:var(--line);}
+.btn-sm{padding:8px 12px; font-size:12.5px; border-radius:10px;}
+.btn-block{width:100%;}
+
+.progress{position:relative; height:30px; background:var(--bg2); border-radius:999px; overflow:hidden; border:1px solid var(--line);}
+.progress div{height:100%; width:0; background:linear-gradient(90deg,var(--accent),var(--accent3)); transition:width .15s linear;}
+.progress span{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800;}
+
+/* ---------- result ---------- */
+.result-actions{display:flex; flex-direction:column; gap:8px; width:100%;}
+@media(min-width:520px){.result-actions{flex-direction:row; flex-wrap:wrap; justify-content:center;}}
+.filespec{display:flex; gap:8px; flex-wrap:wrap; justify-content:center; font-size:11.5px; color:var(--muted);}
+.filespec b{color:var(--text);}
+.note{border:1px solid var(--line); background:var(--surface2); border-radius:12px; padding:10px 12px; font-size:12.5px; color:var(--muted); line-height:1.5;}
+.note b{color:var(--text);}
+
+/* ---------- caption ---------- */
+.cap-grid{display:grid; grid-template-columns:1fr; gap:12px;}
+@media(min-width:900px){.cap-grid{grid-template-columns:1fr 1fr;}}
+.cap-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:12px; display:flex; flex-direction:column; gap:8px;}
+.cap-card header{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+.cap-card h3{font-size:14px;}
+.cap-card textarea{min-height:170px; font-size:13.5px; line-height:1.6; font-family:inherit;}
+.cap-card textarea.mono{font-size:12.5px;}
+.copy-btn{background:var(--surface2); border:1px solid var(--line); color:var(--text); border-radius:9px; padding:6px 11px; font-size:12px; font-weight:800; cursor:pointer;}
+.copy-btn:active{background:var(--accent); border-color:var(--accent); color:#fff;}
+
+.tips{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px;}
+.tips ol{margin:8px 0 0; padding-left:20px; color:var(--muted); font-size:13px; line-height:1.7;}
+.tips ol b{color:var(--text);}
+
+.toast{
+  position:fixed; left:50%; bottom:calc(24px + var(--safe-b)); transform:translate(-50%,20px);
+  background:#fff; color:#111; padding:11px 18px; border-radius:999px;
+  font-weight:800; font-size:13.5px; z-index:200; max-width:92vw; text-align:center;
+  opacity:0; pointer-events:none; transition:.22s; box-shadow:0 10px 30px rgba(0,0,0,.4);
+}
+.toast.show{opacity:1; transform:translate(-50%,0);}
+
+.footer{text-align:center; color:var(--muted); font-size:11px; margin-top:28px; line-height:1.6;}
+</style>
+</head>
+<body>
+
+<noscript>
+  <div style="margin:0;padding:14px 16px;background:#ffd60a;color:#1a1200;font-weight:800;font-size:14px;line-height:1.5;">
+    ⚠️ 이 화면은 JavaScript가 필요해요. 아이폰 '파일' 앱의 미리보기로 열면 동작하지 않을 수 있어요 —
+    <b>Documents(Readdle)</b>·<b>Koder</b> 같은 앱이나 컴퓨터 브라우저에서 열어 주세요.
+  </div>
+</noscript>
+
+<header class="topbar">
+  <div class="brand"><span class="logo">🔥</span> 릴스 딜 스튜디오</div>
+  <span class="top-tag">직구 핫딜 릴스</span>
+</header>
+
+<main>
+
+  <!-- ================= 1. 업로드 ================= -->
+  <section class="hero">
+    <h1>사진 <em>2~6장</em>이면,<br />인스타 릴스 완성</h1>
+    <p>직구 핫딜 틀에 맞춰 자동 편집 → 캡션 · 해시태그 · DM 스크립트까지 한 번에</p>
+
+    <label id="dropzone" class="dropzone">
+      <input id="fileInput" type="file" accept="video/*,image/*" multiple hidden />
+      <div class="dz-icon">📲</div>
+      <div class="dz-title">영상 1개 또는 사진 2~6장 올리기</div>
+      <div class="dz-sub">아이폰 사진 앱에서 바로 고르면 돼요 · 파일은 기기 안에서만 처리돼요</div>
+      <div class="dz-chips">
+        <span class="chip">MP4 · MOV</span>
+        <span class="chip">JPG · PNG · HEIC</span>
+        <span class="chip">9:16 자동 변환</span>
+      </div>
+    </label>
+
+    <div class="hero-actions">
+      <button id="btnSample" class="btn btn-soft btn-sm">🎬 샘플로 먼저 둘러보기</button>
+      <button id="btnClear" class="btn btn-ghost btn-sm hidden">✕ 선택 초기화</button>
+    </div>
+
+    <div id="mediaBar" class="mediabar hidden">
+      <div class="mediabar-head">
+        <span id="mediaTitle">선택한 미디어</span>
+        <span id="mediaMeta"></span>
+      </div>
+      <div id="mediaThumbs" class="thumbs"></div>
+    </div>
+  </section>
+
+  <!-- ================= 2. 템플릿 ================= -->
+  <section id="templatesSection">
+    <div class="section-head">
+      <h2 id="templatesTitle">지금 쓰는 릴스 틀</h2>
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-filter="all">전체</button>
+        <button class="tab" data-filter="reels">릴스</button>
+        <button class="tab" data-filter="shorts">쇼츠</button>
+        <button class="tab" data-filter="youtube">유튜브</button>
+      </div>
+    </div>
+    <p id="recommendNote" class="muted small">틀을 누르면 바로 미리보기가 열려요. 사진을 올리면 같은 틀로 완성돼요.</p>
+    <div id="templateGrid" class="grid"></div>
+  </section>
+
+  <!-- ================= 3. 편집 ================= -->
+  <section id="editor" class="hidden">
+    <div class="section-head">
+      <h2>편집하기 · <span id="editorTemplateName"></span></h2>
+    </div>
+    <div class="editor-body">
+
+      <div class="preview-wrap">
+        <div class="pv-wrap"><canvas id="previewCanvas" width="540" height="960"></canvas></div>
+        <div class="preview-controls">
+          <button id="btnPlay" class="btn btn-ghost btn-sm">⏸ 일시정지</button>
+          <span id="previewTime" class="muted small">0:00 / 0:15</span>
+        </div>
+      </div>
+
+      <form id="editForm" class="panel" onsubmit="return false;">
+
+        <fieldset>
+          <legend>딜 정보 (영상에 그대로 박혀요)</legend>
+          <label>상품명
+            <input id="fName" name="name" maxlength="40" placeholder="무선 미니 마사지건" />
+          </label>
+          <div class="row">
+            <label>정가
+              <input id="fOld" name="oldPrice" maxlength="12" placeholder="$359" inputmode="text" />
+            </label>
+            <label>할인가
+              <input id="fNew" name="newPrice" maxlength="12" placeholder="$169" inputmode="text" />
+            </label>
+            <label>할인율 %
+              <input id="fOff" name="off" maxlength="3" placeholder="53" inputmode="numeric" />
+            </label>
+          </div>
+          <p class="hint">정가와 할인가를 숫자로 적으면 할인율이 자동 계산돼요. 직접 고쳐도 됩니다.</p>
+          <label>딜 배지 문구
+            <input id="fBadge" name="badge" maxlength="18" placeholder="블프 역대가" />
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>영상 문구</legend>
+          <label>첫 3초 훅 <small>(손해 회피형이 잘 먹혀요)</small>
+            <input id="fHook" name="hook" maxlength="40" placeholder="정가 주고 사면 100% 후회" />
+          </label>
+          <label>자막 <small>(줄마다 순서대로 표시 · 2~4줄 추천)</small>
+            <textarea id="fCaption" name="caption" rows="4" placeholder="실사용 3주, 어깨 뻐근함이 확 줄었어요&#10;정가 $359인데 지금 $169&#10;쿠폰 먹이면 관세 포함 이 가격"></textarea>
+          </label>
+          <div class="row">
+            <label>CTA 키워드 <small>(댓글에 남길 단어)</small>
+              <input id="fKeyword" name="keyword" maxlength="10" placeholder="링크" />
+            </label>
+            <label>채널 핸들 <small>(선택)</small>
+              <input id="fChannel" name="channel" maxlength="24" placeholder="my_deal_log" />
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>길이</legend>
+          <label id="photoLenField">사진 릴스 길이
+            <select id="fDuration">
+              <option value="10">10초</option>
+              <option value="15" selected>15초</option>
+              <option value="20">20초</option>
+            </select>
+          </label>
+          <div id="videoLenField" class="row hidden">
+            <label>시작(초)<input id="fStart" type="number" min="0" step="0.1" value="0" inputmode="decimal" /></label>
+            <label>끝(초)<input id="fEnd" type="number" min="0" step="0.1" inputmode="decimal" /></label>
+          </div>
+          <p id="lengthWarn" class="warn hidden"></p>
+        </fieldset>
+
+        <button id="btnRender" class="btn btn-primary btn-block">✨ 릴스 만들기</button>
+        <div id="renderProgress" class="progress hidden"><div></div><span></span></div>
+        <button id="btnCancel" class="btn btn-ghost btn-block hidden">취소</button>
+        <p class="hint">녹화는 영상 길이만큼 걸려요 (15초 → 약 15초). 화면을 끄지 말고 기다려 주세요.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= 4. 결과 ================= -->
+  <section id="result" class="hidden">
+    <div class="section-head"><h2>완성! 인스타에 올리기</h2></div>
+    <div class="editor-body">
+      <div class="preview-wrap">
+        <video id="resultVideo" controls playsinline webkit-playsinline muted loop></video>
+        <div class="filespec" id="resultSpec"></div>
+        <div class="result-actions">
+          <a id="btnDownload" class="btn btn-primary" download>💾 저장하기</a>
+          <button id="btnShare" class="btn btn-soft">📤 공유 · 사진에 저장</button>
+        </div>
+        <p class="hint" id="saveHint">아이폰: 저장하기 → 공유 시트에서 <b>‘비디오 저장’</b> 또는 <b>‘파일에 저장’</b>을 누르면 사진/파일 앱에 들어가요.</p>
+      </div>
+      <div class="panel">
+        <div class="note" id="codecNote"></div>
+        <div class="note">
+          <b>인스타 업로드 순서</b><br />
+          1. 인스타그램 앱 → <b>+</b> → <b>릴스</b> → 사진 앱에서 방금 저장한 영상 선택<br />
+          2. 아래 <b>캡션 복사</b> → 붙여넣기 → <b>해시태그 복사</b> → 붙여넣기<br />
+          3. 댓글에 키워드가 달리면 <b>DM 스크립트</b>를 복사해 답장<br />
+          4. 제휴 고지는 캡션 맨 아래에 그대로 남겨두세요 (공정위 표시 요건)
+        </div>
+        <button id="btnAgain" class="btn btn-ghost btn-block">↺ 다른 틀·문구로 다시 만들기</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 5. 캡션 생성기 ================= -->
+  <section id="captionSec" class="hidden">
+    <div class="section-head">
+      <h2>캡션 · 해시태그 · DM 스크립트</h2>
+      <button id="btnRegen" class="btn btn-soft btn-sm">🔄 다시 생성</button>
+    </div>
+    <p class="muted small">위 딜 정보와 자막을 그대로 가져와 자동으로 만들어요. 필요하면 직접 고쳐도 됩니다.</p>
+    <div class="cap-grid">
+      <div class="cap-card">
+        <header><h3>📝 릴스 캡션</h3><button class="copy-btn" data-copy="capText">복사</button></header>
+        <textarea id="capText" spellcheck="false"></textarea>
+      </div>
+      <div class="cap-card">
+        <header><h3>#️⃣ 해시태그</h3><button class="copy-btn" data-copy="hashText">복사</button></header>
+        <textarea id="hashText" class="mono" spellcheck="false"></textarea>
+      </div>
+      <div class="cap-card">
+        <header><h3>💌 자동 DM 답장</h3><button class="copy-btn" data-copy="dmText">복사</button></header>
+        <textarea id="dmText" spellcheck="false"></textarea>
+      </div>
+      <div class="cap-card">
+        <header><h3>📋 한 번에 복사</h3><button class="copy-btn" data-copy="allText">전체 복사</button></header>
+        <textarea id="allText" class="mono" spellcheck="false"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <section class="tips">
+    <h2 style="font-size:15px;">직구 릴스, 이렇게 하면 덜 막혀요</h2>
+    <ol>
+      <li><b>수익 공개는 필수</b> — 캡션에 제휴 고지 문구를 빼면 공정위 표시광고법 위반이 될 수 있어요.</li>
+      <li><b>본인 촬영·보유 사진만</b> — 판매처 상세컷을 그대로 올리면 저작권 신고로 내려갈 수 있어요.</li>
+      <li><b>훅은 손해 회피형</b> — “이거 정가 주고 사면 후회”처럼 손해를 먼저 말하면 3초 이탈이 줄어요.</li>
+      <li><b>링크는 DM으로</b> — 캡션에 외부 링크를 넣으면 도달이 떨어져요. 댓글 키워드 → DM이 지금은 가장 안전해요.</li>
+      <li><b>가격은 캡처해 두기</b> — 딜은 몇 시간이면 끝나요. 영상 만들 때 가격 화면을 같이 찍어두면 나중에 분쟁이 없어요.</li>
+      <li><b>아이폰에서 열기</b> — 파일 앱 미리보기에서는 스크립트가 막혀요. <b>Documents(Readdle)</b> 같은 앱으로 열거나, 컴퓨터 브라우저에서 열면 돼요.</li>
+    </ol>
+  </section>
+
+  <p class="footer">
+    모든 처리는 이 브라우저 안에서만 이뤄져요 · 영상이 밖으로 나가지 않습니다<br />
+    릴스 딜 스튜디오 · 틀편집 스튜디오 기반 개조판
+  </p>
+</main>
+
+<div id="toast" class="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============================================================
+    0. 기본 도구
+  ============================================================ */
+  var $ = function (s) { return document.querySelector(s); };
+  var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+  var SANS = '-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif';
+
+  var state = {
+    mode: null,          // 'video' | 'photo' | null
+    video: null,
+    videoFile: null,
+    photos: [],
+    media: null,
+    template: null,
+    result: null,
+    abort: null,
+    filter: 'all',
+    previewT: 0,
+    playing: true,
+    offManual: false,
+    lastRendered: null,
+  };
+
+  function toast(msg, ms) {
+    var t = $('#toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(function () { t.classList.remove('show'); }, ms || 2800);
+  }
+
+  function fmt(sec) {
+    sec = Math.max(0, sec || 0);
+    return Math.floor(sec / 60) + ':' + String(Math.floor(sec % 60)).padStart(2, '0');
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function wrapLines(ctx, text, maxW) {
+    var out = [];
+    String(text || '').split('\n').forEach(function (para) {
+      var line = '';
+      for (var i = 0; i < para.length; i++) {
+        var ch = para[i];
+        var test = line + ch;
+        if (ctx.measureText(test).width > maxW && line) { out.push(line); line = ch; }
+        else line = test;
+      }
+      out.push(line);
+    });
+    return out.filter(function (l, i, a) { return l.length || a.length === 1; });
+  }
+
+  function strokeText(ctx, text, cx, y, opt) {
+    opt = opt || {};
+    var size = opt.size || 64;
+    var align = opt.align || 'center';
+    var lineGap = opt.lineGap || 1.18;
+    ctx.save();
+    ctx.font = (opt.weight || '900') + ' ' + size + 'px ' + SANS;
+    ctx.textAlign = align;
+    ctx.textBaseline = 'top';
+    ctx.lineJoin = 'round';
+    ctx.miterLimit = 2;
+    ctx.lineWidth = opt.strokeWidth || size * 0.17;
+    ctx.strokeStyle = opt.stroke || '#000';
+    ctx.fillStyle = opt.fill || '#fff';
+    var lines = wrapLines(ctx, text, opt.maxW || 900).slice(0, opt.maxLines || 99);
+    lines.forEach(function (l, i) {
+      var ly = y + i * size * lineGap;
+      if (opt.stroke !== 'none') ctx.strokeText(l, cx, ly);
+      ctx.fillText(l, cx, ly);
+    });
+    ctx.restore();
+    return lines.length * size * lineGap;
+  }
+
+  function tagPill(ctx, text, x, y, opt) {
+    opt = opt || {};
+    var size = opt.size || 42;
+    var padX = opt.padX == null ? size * 0.62 : opt.padX;
+    var padY = opt.padY == null ? size * 0.34 : opt.padY;
+    ctx.save();
+    ctx.font = (opt.weight || '900') + ' ' + size + 'px ' + SANS;
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'left';
+    var w = ctx.measureText(text).width + padX * 2;
+    var h = size + padY * 2;
+    if (opt.shadow) { ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 26; ctx.shadowOffsetY = 8; }
+    ctx.fillStyle = opt.bg || 'rgba(255,255,255,.16)';
+    roundRect(ctx, x, y, w, h, opt.radius == null ? h / 2 : opt.radius);
+    ctx.fill();
+    ctx.shadowColor = 'transparent';
+    if (opt.border) { ctx.strokeStyle = opt.border; ctx.lineWidth = 3; ctx.stroke(); }
+    ctx.fillStyle = opt.fg || '#fff';
+    ctx.fillText(text, x + padX, y + h / 2 + size * 0.04);
+    ctx.restore();
+    return { w: w, h: h };
+  }
+
+  var easeOut = function (x) { x = Math.min(Math.max(x, 0), 1); return 1 - Math.pow(1 - x, 3); };
+
+  function captionLines(txt) {
+    return String(txt || '').split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+  }
+
+  function lineIndexAt(t, duration, n) {
+    if (!n) return -1;
+    var p = duration ? Math.min(Math.max(t / duration, 0), 0.9999) : 0;
+    return Math.min(n - 1, Math.floor(p * n));
+  }
+
+  /* ============================================================
+    1. 미디어 (영상 / 사진 시퀀스 / 샘플)
+  ============================================================ */
+  var blurTmp = document.createElement('canvas');
+  blurTmp.width = 40; blurTmp.height = 71;
+  var blurCtx = blurTmp.getContext('2d');
+
+  function makeVideoMedia(video) {
+    return {
+      kind: 'video',
+      t: 0,
+      draw: function (ctx, x, y, w, h, mode) {
+        var vw = video.videoWidth || 1080, vh = video.videoHeight || 1920;
+        var s = (mode === 'contain')
+          ? Math.min(w / vw, h / vh)
+          : Math.max(w / vw, h / vh);
+        var dw = vw * s, dh = vh * s;
+        ctx.save();
+        ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+        ctx.drawImage(video, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+        ctx.restore();
+      },
+      blurBg: function (ctx, f) { blurBgFromMedia(this, ctx, f); }
+    };
+  }
+
+  function makePhotoMedia(seq) {
+    return {
+      kind: 'photo',
+      t: 0,
+      seq: seq,
+      draw: function (ctx, x, y, w, h) { seq.drawInto(ctx, x, y, w, h, this.t); },
+      blurBg: function (ctx, f) { blurBgFromMedia(this, ctx, f); }
+    };
+  }
+
+  function makeCanvasMedia(canvas) {
+    // 샘플용: 매 프레임 갱신되는 캔버스
+    return {
+      kind: 'video',
+      t: 0,
+      draw: function (ctx, x, y, w, h, mode) {
+        var cw = canvas.width, ch = canvas.height;
+        var s = (mode === 'contain') ? Math.min(w / cw, h / ch) : Math.max(w / cw, h / ch);
+        var dw = cw * s, dh = ch * s;
+        ctx.save();
+        ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+        ctx.drawImage(canvas, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+        ctx.restore();
+      },
+      blurBg: function (ctx, f) { blurBgFromMedia(this, ctx, f); }
+    };
+  }
+
+  function blurBgFromMedia(media, ctx, f) {
+    blurTmp.width = 30;
+    blurTmp.height = Math.max(2, Math.round(30 * f.H / f.W));
+    blurCtx.setTransform(1, 0, 0, 1, 0, 0);
+    blurCtx.clearRect(0, 0, blurTmp.width, blurTmp.height);
+    media.draw(blurCtx, 0, 0, blurTmp.width, blurTmp.height, 'cover');
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(blurTmp, 0, 0, f.W, f.H);
+    ctx.restore();
+  }
+
+  /* 사진 시퀀스: 켄번즈(줌+팬) + 크로스페이드 */
+  function makePhotoSequence(images, total) {
+    var n = images.length;
+    var per = total / n;
+    var fade = Math.min(0.6, Math.max(0.25, per * 0.18));
+
+    function drawOne(ctx, item, x, y, w, h, prog, idx, alpha) {
+      var iw = item.w, ih = item.h;
+      var baseS = Math.max(w / iw, h / ih);
+      var zoom = 1.06 + 0.15 * prog;
+      var s = baseS * zoom;
+      var dw = iw * s, dh = ih * s;
+      var slackX = Math.max(0, dw - w), slackY = Math.max(0, dh - h);
+      var dir = (idx % 2 === 0) ? 1 : -1;
+      var fx = 0.5 + dir * (prog - 0.5) * 0.75;
+      var fy = 0.5 + (prog - 0.5) * 0.45;
+      fx = Math.min(1, Math.max(0, fx));
+      fy = Math.min(1, Math.max(0, fy));
+      ctx.save();
+      if (alpha != null) ctx.globalAlpha = alpha;
+      ctx.drawImage(item.img, x - slackX * fx, y - slackY * fy, dw, dh);
+      ctx.restore();
+    }
+
+    return {
+      total: total,
+      count: n,
+      drawInto: function (ctx, x, y, w, h, t) {
+        t = Math.min(Math.max(t, 0), total - 0.001);
+        var idx = Math.min(n - 1, Math.floor(t / per));
+        var local = t - idx * per;
+        var prog = Math.min(1, local / per);
+        ctx.save();
+        ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+        ctx.fillStyle = '#08080e';
+        ctx.fillRect(x, y, w, h);
+        if (idx > 0 && local < fade) {
+          var prevProg = 1;
+          drawOne(ctx, images[idx - 1], x, y, w, h, prevProg, idx - 1, 1);
+          drawOne(ctx, images[idx], x, y, w, h, 0.02, idx, Math.min(1, local / fade));
+        } else {
+          drawOne(ctx, images[idx], x, y, w, h, prog, idx, 1);
+        }
+        ctx.restore();
+      }
+    };
+  }
+
+  /* ============================================================
+    2. 템플릿
+  ============================================================ */
+  var TEMPLATES = [
+    {
+      id: 'reels-deal',
+      name: '🔥 직구 핫딜 릴스형',
+      platform: 'reels',
+      W: 1080, H: 1920,
+      trend: '인스타 릴스 · 제휴/직구 딜 전용',
+      desc: '상단 훅 + 할인 배지 + 정가→할인가 비교 + 하단 고정 CTA. 사진 2~6장으로 바로 만드는 기본 틀.',
+      tips: '훅은 “정가 주고 사면 후회”처럼 손해를 먼저 말하면 3초 이탈이 줄어요.',
+      draw: function (ctx, f) {
+        var W = f.W, H = f.H, d = f.deal;
+        var isVideo = f.media.kind === 'video';
+
+        if (isVideo) {
+          f.media.draw(ctx, 0, 0, W, H, 'cover');
+          ctx.fillStyle = 'rgba(6,6,12,0.26)';
+          ctx.fillRect(0, 0, W, H);
+        } else {
+          f.media.blurBg(ctx, f);
+          var cx = 56, cy = 648, cw = W - 112, ch = 748;
+          ctx.save();
+          ctx.shadowColor = 'rgba(0,0,0,.6)';
+          ctx.shadowBlur = 46;
+          ctx.shadowOffsetY = 20;
+          ctx.fillStyle = '#0a0a12';
+          roundRect(ctx, cx, cy, cw, ch, 46);
+          ctx.fill();
+          ctx.restore();
+          ctx.save();
+          roundRect(ctx, cx, cy, cw, ch, 46);
+          ctx.clip();
+          f.media.draw(ctx, cx, cy, cw, ch, 'cover');
+          ctx.restore();
+          ctx.save();
+          roundRect(ctx, cx + 1.5, cy + 1.5, cw - 3, ch - 3, 45);
+          ctx.strokeStyle = 'rgba(255,255,255,.22)';
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // 위·아래 그라데이션
+        var g = ctx.createLinearGradient(0, 0, 0, H * 0.46);
+        g.addColorStop(0, 'rgba(8,8,14,.94)');
+        g.addColorStop(0.55, 'rgba(8,8,14,.62)');
+        g.addColorStop(1, 'rgba(8,8,14,0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, W, H * 0.46);
+
+        g = ctx.createLinearGradient(0, H * 0.58, 0, H);
+        g.addColorStop(0, 'rgba(8,8,14,0)');
+        g.addColorStop(0.45, 'rgba(8,8,14,.72)');
+        g.addColorStop(1, 'rgba(8,8,14,.97)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, H * 0.58, W, H * 0.42);
+
+        // ---- 배지 줄 ----
+        var by = 100, bx = 56;
+        var offLabel = d.off ? (d.off + '% OFF') : '특가';
+        var b1 = offBadge(ctx, '🔥 ' + offLabel, bx, by, 46);
+        bx += b1.w + 14;
+        if (d.badge) {
+          tagPill(ctx, d.badge, bx, by + 6, {
+            size: 38, bg: 'rgba(255,255,255,.14)', fg: '#fff',
+            border: 'rgba(255,255,255,.55)', padX: 24, padY: 18
+          });
+        }
+
+        // ---- 훅 (2줄에 맞게 자동 축소) ----
+        var hook = d.hook || d.name || '지금이 역대가';
+        var big = f.t < 3;
+        var hookSize = fitHookSize(ctx, hook, W - 112, big ? 92 : 68);
+        var pop = big ? (0.86 + 0.14 * easeOut(f.t / 0.32)) : 1;
+        ctx.save();
+        ctx.translate(56, 236);
+        ctx.scale(pop, pop);
+        strokeText(ctx, hook, 0, 0, {
+          size: hookSize, maxW: W - 112, align: 'left',
+          fill: big ? '#FFE14D' : '#ffffff',
+          stroke: '#0a0a10', strokeWidth: hookSize * 0.16, maxLines: 2
+        });
+        ctx.restore();
+
+        // ---- 가격 비교 필 ----
+        pricePill(ctx, 56, 468, d.oldP, d.newP, f.t);
+
+        // ---- 자막 ----
+        var lines = f.capLines || [];
+        var li = lineIndexAt(f.t, f.duration, lines.length);
+        if (li >= 0) {
+          var nLine = lines.length || 1;
+          var lineStart = li * f.duration / nLine;
+          var a = Math.min(1, Math.max(0, (f.t - lineStart) / 0.28));
+          ctx.save();
+          ctx.globalAlpha = a;
+          ctx.translate(0, (1 - easeOut(a)) * 18);
+          var capSize = fitHookSize(ctx, lines[li], W - 150, 58);
+          strokeText(ctx, lines[li], W / 2, 1432 + (58 - capSize) * 0.6, {
+            size: capSize, maxW: W - 150, maxLines: 2,
+            fill: '#ffffff', stroke: 'rgba(0,0,0,.9)', strokeWidth: 13
+          });
+          ctx.restore();
+        }
+
+        // ---- 채널 ----
+        if (d.channel) {
+          ctx.save();
+          ctx.globalAlpha = 0.75;
+          ctx.font = '700 28px ' + SANS;
+          ctx.fillStyle = '#fff';
+          ctx.textAlign = 'right';
+          ctx.textBaseline = 'alphabetic';
+          ctx.fillText('@' + String(d.channel).replace(/^@/, ''), W - 56, 1588);
+          ctx.restore();
+        }
+
+        // ---- 고정 CTA 바 ----
+        var ctaY = 1602, ctaH = 112, ctaX = 40, ctaW = W - 80;
+        var pulse = 1 + Math.sin(f.t * 4.2) * 0.012;
+        ctx.save();
+        ctx.translate(W / 2, ctaY + ctaH / 2);
+        ctx.scale(pulse, pulse);
+        ctx.translate(-W / 2, -(ctaY + ctaH / 2));
+        var cg = ctx.createLinearGradient(ctaX, ctaY, ctaX + ctaW, ctaY + ctaH);
+        cg.addColorStop(0, '#ff2d55');
+        cg.addColorStop(1, '#ff6b35');
+        ctx.shadowColor = 'rgba(255,45,85,.55)';
+        ctx.shadowBlur = 34;
+        ctx.shadowOffsetY = 10;
+        ctx.fillStyle = cg;
+        roundRect(ctx, ctaX, ctaY, ctaW, ctaH, ctaH / 2);
+        ctx.fill();
+        ctx.restore();
+
+        ctx.save();
+        ctx.font = '900 46px ' + SANS;
+        ctx.fillStyle = '#fff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        var kw = d.keyword || '링크';
+        var ctaText = "💬 댓글에 '" + kw + "' 남기면 DM 발송";
+        var fit = 46;
+        while (ctx.measureText(ctaText).width > ctaW - 70 && fit > 28) {
+          fit -= 2;
+          ctx.font = '900 ' + fit + 'px ' + SANS;
+        }
+        ctx.fillText(ctaText, W / 2, ctaY + ctaH / 2 + 2);
+        ctx.restore();
+
+        // 진행 바
+        var p = f.duration ? Math.min(f.t / f.duration, 1) : 0;
+        ctx.fillStyle = 'rgba(255,255,255,.16)';
+        ctx.fillRect(0, H - 8, W, 8);
+        var pg = ctx.createLinearGradient(0, 0, W, 0);
+        pg.addColorStop(0, '#ff2d55');
+        pg.addColorStop(1, '#ffd60a');
+        ctx.fillStyle = pg;
+        ctx.fillRect(0, H - 8, W * p, 8);
+      }
+    },
+    {
+      id: 'shorts-hook',
+      name: '훅 자막형 (쇼츠)',
+      platform: 'shorts',
+      W: 1080, H: 1920,
+      trend: '🔥 쇼츠에서 가장 많이 쓰는 포맷',
+      desc: '첫 3초 큰 훅 문구로 이탈을 막고, 아래에 굵은 자막이 이어집니다. 가로 영상도 흐림 배경으로 세로에 꽉 채워요.',
+      tips: '훅은 15자 이내 질문형이 효과적이에요.',
+      draw: function (ctx, f) {
+        f.media.blurBg(ctx, f);
+        ctx.fillStyle = 'rgba(0,0,0,.35)';
+        ctx.fillRect(0, 0, f.W, f.H);
+        var vh = Math.min(f.H * 0.62, f.W * 1.02);
+        var vy = (f.H - vh) / 2;
+        ctx.save();
+        roundRect(ctx, 40, vy, f.W - 80, vh, 36);
+        ctx.clip();
+        f.media.draw(ctx, 40, vy, f.W - 80, vh, 'cover');
+        ctx.restore();
+
+        if (f.t < 3 && f.deal.hook) {
+          var a = easeOut(f.t / 0.35);
+          ctx.save();
+          ctx.globalAlpha = f.t > 2.6 ? Math.max(0, (3 - f.t) / 0.4) : 1;
+          ctx.translate(f.W / 2, 300);
+          ctx.scale(0.72 + 0.28 * a, 0.72 + 0.28 * a);
+          strokeText(ctx, f.deal.hook, 0, 0, { size: 100, maxW: f.W * 0.86, fill: '#FFE14D', maxLines: 2 });
+          ctx.restore();
+        } else if (f.deal.name) {
+          strokeText(ctx, f.deal.name, f.W / 2, 240, { size: 68, maxW: f.W * 0.86, maxLines: 2 });
+        }
+        var lines = f.capLines || [];
+        var li = lineIndexAt(f.t, f.duration, lines.length);
+        if (li >= 0) strokeText(ctx, lines[li], f.W / 2, f.H - 560, { size: 74, maxW: f.W * 0.84, maxLines: 3 });
+        progress(ctx, f, '#FF3B5C');
+      }
+    },
+    {
+      id: 'shorts-vlog',
+      name: '브이로그 카드형 (쇼츠)',
+      platform: 'shorts',
+      W: 1080, H: 1920,
+      trend: '✨ 일상·리뷰 채널 인기',
+      desc: '부드러운 단색 배경 위에 둥근 카드 영상, 상단에 제목과 날짜 스티커가 붙는 감성 스타일.',
+      tips: '제목은 "오늘의 ○○"처럼 시리즈로 만들면 재방문이 늘어요.',
+      draw: function (ctx, f) {
+        var g = ctx.createLinearGradient(0, 0, 0, f.H);
+        g.addColorStop(0, '#FDF2E9');
+        g.addColorStop(1, '#F6D7C3');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, f.W, f.H);
+
+        var pad = 70, cy = 430, ch = f.H - cy - 420;
+        ctx.save();
+        ctx.shadowColor = 'rgba(80,40,20,.25)';
+        ctx.shadowBlur = 50;
+        ctx.shadowOffsetY = 20;
+        ctx.fillStyle = '#000';
+        roundRect(ctx, pad, cy, f.W - pad * 2, ch, 48);
+        ctx.fill();
+        ctx.restore();
+        ctx.save();
+        roundRect(ctx, pad, cy, f.W - pad * 2, ch, 48);
+        ctx.clip();
+        f.media.draw(ctx, pad, cy, f.W - pad * 2, ch, 'cover');
+        ctx.restore();
+
+        var today = new Date();
+        tagPill(ctx, '📅 ' + (today.getMonth() + 1) + '월 ' + today.getDate() + '일', pad, 150,
+          { size: 38, bg: '#E07A5F', padY: 16 });
+
+        ctx.save();
+        ctx.fillStyle = '#3D2B1F';
+        ctx.font = '900 82px ' + SANS;
+        ctx.textBaseline = 'top';
+        wrapLines(ctx, f.deal.name || f.deal.hook || '오늘의 기록', f.W - pad * 2)
+          .slice(0, 2)
+          .forEach(function (l, i) { ctx.fillText(l, pad, 244 + i * 94); });
+        ctx.restore();
+
+        var lines = f.capLines || [];
+        var li = lineIndexAt(f.t, f.duration, lines.length);
+        if (li >= 0) {
+          ctx.save();
+          ctx.font = '700 52px ' + SANS;
+          ctx.fillStyle = '#3D2B1F';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'top';
+          wrapLines(ctx, lines[li], f.W - pad * 2).slice(0, 3)
+            .forEach(function (l, i) { ctx.fillText(l, f.W / 2, f.H - 360 + i * 66); });
+          ctx.restore();
+        }
+        if (f.deal.channel) {
+          ctx.save();
+          ctx.font = '600 36px ' + SANS;
+          ctx.fillStyle = 'rgba(61,43,31,.6)';
+          ctx.textAlign = 'center';
+          ctx.fillText('@' + String(f.deal.channel).replace(/^@/, ''), f.W / 2, f.H - 108);
+          ctx.restore();
+        }
+      }
+    },
+    {
+      id: 'shorts-list',
+      name: '정보 TOP 리스트형 (쇼츠)',
+      platform: 'shorts',
+      W: 1080, H: 1920,
+      trend: '📈 저장·공유가 많은 정보형',
+      desc: '상단 고정 제목 + 시간에 따라 바뀌는 순위 번호. "꿀팁 TOP 3", "추천 맛집 5곳"에 딱이에요.',
+      tips: '자막 줄을 항목처럼 하나씩 적으면 순서대로 나와요.',
+      draw: function (ctx, f) {
+        ctx.fillStyle = '#0B0F1A';
+        ctx.fillRect(0, 0, f.W, f.H);
+        ctx.fillStyle = '#2563EB';
+        ctx.fillRect(0, 0, f.W, 400);
+        strokeText(ctx, f.deal.hook || f.deal.name || '알아두면 좋은 TOP 3', f.W / 2, 110,
+          { size: 82, maxW: f.W * 0.88, stroke: '#0B0F1A', maxLines: 2 });
+
+        var vy = 400, vh = f.H - 400 - 380;
+        f.media.draw(ctx, 0, vy, f.W, vh, 'cover');
+
+        var items = f.capLines || [];
+        if (items.length && f.duration) {
+          var n = items.length;
+          var idx = lineIndexAt(f.t, f.duration, n);
+          var local = (f.t / f.duration) * n - idx;
+          var a = easeOut(local * 4);
+          ctx.save();
+          ctx.globalAlpha = a;
+          var rank = idx + 1;
+          ctx.fillStyle = '#FACC15';
+          ctx.beginPath();
+          ctx.arc(150, vy + vh + 150, 95, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#0B0F1A';
+          ctx.font = '900 110px ' + SANS;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(String(rank), 150, vy + vh + 158);
+          ctx.restore();
+          ctx.save();
+          ctx.globalAlpha = a;
+          ctx.translate((1 - a) * 60, 0);
+          ctx.font = '800 62px ' + SANS;
+          ctx.fillStyle = '#fff';
+          ctx.textBaseline = 'top';
+          wrapLines(ctx, items[idx], f.W - 330).slice(0, 3)
+            .forEach(function (l, i) { ctx.fillText(l, 280, vy + vh + 84 + i * 74); });
+          ctx.restore();
+        }
+        progress(ctx, f, '#FACC15', vy + vh - 10, 10);
+      }
+    },
+    {
+      id: 'youtube-classic',
+      name: '롱폼 기본형 (유튜브)',
+      platform: 'youtube',
+      W: 1920, H: 1080,
+      trend: '🎬 강의·리뷰·브이로그 기본',
+      desc: '시작 2.5초 제목 카드 → 본편(채널 워터마크) → 마지막 4초 구독 유도 화면.',
+      tips: '마지막 구독 화면 구간은 YouTube 스튜디오 "최종 화면"과 맞춰 두면 좋아요.',
+      draw: function (ctx, f) {
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, f.W, f.H);
+        f.media.draw(ctx, 0, 0, f.W, f.H, 'cover');
+
+        if (f.deal.channel) {
+          tagPill(ctx, '▶ ' + String(f.deal.channel).replace(/^@/, ''), f.W - 430, 48,
+            { size: 32, bg: 'rgba(0,0,0,.55)', padY: 16 });
+        }
+
+        var intro = 2.5;
+        if (f.t < intro) {
+          var a2 = f.t < intro - 0.5 ? 1 : (intro - f.t) / 0.5;
+          ctx.save();
+          ctx.globalAlpha = a2;
+          ctx.fillStyle = 'rgba(10,10,20,.72)';
+          ctx.fillRect(0, 0, f.W, f.H);
+          var s = easeOut(f.t / 0.5);
+          ctx.fillStyle = '#FF0033';
+          ctx.fillRect(f.W / 2 - 300 * s, f.H / 2 + 110, 600 * s, 12);
+          strokeText(ctx, f.deal.hook || f.deal.name || '제목을 입력하세요', f.W / 2, f.H / 2 - 130,
+            { size: 104, maxW: f.W * 0.8, stroke: 'none', maxLines: 2 });
+          ctx.restore();
+        } else {
+          var lines = f.capLines || [];
+          var li = lineIndexAt(f.t, f.duration, lines.length);
+          if (li >= 0) {
+            ctx.save();
+            ctx.font = '700 54px ' + SANS;
+            var ls = wrapLines(ctx, lines[li], f.W * 0.75).slice(0, 2);
+            var w = Math.max.apply(null, ls.map(function (l) { return ctx.measureText(l).width; })) + 60;
+            var h = ls.length * 70 + 30;
+            ctx.fillStyle = 'rgba(0,0,0,.6)';
+            roundRect(ctx, (f.W - w) / 2, f.H - 90 - h, w, h, 14);
+            ctx.fill();
+            ctx.fillStyle = '#fff';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ls.forEach(function (l, i) { ctx.fillText(l, f.W / 2, f.H - 90 - h + 18 + i * 70); });
+            ctx.restore();
+          }
+        }
+
+        var outro = 4;
+        if (f.duration > outro + intro && f.t > f.duration - outro) {
+          var a3 = easeOut((f.t - (f.duration - outro)) / 0.6);
+          ctx.save();
+          ctx.globalAlpha = a3;
+          ctx.fillStyle = 'rgba(0,0,0,.6)';
+          ctx.fillRect(0, 0, f.W, f.H);
+          strokeText(ctx, '시청해 주셔서 감사합니다!', f.W / 2, 250,
+            { size: 78, maxW: f.W * 0.8, stroke: 'none' });
+          var bw = 520, bh = 120;
+          ctx.fillStyle = '#FF0033';
+          roundRect(ctx, (f.W - bw) / 2, 520, bw, bh, 60);
+          ctx.fill();
+          ctx.fillStyle = '#fff';
+          ctx.font = '900 58px ' + SANS;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('🔔 구독하기', f.W / 2, 582);
+          ctx.restore();
+        }
+      }
+    },
+    {
+      id: 'youtube-cinema',
+      name: '시네마틱 하이라이트형 (유튜브)',
+      platform: 'youtube',
+      W: 1920, H: 1080,
+      trend: '🎥 여행·하이라이트 인기',
+      desc: '위아래 영화 같은 검은 띠(레터박스)와 왼쪽 아래 자막 바가 들어가는 고급 스타일.',
+      tips: '음악이 있는 영상, 여행 하이라이트에 잘 어울려요.',
+      draw: function (ctx, f) {
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, f.W, f.H);
+        var bar = Math.round(f.H * 0.12 * easeOut(f.t / 1.2));
+        f.media.draw(ctx, 0, 0, f.W, f.H, 'cover');
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, f.W, bar);
+        ctx.fillRect(0, f.H - bar, f.W, bar);
+
+        var show = f.t > 0.8 && f.t < 6;
+        if (show && (f.deal.name || f.deal.hook)) {
+          var a = Math.min(easeOut((f.t - 0.8) / 0.6), f.t > 5.4 ? (6 - f.t) / 0.6 : 1);
+          ctx.save();
+          ctx.globalAlpha = a;
+          ctx.fillStyle = '#F5C542';
+          ctx.fillRect(120, f.H - 330, 10, 150);
+          ctx.fillStyle = '#fff';
+          ctx.font = '800 72px ' + SANS;
+          ctx.textBaseline = 'top';
+          ctx.fillText(f.deal.name || f.deal.hook, 160, f.H - 330);
+          ctx.font = '500 38px ' + SANS;
+          ctx.fillStyle = 'rgba(255,255,255,.8)';
+          ctx.fillText(f.deal.channel ? '@' + String(f.deal.channel).replace(/^@/, '') : '', 162, f.H - 232);
+          ctx.restore();
+        }
+        var lines = f.capLines || [];
+        var li = lineIndexAt(f.t, f.duration, lines.length);
+        if (f.t >= 6 && li >= 0) {
+          ctx.save();
+          ctx.font = '500 48px ' + SANS;
+          ctx.fillStyle = '#fff';
+          ctx.textAlign = 'center';
+          ctx.shadowColor = '#000';
+          ctx.shadowBlur = 12;
+          ctx.fillText(lines[li], f.W / 2, f.H - bar - 50);
+          ctx.restore();
+        }
+      }
+    }
+  ];
+
+  function progress(ctx, f, color, y, h) {
+    y = y == null ? f.H - 14 : y;
+    h = h || 14;
+    var p = f.duration ? Math.min(f.t / f.duration, 1) : 0;
+    ctx.fillStyle = 'rgba(255,255,255,.25)';
+    ctx.fillRect(0, y, f.W, h);
+    ctx.fillStyle = color;
+    ctx.fillRect(0, y, f.W * p, h);
+  }
+
+  /* 빨강 그라데이션 할인 배지 */
+  function offBadge(ctx, text, x, y, size) {
+    var padX = size * 0.62, padY = size * 0.40;
+    ctx.save();
+    ctx.font = '900 ' + size + 'px ' + SANS;
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'left';
+    var w = ctx.measureText(text).width + padX * 2;
+    var h = size + padY * 2;
+    var g = ctx.createLinearGradient(x, y, x + w, y + h);
+    g.addColorStop(0, '#ff2d55');
+    g.addColorStop(1, '#ff6b35');
+    ctx.shadowColor = 'rgba(255,45,85,.45)';
+    ctx.shadowBlur = 28;
+    ctx.shadowOffsetY = 8;
+    ctx.fillStyle = g;
+    roundRect(ctx, x, y, w, h, h / 2);
+    ctx.fill();
+    ctx.shadowColor = 'transparent';
+    ctx.fillStyle = '#fff';
+    ctx.fillText(text, x + padX, y + h / 2 + size * 0.04);
+    ctx.restore();
+    return { w: w, h: h };
+  }
+
+  /* 훅이 2줄 안에 들어오는 가장 큰 글자 크기 */
+  function fitHookSize(ctx, text, maxW, start) {
+    var size = start;
+    ctx.save();
+    while (size > 52) {
+      ctx.font = '900 ' + size + 'px ' + SANS;
+      var lines = wrapLines(ctx, text, maxW);
+      // 한 줄에 한 글자만 남는 줄이 있으면 더 줄인다
+      var orphan = lines.some(function (l) { return l.length <= 1 && lines.length > 1; });
+      if (lines.length <= 2 && !orphan) break;
+      size -= 4;
+    }
+    ctx.restore();
+    return size;
+  }
+
+  /* 가격 비교 필: $359 → $169 */
+  function pricePill(ctx, x, y, oldP, newP, t) {
+    if (!oldP && !newP) return;
+    var sizeOld = 50, sizeNew = 96, arrowSize = 60;
+    ctx.save();
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'left';
+
+    ctx.font = '800 ' + sizeOld + 'px ' + SANS;
+    var wOld = oldP ? ctx.measureText(oldP).width : 0;
+    ctx.font = '900 ' + sizeNew + 'px ' + SANS;
+    var wNew = newP ? ctx.measureText(newP).width : 0;
+    var wArrow = (oldP && newP) ? 74 : 0;
+    var padX = 46;
+    var w = padX * 2 + wOld + wArrow + wNew;
+    var h = 152;
+    if (w > 968) {
+      var k = 968 / w;
+      sizeOld *= k; sizeNew *= k; arrowSize *= k; wOld *= k; wNew *= k; wArrow *= k; padX *= k; w = 968; h = Math.round(h * (0.55 + 0.45 * k));
+    }
+
+    var pop = Math.min(1, easeOut((t - 0.15) / 0.35));
+    ctx.translate(x, y + h / 2);
+    ctx.scale(0.92 + 0.08 * pop, 0.92 + 0.08 * pop);
+    ctx.translate(-x, -(y + h / 2));
+
+    ctx.shadowColor = 'rgba(0,0,0,.5)';
+    ctx.shadowBlur = 30;
+    ctx.shadowOffsetY = 10;
+    ctx.fillStyle = 'rgba(255,255,255,.97)';
+    roundRect(ctx, x, y, w, h, 42);
+    ctx.fill();
+    ctx.shadowColor = 'transparent';
+
+    var cx = x + padX;
+    var midY = y + h / 2 + 3;
+    if (oldP) {
+      ctx.font = '800 ' + sizeOld + 'px ' + SANS;
+      ctx.fillStyle = 'rgba(18,18,28,.42)';
+      ctx.fillText(oldP, cx, midY);
+      ctx.strokeStyle = 'rgba(18,18,28,.55)';
+      ctx.lineWidth = Math.max(4, sizeOld * 0.08);
+      ctx.beginPath();
+      ctx.moveTo(cx - 4, midY + 2);
+      ctx.lineTo(cx + wOld + 4, midY + 2);
+      ctx.stroke();
+      cx += wOld + 16;
+      if (newP) {
+        ctx.font = '900 ' + arrowSize + 'px ' + SANS;
+        ctx.fillStyle = '#15151f';
+        ctx.fillText('→', cx, midY + 2);
+        cx += wArrow + 6;
+      }
+    }
+    if (newP) {
+      ctx.font = '900 ' + sizeNew + 'px ' + SANS;
+      ctx.fillStyle = '#ff2040';
+      ctx.fillText(newP, cx, midY + 2);
+    }
+    ctx.restore();
+  }
+
+  /* ============================================================
+    3. 샘플 소스
+  ============================================================ */
+  var samplePortrait = makeSampleCanvas(540, 960);
+  var sampleLandscape = makeSampleCanvas(960, 540);
+
+  function makeSampleCanvas(w, h) {
+    var c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    var x = c.getContext('2d');
+    var t0 = 0;
+    return {
+      canvas: c,
+      draw: function (t) {
+        t0 = t;
+        var g = x.createLinearGradient(0, 0, w, h);
+        var hue = (t * 30) % 360;
+        g.addColorStop(0, 'hsl(' + hue + ',72%,52%)');
+        g.addColorStop(1, 'hsl(' + ((hue + 90) % 360) + ',72%,32%)');
+        x.fillStyle = g;
+        x.fillRect(0, 0, w, h);
+        for (var i = 0; i < 6; i++) {
+          var r = w * 0.07 + i * w * 0.03;
+          x.fillStyle = 'rgba(255,255,255,' + (0.07 + i * 0.03) + ')';
+          x.beginPath();
+          x.arc(
+            w / 2 + Math.cos(t * (0.6 + i * 0.2) + i) * w * 0.3,
+            h / 2 + Math.sin(t * (0.8 + i * 0.15) + i) * h * 0.3,
+            r, 0, Math.PI * 2
+          );
+          x.fill();
+        }
+        x.fillStyle = 'rgba(255,255,255,.9)';
+        x.font = '800 ' + Math.round(w * 0.07) + 'px ' + SANS;
+        x.textAlign = 'center';
+        x.textBaseline = 'middle';
+        x.fillText('SAMPLE', w / 2, h / 2);
+      }
+    };
+  }
+
+  var cardSampleMediaPortrait = makeCanvasMedia(samplePortrait.canvas);
+  var cardSampleMediaLandscape = makeCanvasMedia(sampleLandscape.canvas);
+
+  function makeSamplePhotos() {
+    var specs = [
+      { bg: ['#FF5F6D', '#FFC371'], emoji: '🎧', label: 'SAMPLE 01' },
+      { bg: ['#2E86FF', '#34D399'], emoji: '⌚', label: 'SAMPLE 02' },
+      { bg: ['#9D4EDD', '#FF6B6B'], emoji: '📦', label: 'SAMPLE 03' }
+    ];
+    return specs.map(function (sp) {
+      var c = document.createElement('canvas');
+      c.width = 1000; c.height = 1000;
+      var x = c.getContext('2d');
+      var g = x.createLinearGradient(0, 0, 1000, 1000);
+      g.addColorStop(0, sp.bg[0]);
+      g.addColorStop(1, sp.bg[1]);
+      x.fillStyle = g;
+      x.fillRect(0, 0, 1000, 1000);
+      x.fillStyle = 'rgba(255,255,255,.22)';
+      for (var i = 0; i < 5; i++) {
+        x.beginPath();
+        x.arc(180 + i * 190, 300 + (i % 2) * 420, 130, 0, Math.PI * 2);
+        x.fill();
+      }
+      x.textAlign = 'center';
+      x.textBaseline = 'middle';
+      x.font = '260px sans-serif';
+      x.fillText(sp.emoji, 500, 460);
+      x.fillStyle = 'rgba(255,255,255,.92)';
+      x.font = '800 46px ' + SANS;
+      x.fillText(sp.label, 500, 800);
+      return { img: c, w: 1000, h: 1000, name: sp.label };
+    });
+  }
+
+  /* ============================================================
+    4. 딜 텍스트 읽기
+  ============================================================ */
+  var SAMPLE_DEAL = {
+    name: '무선 미니 마사지건',
+    oldP: '$359', newP: '$169', off: '53', badge: '블프 역대가',
+    hook: '정가 주고 사면 100% 후회',
+    keyword: '링크', channel: 'my_deal_log'
+  };
+  var SAMPLE_CAPTION = '실사용 3주, 어깨 뻑뻑함이 확 줄었어요\n정가 $359인데 지금 $169\n쿠폰 먹이면 관세 포함 이 가격';
+
+  function readDeal() {
+    return {
+      name: ($('#fName').value || '').trim(),
+      oldP: ($('#fOld').value || '').trim(),
+      newP: ($('#fNew').value || '').trim(),
+      off: ($('#fOff').value || '').trim(),
+      badge: ($('#fBadge').value || '').trim(),
+      hook: ($('#fHook').value || '').trim(),
+      keyword: ($('#fKeyword').value || '').trim() || '링크',
+      channel: ($('#fChannel').value || '').trim()
+    };
+  }
+
+  function autoOff() {
+    var o = parseFloat(String($('#fOld').value).replace(/[^0-9.]/g, ''));
+    var n = parseFloat(String($('#fNew').value).replace(/[^0-9.]/g, ''));
+    if (!isFinite(o) || !isFinite(n) || o <= 0 || n <= 0 || n >= o) return;
+    $('#fOff').value = String(Math.round((1 - n / o) * 100));
+  }
+
+  /* ============================================================
+    5. 프레임 그리기
+  ============================================================ */
+  function drawFrame(ctx, canvasW, canvasH, template, media, deal, capLines, t, duration) {
+    var sx = canvasW / template.W;
+    var sy = canvasH / template.H;
+    ctx.setTransform(sx, 0, 0, sy, 0, 0);
+    ctx.clearRect(0, 0, template.W, template.H);
+    media.t = t;
+    template.draw(ctx, {
+      W: template.W, H: template.H,
+      t: t, duration: duration,
+      media: media,
+      deal: deal,
+      capLines: capLines
+    });
+  }
+
+  /* ============================================================
+    6. 템플릿 카드
+  ============================================================ */
+  var cards = [];
+  var loopSec = 8;
+
+  function renderGrid() {
+    var grid = $('#templateGrid');
+    grid.innerHTML = '';
+    cards = [];
+    TEMPLATES.filter(function (t) {
+      return state.filter === 'all' || t.platform === state.filter;
+    }).forEach(function (t) {
+      var card = document.createElement('div');
+      card.className = 'card' + (state.template && state.template.id === t.id ? ' selected' : '');
+      card.innerHTML =
+        (t.id === 'reels-deal' ? '<span class="badge deal">👍 추천</span>' : '') +
+        '<div class="thumb' + (t.H > t.W ? '' : ' landscape') + '"></div>' +
+        '<h3>' + t.name + '</h3>' +
+        '<p class="desc">' + t.desc + '</p>' +
+        '<span class="tag">' + (t.platform === 'reels' ? '릴스 9:16' : t.platform === 'shorts' ? '쇼츠 9:16' : '유튜브 16:9') + '</span>';
+      var c = document.createElement('canvas');
+      var cw = Math.round(t.W * 0.24);
+      c.width = cw;
+      c.height = Math.round(cw * t.H / t.W);
+      card.querySelector('.thumb').appendChild(c);
+      card.onclick = function () { selectTemplate(t); };
+      grid.appendChild(card);
+      cards.push({ t: t, ctx: c.getContext('2d'), canvas: c });
+    });
+  }
+
+  $$('.tab').forEach(function (b) {
+    b.addEventListener('click', function () {
+      $$('.tab').forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active');
+      state.filter = b.dataset.filter;
+      renderGrid();
+    });
+  });
+
+  function activeMediaFor(t) {    if (state.media) return state.media;
+    return t.H > t.W ? cardSampleMediaPortrait : cardSampleMediaLandscape;
+  }
+
+  function drawCards(sec) {
+    for (var i = 0; i < cards.length; i++) {
+      var c = cards[i];
+      var media = activeMediaFor(c.t);
+      var t = (state.mode === 'video' && state.video) ? state.video.currentTime : sec;
+      drawFrame(c.ctx, c.canvas.width, c.canvas.height, c.t, media, readDeal(), captionLines($('#fCaption').value), t, loopSec);
+    }
+  }
+
+  /* ============================================================
+    7. 파일 선택
+  ============================================================ */
+  function loadVideoFile(file) {
+    return new Promise(function (resolve, reject) {
+      var v = document.createElement('video');
+      v.src = URL.createObjectURL(file);
+      v.muted = true;
+      v.playsInline = true;
+      v.setAttribute('playsinline', '');
+      v.setAttribute('webkit-playsinline', '');
+      v.preload = 'auto';
+      v.onloadedmetadata = function () { resolve(v); };
+      v.onerror = function () {
+        reject(new Error('이 영상은 브라우저에서 열 수 없어요. MP4(H.264)로 다시 시도해 주세요.'));
+      };
+    });
+  }
+
+  function loadImageFile(file) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      var url = URL.createObjectURL(file);
+      img.onload = function () {
+        if (!img.naturalWidth) return reject(new Error('사진을 읽지 못했어요: ' + file.name));
+        resolve({ img: img, w: img.naturalWidth, h: img.naturalHeight, url: url, name: file.name });
+      };
+      img.onerror = function () {
+        URL.revokeObjectURL(url);
+        reject(new Error('이 사진은 열 수 없어요(HEIC 형식이면 사진 앱에서 JPG로 저장 후 다시 시도): ' + file.name));
+      };
+      img.src = url;
+    });
+  }
+
+  function setMediaBar() {
+    var bar = $('#mediaBar'), thumbs = $('#mediaThumbs');
+    thumbs.innerHTML = '';
+    if (state.mode === 'photo' && state.photos.length) {
+      bar.classList.remove('hidden');
+      $('#mediaTitle').textContent = '🖼 사진 ' + state.photos.length + '장';
+      $('#mediaMeta').textContent = '켄번즈 자동 적용';
+      state.photos.forEach(function (p, i) {
+        var d = document.createElement('div');
+        d.className = 'num';
+        var im = document.createElement('img');
+        im.src = p.url || (p.img.toDataURL ? p.img.toDataURL() : '');
+        d.appendChild(im);
+        var b = document.createElement('b');
+        b.textContent = i + 1;
+        d.appendChild(b);
+        thumbs.appendChild(d);
+      });
+      $('#btnClear').classList.remove('hidden');
+    } else if (state.mode === 'video' && state.video) {
+      bar.classList.remove('hidden');
+      $('#mediaTitle').textContent = '🎬 영상 1개';
+      $('#mediaMeta').textContent = state.video.videoWidth + '×' + state.video.videoHeight + ' · ' +
+        ((isFinite(state.video.duration) && state.video.duration > 0) ? fmt(state.video.duration) : '길이 미상');
+      $('#btnClear').classList.remove('hidden');
+    } else {
+      bar.classList.add('hidden');
+      $('#btnClear').classList.add('hidden');
+    }
+  }
+
+  async function handleFiles(fileList) {
+    var files = Array.prototype.slice.call(fileList || []);
+    if (!files.length) return;
+    var videos = files.filter(function (f) { return /^video\//.test(f.type); });
+    var images = files.filter(function (f) { return /^image\//.test(f.type) || /\.(jpe?g|png|heic|heif|webp|gif)$/i.test(f.name); });
+
+    try {
+      if (videos.length) {
+        if (state.video) state.video.pause();
+        revokeMedia();
+        var v = await loadVideoFile(videos[0]);
+        v.loop = false;
+        state.mode = 'video';
+        state.video = v;
+        state.videoFile = videos[0];
+        state.photos = [];
+        state.media = makeVideoMedia(v);
+        var vdur = (isFinite(v.duration) && v.duration > 0) ? v.duration : 0;
+        $('#fEnd').value = vdur ? vdur.toFixed(1) : '15';
+        $('#fStart').value = '0';
+        $('#photoLenField').classList.add('hidden');
+        $('#videoLenField').classList.remove('hidden');
+        if (!$('#fName').value) $('#fName').value = videos[0].name.replace(/\.[^.]+$/, '').slice(0, 40);
+      } else if (images.length) {
+        if (images.length > 6) {
+          toast('사진은 최대 6장까지 써요. 앞 6장만 사용할게요.');
+          images = images.slice(0, 6);
+        }
+        revokeMedia();
+        var loaded = [];
+        for (var i = 0; i < images.length; i++) {
+          loaded.push(await loadImageFile(images[i]));
+        }
+        state.mode = 'photo';
+        state.video = null;
+        state.videoFile = null;
+        state.photos = loaded;
+        state.media = makePhotoMedia(makePhotoSequence(loaded, +$('#fDuration').value || 15));
+        $('#photoLenField').classList.remove('hidden');
+        $('#videoLenField').classList.add('hidden');
+        if (images.length === 1) toast('사진이 1장이면 천천히 확대되는 한 장면이 돼요. 2장 이상이면 전환이 생겨요.', 3800);
+      } else {
+        return toast('영상이나 사진 파일을 골라 주세요.');
+      }
+
+      state.previewT = 0;
+      setMediaBar();
+      $('#templatesTitle').textContent = '내 미디어에 맞는 틀';
+      $('#recommendNote').textContent = state.mode === 'photo'
+        ? '사진 ' + state.photos.length + '장이 준비됐어요. 틀을 누르면 미리보기가 열려요.'
+        : '영상이 준비됐어요. 틀을 누르면 미리보기가 열려요.';
+
+      renderGrid();
+      selectTemplate(state.template || TEMPLATES[0], true);
+    } catch (e) {
+      toast(e.message || '파일을 불러오지 못했어요.', 4500);
+    }
+  }
+
+  function revokeMedia() {
+    if (state.video) { state.video.pause(); state.video = null; }
+    state.photos.forEach(function (p) { if (p.url) URL.revokeObjectURL(p.url); });
+    state.photos = [];
+    state.media = null;
+  }
+
+  $('#fileInput').addEventListener('change', function (e) {
+    handleFiles(e.target.files);
+    e.target.value = '';
+  });
+
+  var dz = $('#dropzone');
+  ['dragenter', 'dragover'].forEach(function (ev) {
+    dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.add('drag'); });
+  });
+  ['dragleave', 'drop'].forEach(function (ev) {
+    dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.remove('drag'); });
+  });
+  dz.addEventListener('drop', function (e) {
+    if (e.dataTransfer && e.dataTransfer.files) handleFiles(e.dataTransfer.files);
+  });
+
+  $('#btnClear').onclick = function () {
+    revokeMedia();
+    state.mode = null;
+    setMediaBar();
+    $('#templatesTitle').textContent = '지금 쓰는 릴스 틀';
+    $('#recommendNote').textContent = '틀을 누르면 바로 미리보기가 열려요. 사진을 올리면 같은 틀로 완성돼요.';
+    renderGrid();
+  };
+
+  $('#btnSample').onclick = async function () {
+    try {
+      revokeMedia();
+      state.mode = 'photo';
+      state.photos = makeSamplePhotos();
+      state.media = makePhotoMedia(makePhotoSequence(state.photos, +$('#fDuration').value || 15));
+      if (!$('#fName').value) {
+        $('#fName').value = SAMPLE_DEAL.name;
+        $('#fOld').value = SAMPLE_DEAL.oldP;
+        $('#fNew').value = SAMPLE_DEAL.newP;
+        $('#fOff').value = SAMPLE_DEAL.off;
+        $('#fBadge').value = SAMPLE_DEAL.badge;
+        $('#fHook').value = SAMPLE_DEAL.hook;
+        $('#fKeyword').value = SAMPLE_DEAL.keyword;
+        $('#fChannel').value = SAMPLE_DEAL.channel;
+        $('#fCaption').value = SAMPLE_CAPTION;
+      }
+      $('#photoLenField').classList.remove('hidden');
+      $('#videoLenField').classList.add('hidden');
+      setMediaBar();
+      $('#mediaTitle').textContent = '🎬 샘플 사진 3장';
+      $('#mediaMeta').textContent = '체험용';
+      state.previewT = 0;
+      renderGrid();
+      selectTemplate(TEMPLATES[0], true);
+      syncCaption();
+      toast('샘플로 열었어요. 사진을 올리면 내 상품으로 바뀝니다.');
+      setTimeout(function () { $('#editor').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 250);
+    } catch (e) {
+      toast('샘플을 준비하지 못했어요: ' + e.message);
+    }
+  };
+
+  /* ============================================================
+    8. 편집 화면
+  ============================================================ */
+  function selectTemplate(t, silent) {
+    if (!state.media) {
+      // 미디어 없이 틀을 누르면 샘플로 열고, 누른 틀을 그대로 보여 준다
+      $('#btnSample').click();
+      if (state.media) selectTemplate(t, true);
+      return;
+    }
+    state.template = t;
+    state.previewT = 0;
+    renderGrid();
+    $('#editor').classList.remove('hidden');
+    $('#editorTemplateName').textContent = t.name;
+    var c = $('#previewCanvas');
+    if (t.H > t.W) { c.width = 540; c.height = 960; }
+    else { c.width = 960; c.height = 540; }
+    var wrap = c.parentElement;
+    c.style.aspectRatio = (t.W / t.H).toFixed(4);
+    if (!silent) $('#editor').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function previewState() {
+    var t = state.template;
+    if (!t || !state.media) return;
+    var c = $('#previewCanvas');
+    var ctx = c.getContext('2d');
+    var deal = readDeal();
+    var lines = captionLines($('#fCaption').value);
+    var tt, dur;
+
+    if (state.mode === 'video' && state.video) {
+      var v = state.video;
+      if (v.readyState < 2) return;
+      var start = parseFloat($('#fStart').value) || 0;
+      var end = Math.min(parseFloat($('#fEnd').value) || v.duration, v.duration);
+      if (v.currentTime < start || v.currentTime >= end) v.currentTime = start;
+      tt = Math.max(0, v.currentTime - start);
+      dur = Math.max(0.5, end - start);
+      if (state.playing && v.paused) v.play().catch(function () {});
+      if (!state.playing && !v.paused) v.pause();
+      $('#previewTime').textContent = fmt(tt) + ' / ' + fmt(dur);
+    } else {
+      dur = +$('#fDuration').value || 15;
+      if (state.media.seq) state.media.seq.total = dur;
+      tt = state.previewT;
+      $('#previewTime').textContent = fmt(tt) + ' / ' + fmt(dur);
+    }
+    drawFrame(ctx, c.width, c.height, t, state.media, deal, lines, tt, dur);
+  }
+
+  $('#btnPlay').onclick = function () {
+    state.playing = !state.playing;
+    this.textContent = state.playing ? '⏸ 일시정지' : '▶ 재생';
+    if (state.video) state.playing ? state.video.play().catch(function () {}) : state.video.pause();
+  };
+
+  ['fName', 'fOld', 'fNew', 'fBadge', 'fHook', 'fKeyword', 'fChannel', 'fCaption', 'fOff'].forEach(function (id) {
+    $('#' + id).addEventListener('input', function () {
+      if (id === 'fOld' || id === 'fNew') autoOff();
+      syncCaption();
+    });
+  });
+  $('#fDuration').addEventListener('change', function () {
+    if (state.mode === 'photo' && state.photos.length) {
+      state.media = makePhotoMedia(makePhotoSequence(state.photos, +this.value || 15));
+    }
+    state.previewT = 0;
+    syncCaption();
+  });
+
+  /* ============================================================
+    9. 렌더링
+  ============================================================ */
+  var MIME_ORDER = [
+    'video/mp4;codecs=avc1.640028,mp4a.40.2',
+    'video/mp4;codecs=avc1.42E01E,mp4a.40.2',
+    'video/mp4',
+    'video/webm;codecs=vp9,opus',
+    'video/webm;codecs=vp8,opus',
+    'video/webm'
+  ];
+
+  function pickMime() {
+    if (typeof MediaRecorder === 'undefined' || !MediaRecorder.isTypeSupported) return '';
+    for (var i = 0; i < MIME_ORDER.length; i++) {
+      try { if (MediaRecorder.isTypeSupported(MIME_ORDER[i])) return MIME_ORDER[i]; } catch (e) {}
+    }
+    return '';
+  }
+
+  function detectCodec(blob) {
+    if (!/mp4/.test(blob.type)) return Promise.resolve('webm');
+    return blob.slice(0, 8192).arrayBuffer().then(function (buf) {
+      var bytes = new Uint8Array(buf);
+      var s = '';
+      for (var i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
+      if (s.indexOf('avcC') >= 0 || s.indexOf('avc1') >= 0) return 'h264';
+      if (s.indexOf('vp09') >= 0) return 'vp9';
+      if (s.indexOf('av01') >= 0) return 'av01';
+      if (s.indexOf('hvc1') >= 0 || s.indexOf('hev1') >= 0) return 'hevc';
+      return 'unknown';
+    }).catch(function () { return 'unknown'; });
+  }
+
+  function outSize(t) {
+    if (t.H > t.W) return { w: 720, h: 1280 };
+    return { w: 1280, h: 720 };
+  }
+
+  function waitEvent(el, ev) {
+    return new Promise(function (res) { el.addEventListener(ev, res, { once: true }); });
+  }
+
+  async function renderPhoto(opts) {
+    var t = opts.template, deal = opts.deal, lines = opts.lines;
+    var duration = opts.duration;
+    var size = outSize(t);
+    var canvas = document.createElement('canvas');
+    canvas.width = size.w; canvas.height = size.h;
+    var ctx = canvas.getContext('2d');
+    var seq = state.media.seq;
+    seq.total = duration;
+
+    var stream = canvas.captureStream(30);
+    var mime = pickMime();
+    var rec;
+    try {
+      rec = new MediaRecorder(stream, {
+        mimeType: mime || undefined,
+        videoBitsPerSecond: size.w >= 1280 ? 8000000 : 6000000
+      });
+    } catch (e) {
+      stream.getTracks().forEach(function (x) { x.stop(); });
+      throw new Error('이 브라우저는 영상 녹화(MediaRecorder)를 지원하지 않아요.');
+    }
+
+    var chunks = [];
+    rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+    var stopped = waitEvent(rec, 'stop');
+
+    // 첫 프레임 먼저 그린다
+    drawFrame(ctx, canvas.width, canvas.height, t, state.media, deal, lines, 0, duration);
+    rec.start(250);
+
+    var t0 = performance.now();
+    await new Promise(function (resolve) {
+      var done = false;
+      function finish() {
+        if (done) return;
+        done = true;
+        resolve();
+      }
+      opts.signal.addEventListener('abort', finish);
+      function frame() {
+        if (done) return;
+        var el = (performance.now() - t0) / 1000;
+        var cur = Math.min(duration, el);
+        drawFrame(ctx, canvas.width, canvas.height, t, state.media, deal, lines, cur, duration);
+        opts.onProgress(Math.min(1, cur / duration));
+        if (el >= duration) return finish();
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    });
+
+    if (rec.state !== 'inactive') rec.stop();
+    await stopped;
+    stream.getTracks().forEach(function (x) { x.stop(); });
+
+    var type = (rec.mimeType || mime || 'video/webm').split(';')[0];
+    return new Blob(chunks, { type: type });
+  }
+
+  function renderVideo(opts) {
+    var t = opts.template, deal = opts.deal, lines = opts.lines;
+    var size = outSize(t);
+    var canvas = document.createElement('canvas');
+    canvas.width = size.w; canvas.height = size.h;
+    var ctx = canvas.getContext('2d');
+    var video = state.video;
+    var start = opts.start || 0;
+    var vdur = (isFinite(video.duration) && video.duration > 0) ? video.duration : (opts.end || 15);
+    var end = Math.min(opts.end || vdur, vdur);
+    var duration = Math.max(0.5, end - start);
+
+    video.muted = false;
+    video.volume = 1;
+    video.loop = false;
+
+    var stream = canvas.captureStream(30);
+    var audioCtx = null;
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) {
+        audioCtx = new AC();
+        var src = audioCtx.createMediaElementSource(video);
+        var dest = audioCtx.createMediaStreamDestination();
+        src.connect(dest);
+        dest.stream.getAudioTracks().forEach(function (tr) { stream.addTrack(tr); });
+        audioCtx.resume().catch(function () {});
+      }
+    } catch (e) {
+      audioCtx = null; // 소리 없이 계속
+    }
+
+    function cleanupFails() {
+      if (audioCtx) { try { audioCtx.close(); } catch (e) {} }
+    }
+
+    var mime = pickMime();
+    var rec;
+    try {
+      rec = new MediaRecorder(stream, {
+        mimeType: mime || undefined,
+        videoBitsPerSecond: size.w >= 1280 ? 9000000 : 7000000,
+        audioBitsPerSecond: 160000
+      });
+    } catch (e) {
+      cleanupFails();
+      stream.getTracks().forEach(function (x) { x.stop(); });
+      throw new Error('이 브라우저는 영상 녹화(MediaRecorder)를 지원하지 않아요.');
+    }
+
+    var chunks = [];
+    rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+    var stopped = waitEvent(rec, 'stop');
+
+    return new Promise(function (resolve, reject) {
+      var finished = false;
+
+      function finish() {
+        if (finished) return;
+        finished = true;
+        video.pause();
+        if (rec.state !== 'inactive') rec.stop();
+      }
+      opts.signal.addEventListener('abort', finish);
+
+      function draw() {
+        var tt = Math.max(0, video.currentTime - start);
+        drawFrame(ctx, canvas.width, canvas.height, t, state.media, deal, lines, tt, duration);
+        opts.onProgress(Math.min(1, tt / duration));
+      }
+
+      video.currentTime = start;
+      waitEvent(video, 'seeked').then(function () {
+        draw();
+        rec.start(250);
+        var playP = video.play();
+        if (playP && playP.catch) {
+          playP.catch(function () {
+            finish();
+            reject(new Error('영상 재생이 막혔어요. 화면을 한 번 누른 뒤 다시 시도해 주세요.'));
+          });
+        }
+        var useVFC = 'requestVideoFrameCallback' in HTMLVideoElement.prototype;
+        function tick() {
+          if (finished) return;
+          draw();
+          if (video.currentTime >= end - 0.02 || video.ended) return finish();
+          if (useVFC) video.requestVideoFrameCallback(tick);
+          else requestAnimationFrame(tick);
+        }
+        tick();
+      });
+
+      video.addEventListener('ended', finish);
+      stopped.then(function () {
+        stream.getTracks().forEach(function (x) { x.stop(); });
+        cleanupFails();
+        var type = (rec.mimeType || mime || 'video/webm').split(';')[0];
+        resolve(new Blob(chunks, { type: type }));
+      });
+    });
+  }
+
+  function setProgress(p, label) {
+    var bar = $('#renderProgress');
+    bar.classList.remove('hidden');
+    bar.firstElementChild.style.width = Math.round(p * 100) + '%';
+    bar.lastElementChild.textContent = label + ' ' + Math.round(p * 100) + '%';
+  }
+
+  $('#btnRender').onclick = async function () {
+    var t = state.template;
+    if (!t || !state.media) return toast('먼저 사진이나 영상을 올려 주세요.');
+    if (!state.photos.length && !state.video) return toast('먼저 사진이나 영상을 올려 주세요.');
+    if (typeof MediaRecorder === 'undefined') {
+      return toast('이 브라우저는 영상 저장을 지원하지 않아요. 아이폰 사파리 최신 버전으로 열어 주세요.', 5000);
+    }
+
+    var deal = readDeal();
+    var lines = captionLines($('#fCaption').value);
+    var duration = +$('#fDuration').value || 15;
+
+    state.video && state.video.pause();
+    state.abort = new AbortController();
+    $('#btnRender').disabled = true;
+    $('#btnCancel').classList.remove('hidden');
+    setProgress(0, '만드는 중…');
+
+    try {
+      var blob;
+      if (state.mode === 'video' && state.video) {
+        var start = parseFloat($('#fStart').value) || 0;
+        var end = Math.min(parseFloat($('#fEnd').value) || state.video.duration, state.video.duration);
+        if (end <= start) throw new Error('끝 시간이 시작 시간보다 커야 해요.');
+        duration = end - start;
+        blob = await renderVideo({
+          template: t, deal: deal, lines: lines, start: start, end: end,
+          signal: state.abort.signal,
+          onProgress: function (p) { setProgress(p, '영상 녹화 중…'); }
+        });
+      } else {
+        blob = await renderPhoto({
+          template: t, deal: deal, lines: lines, duration: duration,
+          signal: state.abort.signal,
+          onProgress: function (p) { setProgress(p, '사진으로 릴스 만드는 중…'); }
+        });
+      }
+
+      if (!blob || !blob.size) throw new Error('영상 데이터가 비어 있어요. 다시 시도해 주세요.');
+      showResult(blob, t, duration);
+    } catch (e) {
+      if (e && e.name === 'AbortError') toast('취소했어요.');
+      else toast('만들기 실패: ' + (e.message || e), 5000);
+    } finally {
+      $('#renderProgress').classList.add('hidden');
+      $('#btnRender').disabled = false;
+      $('#btnCancel').classList.add('hidden');
+      if (state.mode === 'video' && state.video) state.video.play().catch(function () {});
+    }
+  };
+
+  $('#btnCancel').onclick = function () { if (state.abort) state.abort.abort(); };
+
+  /* ============================================================
+    10. 결과
+  ============================================================ */
+  function showResult(blob, t, duration) {
+    if (state.result && state.result.url) URL.revokeObjectURL(state.result.url);
+    var url = URL.createObjectURL(blob);
+    var ext = /mp4/.test(blob.type) ? 'mp4' : 'webm';
+    var deal = readDeal();
+    var base = (deal.name || 'reels').replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, '_').slice(0, 40);
+    var fname = base + '_' + (deal.off ? deal.off + 'off' : 'deal') + '.' + ext;
+    detectCodec(blob).then(function (codec) {
+      window.__lastCodec = codec;
+      var c = $('#codecNote');
+      var label = codec === 'h264' ? 'H.264' : codec === 'webm' ? 'WEBM' : codec.toUpperCase();
+      var spec = $('#resultSpec');
+      spec.insertAdjacentHTML('beforeend', '<span>코덱 <b>' + label + '</b></span>');
+      if (ext === 'mp4' && (codec === 'vp9' || codec === 'av01')) {
+        c.innerHTML = '<b>MP4로 저장됐지만 코덱이 ' + codec.toUpperCase() + '이에요 ⚠️</b> 인스타그램은 <b>H.264 MP4</b>만 받아요. 지금 브라우저(데스크톱 크롬)는 H.264 녹화가 안 돼서 생기는 일이고, <b>아이폰 사파리</b>에서 같은 파일을 열어 만들면 H.264로 저장돼요.';
+      }
+    });
+
+    state.result = { blob: blob, url: url, name: fname, ext: ext };
+    state.lastRendered = { template: t, duration: duration, deal: deal };
+
+    var v = $('#resultVideo');
+    v.src = url;
+    $('#btnDownload').href = url;
+    $('#btnDownload').setAttribute('download', fname);
+    $('#btnDownload').textContent = ext === 'mp4' ? '💾 MP4 저장하기' : '💾 WEBM 저장하기';
+
+    $('#resultSpec').innerHTML =
+      '<span><b>' + Math.round(blob.size / 1024) + ' KB</b></span>' +
+      '<span><b>' + outSize(t).w + '×' + outSize(t).h + '</b></span>' +
+      '<span><b>' + duration.toFixed(1) + '초</b></span>' +
+      '<span><b>' + blob.type + '</b></span>';
+
+    var note = $('#codecNote');
+    if (ext === 'mp4') {
+      note.innerHTML = '<b>MP4로 저장됐어요 ✅</b> 인스타그램에 바로 올릴 수 있는 형식이에요. ‘저장하기’를 누른 뒤 공유 시트에서 <b>비디오 저장</b>을 고르면 사진 앱에 들어가요.';
+      $('#saveHint').innerHTML = '아이폰: 저장하기 → 공유 시트 → <b>‘비디오 저장’</b>(사진 앱) 또는 <b>‘파일에 저장’</b>';
+    } else {
+      note.innerHTML = '<b>이 브라우저는 MP4 녹화를 지원하지 않아 WEBM으로 저장했어요.</b> 인스타그램은 WEBM을 받지 않아요. 아이폰 <b>사파리(iOS 16 이상)</b>에서 다시 열면 MP4로 저장돼요. 지금 파일은 미리보기·보관용으로 쓰세요.';
+      $('#saveHint').innerHTML = 'WEBM 파일은 인스타 업로드가 안 돼요. 사파리에서 다시 열어 MP4로 만드는 걸 추천해요.';
+    }
+
+    $('#result').classList.remove('hidden');
+    $('#captionSec').classList.remove('hidden');
+    syncCaption();
+    $('#result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    toast('완성! 아래에서 캡션을 복사하세요.');
+  }
+
+  $('#btnShare').onclick = async function () {
+    if (!state.result) return;
+    var file = new File([state.result.blob], state.result.name, { type: state.result.blob.type });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: readDeal().name || '릴스' });
+        return;
+      } catch (e) {
+        if (e && e.name === 'AbortError') return;
+      }
+    }
+    toast('이 브라우저는 공유를 지원하지 않아요. ‘저장하기’를 눌러 주세요.');
+  };
+
+  $('#btnAgain').onclick = function () {
+    $('#result').classList.add('hidden');
+    $('#editor').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  /* ============================================================
+    11. 캡션 · 해시태그 · DM
+  ============================================================ */
+  function buildCaption() {
+    var d = readDeal();
+    var name = d.name || '직구 핫딜 상품';
+    var L = [];
+    L.push(name + (d.off ? ' ' + d.off + '% 할인 중 🔥' : ' 지금 핫딜 🔥'));
+    L.push('');
+    if (d.oldP && d.newP) L.push('정가 ' + d.oldP + ' → 지금 ' + d.newP + (d.badge ? ' (' + d.badge + ')' : ''));
+    else if (d.newP) L.push('지금 ' + d.newP + (d.badge ? ' (' + d.badge + ')' : ''));
+    else if (d.badge) L.push(d.badge);
+    var lines = captionLines($('#fCaption').value);
+    if (lines.length) {
+      L.push('');
+      lines.slice(0, 4).forEach(function (l) { L.push('· ' + l); });
+    }
+    L.push('');
+    L.push("💬 댓글에 '" + d.keyword + "' 남겨주시면 DM으로 링크 보내드려요.");
+    L.push('');
+    L.push('※ 이 포스팅은 제휴 마케팅 활동의 일환으로 일정 수수료를 제공받습니다.');
+    return L.join('\n');
+  }
+
+  function buildHashtags() {
+    var d = readDeal();
+    var base = ['직구템', '해외직구', '해외직구추천', '직구추천', '핫딜', '핫딜정보',
+      '가성비템', '살림템', '인스타쇼핑', '릴스추천', '리뷰', '추천템'];
+    if (/블프|블랙프라이/i.test(d.badge)) base.unshift('블프세일', '블랙프라이데이');
+    var words = d.name.replace(/[^\w가-힣\s]/g, ' ').split(/\s+/)
+      .filter(function (w) { return w.length >= 2; }).slice(0, 4);
+    var badgeTag = d.badge ? d.badge.replace(/\s+/g, '') : '';
+    var all = base.concat(words).concat(badgeTag ? [badgeTag] : []);
+    var seen = {};
+    var tags = [];
+    all.forEach(function (t) {
+      if (!t) return;
+      var k = t.toLowerCase();
+      if (seen[k]) return;
+      seen[k] = 1;
+      tags.push('#' + t);
+    });
+    return tags.slice(0, 20).join(' ');
+  }
+
+  function buildDM() {
+    var d = readDeal();
+    var L = [];
+    L.push('안녕하세요! 댓글 남겨주셔서 감사해요 🙌');
+    L.push(d.name ? d.name + ' 링크 보내드릴게요.' : '문의하신 상품 링크 보내드릴게요.');
+    L.push('');
+    L.push('👉 링크: (여기에 제휴 링크 붙여넣기)');
+    L.push('');
+    if (d.oldP && d.newP) L.push('· 정가 ' + d.oldP + ' → 지금 ' + d.newP + (d.off ? ' (' + d.off + '% 할인)' : ''));
+    else if (d.newP) L.push('· 지금 ' + d.newP + (d.off ? ' (' + d.off + '% 할인)' : ''));
+    if (d.badge) L.push('· ' + d.badge + ' 행사라 조기 종료될 수 있어요');
+    L.push('· 해외배송이라 보통 7~14일 정도 걸려요');
+    L.push('· 결제 전에 쿠폰 적용 여부 꼭 확인해 주세요');
+    L.push('');
+    L.push('받으신 링크는 제휴 링크라, 같은 가격에 구매하셔도 저에게 소정의 수수료가 들어와요.');
+    L.push('필요 없으시면 언제든 말씀해 주세요 🙂');
+    return L.join('\n');
+  }
+
+  function buildAll() {
+    return '[캡션]\n' + $('#capText').value +
+      '\n\n[해시태그]\n' + $('#hashText').value +
+      '\n\n[자동 DM]\n' + $('#dmText').value;
+  }
+
+  function syncCaption() {
+    if ($('#captionSec').classList.contains('hidden') && !state.result) {
+      // 아직 결과 전이라도 값은 채워 둔다
+    }
+    $('#capText').value = buildCaption();
+    $('#hashText').value = buildHashtags();
+    $('#dmText').value = buildDM();
+    $('#allText').value = buildAll();
+  }
+
+  $('#btnRegen').onclick = function () {
+    syncCaption();
+    toast('딜 정보로 다시 만들었어요.');
+  };
+
+  function copyText(text) {
+    if (!text) return;
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(function () {
+        toast('복사했어요 ✅');
+      }).catch(function () { fallbackCopy(text); });
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, text.length);
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    toast(ok ? '복사했어요 ✅' : '복사가 안 되면 길게 눌러 ‘복사’를 눌러 주세요.');
+  }
+
+  $$('.copy-btn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var el = document.getElementById(b.dataset.copy);
+      if (el) copyText(el.value);
+    });
+  });
+
+  /* ============================================================
+    12. 애니메이션 루프
+  ============================================================ */
+  var last = 0;
+  var samplesT0 = performance.now();
+
+  function loop(now) {
+    var dt = last ? (now - last) / 1000 : 0;
+    last = now;
+
+    if (state.mode === 'photo' && state.media && state.media.seq) {
+      if (state.playing) {
+        state.previewT += dt;
+        if (state.previewT >= state.media.seq.total) state.previewT = 0;
+      }
+    }
+
+    var sec = ((now - samplesT0) / 1000) % loopSec;
+    samplePortrait.draw(sec);
+    sampleLandscape.draw(sec);
+
+    if (now - (loop._cardAt || 0) > 90) {
+      loop._cardAt = now;
+      drawCards(sec);
+    }
+    try { previewState(); } catch (e) { /* 프레임 오류는 무시 */ }
+    requestAnimationFrame(loop);
+  }
+
+  /* ============================================================
+    13. 시작
+  ============================================================ */
+  function init() {
+    $('#fName').value = SAMPLE_DEAL.name;
+    $('#fOld').value = SAMPLE_DEAL.oldP;
+    $('#fNew').value = SAMPLE_DEAL.newP;
+    $('#fOff').value = SAMPLE_DEAL.off;
+    $('#fBadge').value = SAMPLE_DEAL.badge;
+    $('#fHook').value = SAMPLE_DEAL.hook;
+    $('#fKeyword').value = SAMPLE_DEAL.keyword;
+    $('#fCaption').value = SAMPLE_CAPTION;
+    state.template = TEMPLATES[0];
+    renderGrid();
+    syncCaption();
+    requestAnimationFrame(loop);
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
