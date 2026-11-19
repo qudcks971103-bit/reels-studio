@@ -1568,8 +1568,9 @@ function extractSrtCues(raw) {
     if (cur && cur.body.length) cues.push({ start: cur.start, end: cur.end, text: cur.body.join(' ') });
     cur = null;
   };
-  for (const rawLine of lines) {
-    const line = rawLine.replace(/\u00a0/g, ' ').trim();
+  for (let i = 0; i < lines.length; i += 1) {
+    const line = lines[i].replace(/\u00a0/g, ' ').trim();
+    if (!line) { flush(); continue; } // 빈 줄 = 큐 경계
     const m = line.match(TIME);
     if (m) {
       flush();
@@ -1581,8 +1582,11 @@ function extractSrtCues(raw) {
       continue;
     }
     if (!cur) continue;
-    if (!line) continue;
-    if (/^\d+$/.test(line) && !cur.body.length) continue; // 큐 번호
+    if (/^\d+$/.test(line)) {
+      // 빈 줄 없이 이어지는 파일: 다음 줄이 시간줄이면 이 숫자는 큐 번호예요
+      const next = (lines[i + 1] || '').replace(/\u00a0/g, ' ').trim();
+      if (!cur.body.length || TIME.test(next)) { flush(); continue; }
+    }
     const clean = line.replace(/<[^>]*>/g, '').replace(/\{[^}]*\}/g, '').trim();
     if (clean) cur.body.push(clean);
   }
@@ -1600,11 +1604,14 @@ function applyCues(cues) {
   });
   if (clock > 0.3) {
     const buckets = state.clips.map(() => []);
-    cues.forEach((cue) => {
-      let i = ranges.findIndex(([a, b]) => cue.start >= a - 0.4 && cue.start < b + 0.4);
-      if (i < 0) i = cue.start < ranges[0][0] ? 0 : state.clips.length - 1;
-      buckets[i].push(cue.text);
-    });
+    const pick = (s) => {
+      for (let i = 0; i < ranges.length; i += 1) {
+        const [a, b] = ranges[i];
+        if (s >= a - 0.001 && s < b) return i;
+      }
+      return s < ranges[0][0] ? 0 : ranges.length - 1;
+    };
+    cues.forEach((cue) => { buckets[pick(cue.start)].push(cue.text); });
     state.clips.forEach((c, i) => { c.captions = buckets[i].join('\n'); });
   } else {
     const n = state.clips.length;
@@ -1623,7 +1630,7 @@ function applyPlainLines(raw) {
   const n = state.clips.length;
   state.clips.forEach((c, i) => { c.captions = lines[i] || ''; });
   if (lines.length > n) state.clips[n - 1].captions = lines.slice(n - 1).join('\n');
-  return Math.min(lines.length, n);
+  return lines.length;
 }
 function applyPendingSubs() {
   if (!state.clips.length) return false;
@@ -1646,7 +1653,7 @@ $('srtInput').addEventListener('change', async (e) => {
     renderNow();
     toast(isSrt
       ? `.srt 자막 ${count}줄을 클립 ${state.clips.length}개에 순서대로 채웠어요`
-      : `.txt 자막 ${count}줄을 클립에 채웠어요`, 4000);
+      : `.txt 자막 ${count}줄을 클립 ${state.clips.length}개에 채웠어요`, 4000);
   } catch (err) {
     console.warn(err);
     toast('자막 파일을 읽지 못했어요. 다시 시도해 주세요', 4000);

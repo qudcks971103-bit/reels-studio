@@ -35,6 +35,19 @@
   src: url('https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2') format('woff2'); }
 @font-face { font-family: 'MaruBuri'; font-weight: 700 900; font-style: normal; font-display: swap;
   src: url('https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2') format('woff2'); }
+/* 인플루언서가 많이 쓰는 폰트 (무료 · 웹폰트 CDN) */
+@font-face { font-family: 'S-CoreDream'; font-weight: 500 700; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamBold.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff') format('woff'); }
+@font-face { font-family: 'S-CoreDream'; font-weight: 800 900; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamExtraBold.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-7ExtraBold.woff') format('woff'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 500 700; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy-7Bold.woff') format('woff'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 800 900; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy-8ExtraBold.woff') format('woff'); }
 
 :root {
   --bg: #f6f5f2;
@@ -147,19 +160,21 @@ input:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px
 
 /* 글씨체 */
 .fontlist { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.fitem { position: relative; display: flex; min-width: 0; }
+.fitem .fchip { flex: 1; min-width: 0; }
 .fchip { font: inherit; text-align: left; padding: 10px 10px 8px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .fchip .sample { font-size: 20px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.fchip .fname { font-size: 11px; font-weight: 700; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--body); }
+.fchip .fname { font-size: 11.5px; font-weight: 800; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--body); }
+.fchip .fnote { font-size: 10.5px; font-weight: 700; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--body); }
+.fchip .fnote.best { color: var(--rec); font-weight: 800; }
 .fchip[aria-pressed="true"] { border-color: var(--rec); box-shadow: 0 0 0 2px color-mix(in srgb, var(--rec) 16%, transparent); }
 .fchip[aria-pressed="true"] .fname { color: var(--rec); }
+.fdel { position: absolute; top: -7px; right: -7px; width: 24px; height: 24px; padding: 0; border-radius: 50%; border: 1.5px solid var(--line); background: var(--surface); color: var(--muted); font: inherit; font-size: 11px; font-weight: 800; display: grid; place-items: center; cursor: pointer; }
+.fonttools, .subtools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.fonttools .mini, .subtools .mini { margin: 0; flex: 1 1 150px; min-width: 0; }
 .linkrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 12.5px; color: var(--muted); }
 .linkrow a { color: var(--ink); font-weight: 700; text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; }
 .linkrow a:hover { border-color: var(--rec); }
-.dlcard { display: none; flex-direction: column; gap: 6px; background: color-mix(in srgb, var(--bg) 60%, var(--surface)); border-radius: 12px; padding: 10px 12px; font-size: 12.5px; }
-.dlcard.open { display: flex; }
-.dlcard .dlrow { display: flex; justify-content: space-between; gap: 8px; }
-.dlcard .dlrow a { color: var(--ink); font-weight: 700; text-decoration: none; border-bottom: 1px solid var(--line); }
-.dlcard .dlrow span { color: var(--muted); }
 
 .seg { display: flex; gap: 6px; flex-wrap: wrap; }
 .segbutton { font: inherit; font-size: 13px; font-weight: 700; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); cursor: pointer; }
@@ -190,8 +205,9 @@ input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border: 3px s
 .audiofile .af-main { flex: 1; min-width: 0; }
 .audiofile strong { display: block; font-size: 13.5px; }
 .audiofile small { color: var(--muted); }
-.tbtn { font: inherit; font-size: 13px; font-weight: 800; padding: 9px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; white-space: nowrap; }
+.tbtn { font: inherit; font-size: 13px; font-weight: 800; padding: 9px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px; }
 .tbtn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.tbtn.small { font-size: 12.5px; font-weight: 700; padding: 7px 11px; color: var(--muted); }
 .tbtn:disabled { opacity: .4; }
 
 .dock { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(10px); border-top: 1px solid var(--line); }
@@ -236,6 +252,13 @@ input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border: 3px s
     <div class="clips" id="clips"></div>
     <p class="hint" id="clipTotal" hidden></p>
     <p class="warn" id="lengthWarn" hidden></p>
+    <div class="subtools">
+      <button class="tbtn small" id="btnSrtSave" type="button">자막 .srt 저장</button>
+      <label class="tbtn small" id="srtPick">자막 .srt·txt 불러오기
+        <input id="srtInput" type="file" accept=".srt,.txt,text/plain,application/x-subrip" hidden>
+      </label>
+    </div>
+    <p class="hint" id="srtNote">클립마다 적은 자막은 .srt 파일로 저장할 수 있고, 쓰던 .srt·txt를 불러오면 클립 순서대로 채워져요.</p>
   </section>
 
   <section>
@@ -264,13 +287,14 @@ input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border: 3px s
     <p class="hint">세이프존은 미리보기에서만 보여요. 저장한 영상에는 그려지지 않아요.</p>
 
     <div class="panel">
-      <div class="panel-head"><b>자막 글씨체</b><span>상업용 무료 · 6종</span></div>
+      <div class="panel-head"><b>자막 글씨체</b><span>인플루언서 추천 · 탭 한 번</span></div>
       <div class="fontlist" id="fontList" role="group" aria-label="자막 글씨체"></div>
-      <div class="linkrow">
-        <a id="fontDl" href="#" target="_blank" rel="noopener">선택한 글씨체 무료 다운로드 →</a>
-        <button class="tbtn" id="btnAllFonts" type="button">6종 전체 보기</button>
+      <div class="fonttools">
+        <label class="tbtn small" id="fontPick">＋ 내 폰트 파일
+          <input id="fontInput" type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" multiple hidden>
+        </label>
+        <span class="mini" id="fontNote">가진 폰트 파일(ttf·otf·woff2)을 올리면 바로 그 글씨로 그려요</span>
       </div>
-      <div class="dlcard" id="dlCard"></div>
     </div>
 
     <div class="panel">
@@ -381,20 +405,25 @@ const fmt = (s) => {
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-// ---------- 글씨체 6종 (상업용 무료) ----------
+// ---------- 글씨체 (인플루언서가 많이 쓰는 순서) ----------
+// badge: 칩 아래 한 줄 추천 태그 · top: 기본 선택(가장 많이 쓰는 폰트)
 const FONTS = [
   { id: 'pretendard', family: 'Pretendard', name: '프리텐다드', sample: '자취 5년차',
-    use: '릴스 기본 1티어 고딕', download: 'https://cactus.tistory.com/306' },
+    badge: '인기 1위 · 깔끔 리뷰', top: true },
   { id: 'gmarket', family: 'GmarketSans', name: 'G마켓 산스', sample: '만원대 가성비',
-    use: '정보·직구·가격 강조', download: 'https://corp.gmarket.com/fonts/' },
-  { id: 'nanumsquare', family: 'NanumSquareNeo', name: '나눔스퀘어 네오', sample: '물때 안 낌',
-    use: '또렷한 리뷰·정보', download: 'https://campaign.naver.com/nanumsquare_neo/' },
-  { id: 'dohyeon', family: 'Do Hyeon', name: '배민 도현체', sample: '이건 정착템',
-    use: '제목·강조 임팩트', download: 'https://www.woowahan.com/fonts' },
+    badge: '후킹·가격 1위' },
+  { id: 'score', family: 'S-CoreDream', name: '에스코어 드림', sample: '세련된 모던',
+    badge: '세련된 모던' },
+  { id: 'paperlogy', family: 'Paperlogy', name: '페이퍼로지', sample: '요즘 감성',
+    badge: '요즘 감성' },
   { id: 'jua', family: 'Jua', name: '배민 주아체', sample: '이거 뭐야',
-    use: '친근한 예능·리액션', download: 'https://www.woowahan.com/fonts' },
+    badge: '친근한 살림' },
+  { id: 'nanumsquare', family: 'NanumSquareNeo', name: '나눔스퀘어 네오', sample: '물때 안 낌',
+    badge: '모던 정보형' },
   { id: 'maruburi', family: 'MaruBuri', name: '마루 부리', sample: '오늘도 천천히',
-    use: '감성 브이로그 명조', download: 'https://hangeul.naver.com/font' },
+    badge: '감성 무드' },
+  { id: 'dohyeon', family: 'Do Hyeon', name: '배민 도현체', sample: '이건 정착템',
+    badge: '강한 제목 훅' },
 ];
 const ACCENTS = {
   lime: { color: '#D7FF3E', name: '라임' },
@@ -1297,38 +1326,339 @@ const totalDuration = () => state.clips.reduce((s, c) => s + (c.duration || 0), 
 const activeClip = () => state.clips[previewIdx] || null;
 
 /* ---------- 글씨체 UI ---------- */
+const DEFAULT_FONT = 'pretendard';
+const FONT_NOTE = '가진 폰트 파일(ttf·otf·woff2)을 올리면 바로 그 글씨로 그려요';
+
+function fontTag(f) {
+  if (f.custom) return f.persisted ? '내 폰트 · 기억됨' : '내 폰트 · 이번만';
+  return f.badge || '추천';
+}
 function renderFonts() {
   const wrap = $('fontList');
   wrap.innerHTML = '';
   FONTS.forEach((f) => {
+    const cell = document.createElement('div');
+    cell.className = 'fitem';
     const b = document.createElement('button');
     b.type = 'button';
-    b.className = 'fchip';
+    b.className = 'fchip' + (f.custom ? ' custom' : '');
+    b.dataset.fontId = f.id;
     b.setAttribute('aria-pressed', String(UI.font === f.id));
-    b.innerHTML = `<span class="sample" style="font-family:'${f.family}','Noto Sans KR',sans-serif">${esc(f.sample)}</span><span class="fname">${esc(f.name)}</span>`;
-    b.onclick = async () => {
-      UI.font = f.id;
-      renderFonts();
-      $('fontDl').href = f.download;
-      $('fontDl').textContent = `${f.name} 무료 다운로드 →`;
-      b.disabled = true;
-      await ensureFont(f.id);
-      b.disabled = false;
-      renderNow();
-      toast(`${f.name}${document.fonts?.check?.(`700 40px "${f.family}"`) ? ' 적용됨' : ' 불러오는 중…'}`, 1800);
-    };
-    wrap.appendChild(b);
+    b.innerHTML = `<span class="sample" style="font-family:'${f.family}','Noto Sans KR',sans-serif">${esc(f.sample)}</span>
+      <span class="fname">${esc(f.name)}</span>
+      <span class="fnote${f.top ? ' best' : ''}">${esc(fontTag(f))}</span>`;
+    b.onclick = () => pickFont(f);
+    cell.appendChild(b);
+    if (f.custom) {
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'fdel';
+      del.setAttribute('aria-label', `${f.name} 지우기`);
+      del.textContent = '✕';
+      del.onclick = (e) => { e.stopPropagation(); removeCustomFont(f); };
+      cell.appendChild(del);
+    }
+    wrap.appendChild(cell);
   });
-  const cur = fontOf();
-  $('fontDl').href = cur.download;
-  $('fontDl').textContent = `${cur.name} 무료 다운로드 →`;
-  $('dlCard').innerHTML = FONTS.map((f) => `<div class="dlrow"><a href="${f.download}" target="_blank" rel="noopener">${esc(f.name)}</a><span>${esc(f.use)}</span></div>`).join('');
 }
-$('btnAllFonts').onclick = () => {
-  $('dlCard').classList.toggle('open');
-  $('btnAllFonts').textContent = $('dlCard').classList.contains('open') ? '접기' : '6종 전체 보기';
+async function pickFont(f) {
+  UI.font = f.id;
+  renderFonts();
+  const ok = await ensureFont(f.id);
+  renderNow();
+  toast(ok ? `${f.name} 글씨체로 그려요` : `${f.name} 불러오는 중…`);
+}
+
+/* ---------- 내 폰트 파일 (ttf · otf · woff · woff2) ---------- */
+const FONT_KEY = 'tilpyeon.customFonts.v1';
+const FONT_BUDGET = 3.5 * 1024 * 1024; // localStorage에 담는 base64 총 글자 수
+let fontSeq = 0;
+
+function bytesToB64(buf) {
+  const bytes = new Uint8Array(buf);
+  const CH = 0x8000;
+  let out = '';
+  for (let i = 0; i < bytes.length; i += CH) out += String.fromCharCode.apply(null, bytes.subarray(i, i + CH));
+  return btoa(out);
+}
+function b64ToBuffer(b64) {
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i += 1) bytes[i] = bin.charCodeAt(i);
+  return bytes.buffer;
+}
+function cleanFontName(filename) {
+  return String(filename || '내 폰트')
+    .replace(/\.[^.]+$/, '')
+    .replace(/[\\/:*?"<>|_]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 22) || '내 폰트';
+}
+function nextFamily() {
+  fontSeq += 1;
+  return `StudioFont${Date.now().toString(36)}${fontSeq}`;
+}
+async function makeCustomFont(name, family, buf) {
+  const face = new FontFace(family, buf, { weight: '100 900', style: 'normal' });
+  await face.load();
+  document.fonts.add(face);
+  return {
+    id: 'custom-' + family.toLowerCase(),
+    family,
+    name,
+    sample: '내 폰트 Aa 가나다',
+    custom: true,
+    face,
+    data: buf,
+  };
+}
+async function addFontFile(file) {
+  const buf = await file.arrayBuffer();
+  const f = await makeCustomFont(cleanFontName(file.name), nextFamily(), buf);
+  FONTS.push(f);
+  return f;
+}
+function persistCustomFonts() {
+  const custom = FONTS.filter((f) => f.custom);
+  const keep = [];
+  let used = 0;
+  custom.forEach((f) => {
+    if (!f.b64) f.b64 = bytesToB64(f.data);
+    const cost = f.b64.length + 160;
+    if (used + cost > FONT_BUDGET) { f.persisted = false; return; }
+    used += cost;
+    f.persisted = true;
+    keep.push({ name: f.name, family: f.family, data: f.b64 });
+  });
+  try {
+    if (keep.length) localStorage.setItem(FONT_KEY, JSON.stringify(keep));
+    else localStorage.removeItem(FONT_KEY);
+  } catch (err) {
+    console.warn('폰트 저장 실패', err);
+    custom.forEach((f) => { f.persisted = false; });
+    try { localStorage.removeItem(FONT_KEY); } catch {}
+  }
+  return { saved: keep.length, lost: custom.filter((f) => !f.persisted).length };
+}
+async function restoreCustomFonts() {
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem(FONT_KEY) || '[]'); } catch { list = []; }
+  if (!Array.isArray(list) || !list.length) return 0;
+  let n = 0;
+  for (const item of list) {
+    try {
+      const f = await makeCustomFont(item.name, item.family, b64ToBuffer(item.data));
+      f.persisted = true;
+      f.b64 = item.data;
+      FONTS.push(f);
+      n += 1;
+    } catch (err) {
+      console.warn('폰트 복원 실패', item.name, err);
+    }
+  }
+  return n;
+}
+function removeCustomFont(f) {
+  const i = FONTS.indexOf(f);
+  if (i < 0) return;
+  try { if (f.face) document.fonts.delete(f.face); } catch {}
+  FONTS.splice(i, 1);
+  if (UI.font === f.id) UI.font = DEFAULT_FONT;
+  persistCustomFonts();
+  renderFonts();
+  renderNow();
+  toast(`${f.name} 폰트를 뺐어요`, 2200);
+}
+$('fontInput').addEventListener('change', async (e) => {
+  const files = Array.from(e.target.files || []);
+  e.target.value = '';
+  if (!files.length) return;
+  $('fontNote').textContent = '폰트 파일 여는 중…';
+  const added = [];
+  let failed = 0;
+  for (const file of files) {
+    try { added.push(await addFontFile(file)); } catch (err) { console.warn(err); failed += 1; }
+  }
+  const res = added.length ? persistCustomFonts() : { lost: 0 };
+  if (added.length) {
+    const last = added[added.length - 1];
+    UI.font = last.id;
+    await ensureFont(last.id);
+  }
+  renderFonts();
+  renderNow();
+  $('fontNote').textContent = FONT_NOTE;
+  const bits = [];
+  if (added.length) bits.push(`${added.map((f) => f.name).join('·')} 글씨체로 그려요`);
+  if (failed) bits.push(`${failed}개는 열지 못했어요 (ttf·otf·woff2만 돼요)`);
+  if (added.length && res.lost) bits.push('파일이 커서 새로고침하면 이번만 써요');
+  toast(bits.join(' · '), 4600);
+});
+
+/* ---------- 자막 파일 (.srt / .txt) ---------- */
+function srtStamp(sec) {
+  const ms = Math.max(0, Math.round((sec || 0) * 1000));
+  const h = Math.floor(ms / 3600000);
+  const m = Math.floor(ms / 60000) % 60;
+  const s = Math.floor(ms / 1000) % 60;
+  const r = ms % 1000;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')},${String(r).padStart(3, '0')}`;
+}
+function buildSrt() {
+  const rows = [];
+  let clock = 0;
+  let n = 1;
+  state.clips.forEach((clip) => {
+    const lines = clipLines(clip);
+    const d = clip.duration || 0;
+    if (lines.length && d > 0) {
+      const per = d / lines.length;
+      lines.forEach((line, i) => {
+        const a = clock + i * per;
+        const b = clock + (i + 1) * per;
+        rows.push(`${n}\n${srtStamp(a)} --> ${srtStamp(Math.max(a + 0.2, b - 0.05))}\n${line.replace(/\*/g, '')}\n`);
+        n += 1;
+      });
+    }
+    clock += d;
+  });
+  return rows.join('\n');
+}
+async function saveFileBlob(blob, filename) {
+  const dl = window.claude && window.claude.use ? await window.claude.use('downloads').catch(() => null) : null;
+  if (dl) {
+    try {
+      await dl.save({ filename, data: blob });
+      return true;
+    } catch (err) {
+      if (err && err.code === 'declined') return false;
+      if (err && err.code === 'rate_limited') { toast('잠시 뒤에 다시 눌러 주세요.'); return false; }
+    }
+  }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.rel = 'noopener';
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 60_000);
+  return true;
+}
+$('btnSrtSave').onclick = async () => {
+  if (!state.clips.length) return toast('영상을 넣고 클립마다 자막을 적으면 .srt로 저장할 수 있어요', 4000);
+  if (!state.clips.some((c) => clipLines(c).length)) return toast('저장할 자막이 없어요. 클립 카드에 자막을 적어 주세요', 4000);
+  if (!state.clips.every((c) => (c.duration || 0) > 0)) return toast('영상 길이를 아직 읽는 중이에요. 잠깐 뒤에 다시 눌러 주세요', 4000);
+  const text = buildSrt();
+  if (!text.trim()) return toast('저장할 자막이 없어요', 3000);
+  const base = (form.title.value || '자막').replace(/[\\/:*?"<>|#]/g, '').trim().slice(0, 40) || '자막';
+  const blob = new Blob([text], { type: 'application/x-subrip;charset=utf-8' });
+  const ok = await saveFileBlob(blob, `${base}.srt`);
+  if (ok) toast(`${base}.srt 파일로 저장했어요`, 3200);
 };
 
+function extractSrtCues(raw) {
+  const lines = String(raw || '').replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n').split('\n');
+  const TIME = /(\d{1,2}):(\d{2}):(\d{2})[.,](\d{1,3})\s*-->\s*(\d{1,2}):(\d{2}):(\d{2})[.,](\d{1,3})/;
+  const cues = [];
+  let cur = null;
+  const flush = () => {
+    if (cur && cur.body.length) cues.push({ start: cur.start, end: cur.end, text: cur.body.join(' ') });
+    cur = null;
+  };
+  for (let i = 0; i < lines.length; i += 1) {
+    const line = lines[i].replace(/\u00a0/g, ' ').trim();
+    if (!line) { flush(); continue; } // 빈 줄 = 큐 경계
+    const m = line.match(TIME);
+    if (m) {
+      flush();
+      cur = {
+        start: (+m[1]) * 3600 + (+m[2]) * 60 + (+m[3]) + (+m[4]) / 1000,
+        end: (+m[5]) * 3600 + (+m[6]) * 60 + (+m[7]) + (+m[8]) / 1000,
+        body: [],
+      };
+      continue;
+    }
+    if (!cur) continue;
+    if (/^\d+$/.test(line)) {
+      // 빈 줄 없이 이어지는 파일: 다음 줄이 시간줄이면 이 숫자는 큐 번호예요
+      const next = (lines[i + 1] || '').replace(/\u00a0/g, ' ').trim();
+      if (!cur.body.length || TIME.test(next)) { flush(); continue; }
+    }
+    const clean = line.replace(/<[^>]*>/g, '').replace(/\{[^}]*\}/g, '').trim();
+    if (clean) cur.body.push(clean);
+  }
+  flush();
+  return cues;
+}
+function applyCues(cues) {
+  if (!cues || !cues.length) return 0;
+  if (!state.clips.length) { state.pendingCues = cues; return -1; }
+  let clock = 0;
+  const ranges = state.clips.map((c) => {
+    const r = [clock, clock + (c.duration || 0)];
+    clock = r[1];
+    return r;
+  });
+  if (clock > 0.3) {
+    const buckets = state.clips.map(() => []);
+    const pick = (s) => {
+      for (let i = 0; i < ranges.length; i += 1) {
+        const [a, b] = ranges[i];
+        if (s >= a - 0.001 && s < b) return i;
+      }
+      return s < ranges[0][0] ? 0 : ranges.length - 1;
+    };
+    cues.forEach((cue) => { buckets[pick(cue.start)].push(cue.text); });
+    state.clips.forEach((c, i) => { c.captions = buckets[i].join('\n'); });
+  } else {
+    const n = state.clips.length;
+    const per = Math.max(1, Math.ceil(cues.length / n));
+    state.clips.forEach((c, i) => {
+      const part = i === n - 1 ? cues.slice(i * per) : cues.slice(i * per, (i + 1) * per);
+      c.captions = part.map((x) => x.text).join('\n');
+    });
+  }
+  return cues.length;
+}
+function applyPlainLines(raw) {
+  const lines = String(raw || '').replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n').split('\n').map((s) => s.trim()).filter(Boolean);
+  if (!lines.length) return 0;
+  if (!state.clips.length) { state.pendingLines = lines; return -1; }
+  const n = state.clips.length;
+  state.clips.forEach((c, i) => { c.captions = lines[i] || ''; });
+  if (lines.length > n) state.clips[n - 1].captions = lines.slice(n - 1).join('\n');
+  return lines.length;
+}
+function applyPendingSubs() {
+  if (!state.clips.length) return false;
+  let done = false;
+  if (state.pendingCues) { applyCues(state.pendingCues); state.pendingCues = null; done = true; }
+  if (state.pendingLines) { applyPlainLines(state.pendingLines); state.pendingLines = null; done = true; }
+  return done;
+}
+$('srtInput').addEventListener('change', async (e) => {
+  const file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if (!file) return;
+  try {
+    const raw = await file.text();
+    const isSrt = /-->/.test(raw) || /\.srt$/i.test(file.name);
+    const count = isSrt ? applyCues(extractSrtCues(raw)) : applyPlainLines(raw);
+    if (count === -1) return toast(`${file.name} 자막을 담아 뒀어요. 영상을 넣으면 순서대로 채워요`, 4400);
+    if (!count) return toast('자막을 읽지 못했어요. .srt 파일인지 확인해 주세요', 4400);
+    renderClips();
+    renderNow();
+    toast(isSrt
+      ? `.srt 자막 ${count}줄을 클립 ${state.clips.length}개에 순서대로 채웠어요`
+      : `.txt 자막 ${count}줄을 클립 ${state.clips.length}개에 채웠어요`, 4000);
+  } catch (err) {
+    console.warn(err);
+    toast('자막 파일을 읽지 못했어요. 다시 시도해 주세요', 4000);
+  }
+});
 /* ---------- 자막 스타일 ---------- */
 document.querySelectorAll('#capStyle .segbutton').forEach((b) => {
   b.onclick = () => {
@@ -1587,6 +1917,10 @@ async function addFiles(fileList) {
     previewPlay();
     renderClips();
     toast(`${state.clips.length}개 클립 · 총 ${fmt(d)} · ${state.selected.name} 틀을 추천했어요`, 4200);
+  }
+  if (applyPendingSubs()) {
+    renderClips();
+    renderNow();
   }
   $('fileInput').value = '';
 }
@@ -2209,6 +2543,12 @@ previewPlay();
 requestAnimationFrame(loop);
 // 글씨체는 배경에서 미리 불러 둡니다
 (async () => { for (const f of FONTS) { await ensureFont(f.id); } })();
+// 지난번에 올린 내 폰트가 있으면 그대로 되살립니다
+restoreCustomFonts().then((n) => {
+  if (!n) return;
+  renderFonts();
+  renderNow();
+});
 </script>
 
 </body>
