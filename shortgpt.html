@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ShortGPT 런처</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ShortGPT">
+<meta name="theme-color" content="#111318">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23e5484d'/%3E%3Cpath d='M26 20l18 12-18 12z' fill='white'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="shortgpt_icon.png">
+<style>
+  :root {
+    --bg: #f6f6f8; --surface: #ffffff; --text: #16181d; --muted: #5f6470;
+    --border: #e2e3e8; --accent: #e5484d; --accent-text: #ffffff; --danger: #b42318;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #111318; --surface: #1b1e25; --text: #eceef2; --muted: #9aa0ab;
+      --border: #2c3039; --accent: #ec5d62; --accent-text: #ffffff; --danger: #f97066;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #111318; --surface: #1b1e25; --text: #eceef2; --muted: #9aa0ab;
+    --border: #2c3039; --accent: #ec5d62; --accent-text: #ffffff; --danger: #f97066;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #home {
+    max-width: 520px; margin: 0 auto;
+    padding: calc(env(safe-area-inset-top) + 32px) 16px calc(env(safe-area-inset-bottom) + 32px);
+  }
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+  .logo { width: 44px; height: 44px; border-radius: 11px; background: var(--accent); display: grid; place-items: center; }
+  h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); font-size: 14px; margin: 0; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+  label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  input {
+    width: 100%; font: inherit; color: var(--text); background: var(--bg);
+    border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; outline: none;
+  }
+  input:focus { border-color: var(--accent); }
+  .row { display: flex; gap: 8px; margin-top: 12px; }
+  button {
+    font: inherit; font-weight: 600; border-radius: 10px; padding: 12px 16px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); flex: 1; }
+  .err { color: var(--danger); font-size: 14px; margin: 10px 0 0; min-height: 0; }
+  h2 { font-size: 14px; color: var(--muted); font-weight: 600; margin: 0 0 10px; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--border); padding: 10px 0; }
+  li:first-child { border-top: 0; padding-top: 0; }
+  li .url { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; cursor: pointer; }
+  li button { padding: 6px 10px; font-size: 13px; font-weight: 500; }
+  .empty { color: var(--muted); font-size: 14px; }
+  details summary { cursor: pointer; font-weight: 600; font-size: 15px; }
+  details ol { padding-left: 20px; margin: 12px 0 0; font-size: 14px; color: var(--muted); }
+  details li { display: list-item; border: 0; padding: 0 0 8px; }
+  code { font-family: ui-monospace, Menlo, monospace; font-size: 13px; background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 1px 5px; word-break: break-all; color: var(--text); }
+
+  #app { position: fixed; inset: 0; display: none; flex-direction: column; background: var(--bg); }
+  #app.on { display: flex; }
+  .bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: calc(env(safe-area-inset-top) + 8px) 12px 8px;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+  }
+  .bar .title { flex: 1; min-width: 0; font-size: 13px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar button { padding: 7px 12px; font-size: 14px; }
+  iframe { flex: 1; width: 100%; border: 0; background: #fff; }
+</style>
+</head>
+<body>
+
+<main id="home">
+  <div class="brand">
+    <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l12 7-12 7z" fill="#fff"/></svg></div>
+    <div>
+      <h1>ShortGPT</h1>
+      <p class="sub">실행 중인 ShortGPT 서버에 연결합니다</p>
+    </div>
+  </div>
+
+  <form class="card" id="form">
+    <label for="url">서버 주소</label>
+    <input id="url" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false"
+           placeholder="https://xxxx.gradio.live 또는 http://192.168.0.10:31415">
+    <div class="row">
+      <button class="primary" type="submit">연결</button>
+      <button type="button" id="newtab">새 창</button>
+    </div>
+    <p class="err" id="err"></p>
+  </form>
+
+  <section class="card">
+    <h2>최근 연결</h2>
+    <ul id="recent"></ul>
+  </section>
+
+  <details class="card">
+    <summary>서버 주소는 어디서 얻나요?</summary>
+    <ol>
+      <li><b>내 PC에서 실행:</b> ShortGPT 폴더에서 <code>python runShortGPT.py</code> 실행 → 같은 와이파이의 폰에서 <code>http://PC의IP:31415</code> 입력</li>
+      <li><b>외부(LTE)에서도 쓰려면:</b> <code>gui/gui_gradio.py</code>의 <code>share=self.colab</code>를 <code>share=True</code>로 바꾸고 실행 → 터미널에 나오는 <code>https://….gradio.live</code> 주소 입력 (72시간마다 바뀜)</li>
+      <li><b>Google Colab:</b> 저장소의 Colab 노트북을 실행하면 나오는 <code>gradio.live</code> 주소 입력</li>
+      <li>화면이 비어 보이면 <b>새 창</b> 버튼으로 여세요. (일부 서버는 다른 페이지 안에 표시되는 것을 막습니다)</li>
+    </ol>
+  </details>
+
+  <details class="card">
+    <summary>홈 화면에 추가하는 법</summary>
+    <ol>
+      <li><b>아이폰(Safari):</b> 공유 버튼 → <b>홈 화면에 추가</b></li>
+      <li><b>안드로이드(Chrome):</b> ⋮ 메뉴 → <b>홈 화면에 추가</b></li>
+    </ol>
+  </details>
+</main>
+
+<div id="app">
+  <div class="bar">
+    <button type="button" id="back">← 홈</button>
+    <span class="title" id="cur"></span>
+    <button type="button" id="reload">새로고침</button>
+  </div>
+  <iframe id="frame" title="ShortGPT" allow="clipboard-write; autoplay; fullscreen"></iframe>
+</div>
+
+<script>
+(function () {
+  var KEY = 'shortgpt-launcher-recent';
+  var $ = function (id) { return document.getElementById(id); };
+
+  function load() {
+    try { var v = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(v) ? v : []; }
+    catch (e) { return []; }
+  }
+  function save(list) { try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {} }
+
+  function normalize(raw) {
+    var s = (raw || '').trim();
+    if (!s) return null;
+    if (!/^https?:\/\//i.test(s)) s = (/gradio\.live/i.test(s) ? 'https://' : 'http://') + s;
+    try { var u = new URL(s); return u.href; } catch (e) { return null; }
+  }
+
+  function remember(url) {
+    var list = load().filter(function (x) { return x !== url; });
+    list.unshift(url);
+    save(list.slice(0, 6));
+    render();
+  }
+
+  function render() {
+    var ul = $('recent'), list = load();
+    ul.innerHTML = '';
+    if (!list.length) { ul.innerHTML = '<li class="empty">아직 없음</li>'; return; }
+    list.forEach(function (url) {
+      var li = document.createElement('li');
+      var span = document.createElement('span');
+      span.className = 'url'; span.textContent = url;
+      span.onclick = function () { open(url); };
+      var del = document.createElement('button');
+      del.type = 'button'; del.textContent = '삭제';
+      del.onclick = function () { save(load().filter(function (x) { return x !== url; })); render(); };
+      li.appendChild(span); li.appendChild(del); ul.appendChild(li);
+    });
+  }
+
+  function open(url) {
+    remember(url);
+    $('cur').textContent = url;
+    $('frame').src = url;
+    $('app').classList.add('on');
+    $('home').style.display = 'none';
+  }
+
+  function getUrl() {
+    var url = normalize($('url').value);
+    $('err').textContent = url ? '' : '올바른 주소를 입력하세요.';
+    return url;
+  }
+
+  $('form').addEventListener('submit', function (e) { e.preventDefault(); var u = getUrl(); if (u) open(u); });
+  $('newtab').addEventListener('click', function () { var u = getUrl(); if (u) { remember(u); window.open(u, '_blank'); } });
+  $('back').addEventListener('click', function () {
+    $('app').classList.remove('on'); $('home').style.display = ''; $('frame').src = 'about:blank';
+  });
+  $('reload').addEventListener('click', function () { var f = $('frame'); var s = f.src; f.src = 'about:blank'; setTimeout(function () { f.src = s; }, 50); });
+
+  var last = load()[0];
+  if (last) $('url').value = last;
+  render();
+})();
+</script>
+</body>
+</html>
