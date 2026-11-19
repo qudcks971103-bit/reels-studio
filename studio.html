@@ -21,33 +21,49 @@
    흐름: 1 영상 → 2 틀 → 3 글자·자막 → 4 보이스·BGM → 저장 */
 @font-face { font-family: 'Pretendard'; font-weight: 45 920; font-style: normal; font-display: swap;
   src: url('https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/woff2/PretendardVariable.woff2') format('woff2'); }
-@font-face { font-family: 'GmarketSans'; font-weight: 500; font-style: normal; font-display: swap;
+/* 글씨 두께 4단계(보통 400 · 중간 500 · 굵게 700 · 아주 굵게 900)
+   폰트마다 가진 굵기를 모두 불러 두고, 없는 굵기는 가장 가까운 파일로 그려요 */
+@font-face { font-family: 'GmarketSans'; font-weight: 300 449; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff'); }
+@font-face { font-family: 'GmarketSans'; font-weight: 450 649; font-style: normal; font-display: swap;
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff'); }
-@font-face { font-family: 'GmarketSans'; font-weight: 700 900; font-style: normal; font-display: swap;
+@font-face { font-family: 'GmarketSans'; font-weight: 650 900; font-style: normal; font-display: swap;
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff'); }
-@font-face { font-family: 'NanumSquareNeo'; font-weight: 400; font-style: normal; font-display: swap;
+@font-face { font-family: 'NanumSquareNeo'; font-weight: 300 549; font-style: normal; font-display: swap;
   src: url('https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-bRg.woff2') format('woff2'); }
-@font-face { font-family: 'NanumSquareNeo'; font-weight: 700 800; font-style: normal; font-display: swap;
+@font-face { font-family: 'NanumSquareNeo'; font-weight: 550 749; font-style: normal; font-display: swap;
   src: url('https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-cBd.woff2') format('woff2'); }
-@font-face { font-family: 'NanumSquareNeo'; font-weight: 900; font-style: normal; font-display: swap;
+@font-face { font-family: 'NanumSquareNeo'; font-weight: 750 900; font-style: normal; font-display: swap;
   src: url('https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-dEb.woff2') format('woff2'); }
-@font-face { font-family: 'MaruBuri'; font-weight: 400; font-style: normal; font-display: swap;
+@font-face { font-family: 'MaruBuri'; font-weight: 300 549; font-style: normal; font-display: swap;
   src: url('https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2') format('woff2'); }
-@font-face { font-family: 'MaruBuri'; font-weight: 700 900; font-style: normal; font-display: swap;
+@font-face { font-family: 'MaruBuri'; font-weight: 550 900; font-style: normal; font-display: swap;
   src: url('https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2') format('woff2'); }
 /* 인플루언서가 많이 쓰는 폰트 (무료 · 웹폰트 CDN) */
-@font-face { font-family: 'S-CoreDream'; font-weight: 500 700; font-style: normal; font-display: swap;
+@font-face { font-family: 'S-CoreDream'; font-weight: 300 449; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamRegular.woff2') format('woff2'); }
+@font-face { font-family: 'S-CoreDream'; font-weight: 450 549; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamMedium.woff2') format('woff2'); }
+@font-face { font-family: 'S-CoreDream'; font-weight: 550 749; font-style: normal; font-display: swap;
   src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamBold.woff2') format('woff2'),
        url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff') format('woff'); }
-@font-face { font-family: 'S-CoreDream'; font-weight: 800 900; font-style: normal; font-display: swap;
+@font-face { font-family: 'S-CoreDream'; font-weight: 750 849; font-style: normal; font-display: swap;
   src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamExtraBold.woff2') format('woff2'),
        url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-7ExtraBold.woff') format('woff'); }
-@font-face { font-family: 'Paperlogy'; font-weight: 500 700; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2'),
-       url('https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy-7Bold.woff') format('woff'); }
-@font-face { font-family: 'Paperlogy'; font-weight: 800 900; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2'),
-       url('https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy-8ExtraBold.woff') format('woff'); }
+@font-face { font-family: 'S-CoreDream'; font-weight: 850 900; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamBlack.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 300 449; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 450 549; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 550 649; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 650 749; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 750 849; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 850 900; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2') format('woff2'); }
 
 :root {
   --bg: #f6f5f2;
@@ -133,6 +149,7 @@ section { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .tcard .name { font-weight: 800; font-size: 13.5px; line-height: 1.3; }
 .tag { align-self: flex-start; font-size: 11px; font-weight: 800; padding: 1px 7px; border-radius: 5px; }
 .badge { position: absolute; top: 14px; right: 14px; background: var(--rec); color: var(--rec-ink); font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; z-index: 1; }
+.badge.new-badge { background: #C8FF29; color: #10130a; }
 .tdesc { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; font-size: 13.5px; display: flex; flex-direction: column; gap: 4px; }
 .tdesc strong { font-size: 15px; }
 .tdesc .trend { color: var(--muted); font-size: 12.5px; }
@@ -179,6 +196,8 @@ input:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px
 .seg { display: flex; gap: 6px; flex-wrap: wrap; }
 .segbutton { font: inherit; font-size: 13px; font-weight: 700; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); cursor: pointer; }
 .segbutton[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.seg.quad { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.seg.quad .segbutton { padding: 9px 8px; font-size: 12.5px; text-align: center; }
 .swatches { display: flex; gap: 8px; }
 .swatch { font: inherit; font-size: 12px; font-weight: 800; width: auto; padding: 7px 12px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
 .swatch i { width: 12px; height: 12px; border-radius: 50%; display: block; }
@@ -295,6 +314,23 @@ input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border: 3px s
         </label>
         <span class="mini" id="fontNote">가진 폰트 파일(ttf·otf·woff2)을 올리면 바로 그 글씨로 그려요</span>
       </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><b>글씨 두께 · 자간</b><span>훅·자막·라벨에 함께 적용</span></div>
+      <div class="seg quad" id="weightRow" role="group" aria-label="글씨 두께">
+        <button class="segbutton" data-weight="400" aria-pressed="false">보통 400</button>
+        <button class="segbutton" data-weight="500" aria-pressed="false">중간 500</button>
+        <button class="segbutton" data-weight="700" aria-pressed="true">굵게 700</button>
+        <button class="segbutton" data-weight="900" aria-pressed="false">아주 굵게 900</button>
+      </div>
+      <div class="slider-row"><span>자간</span><input type="range" id="trackRange" min="-4" max="6" step="1" value="0" aria-label="자간"><output id="trackOut">0px</output></div>
+      <div class="seg" id="trackChips" role="group" aria-label="자간 빠른 설정">
+        <button class="segbutton" data-track="-2" aria-pressed="false">좁게 -2</button>
+        <button class="segbutton" data-track="0" aria-pressed="true">기본 0</button>
+        <button class="segbutton" data-track="2" aria-pressed="false">넓게 +2</button>
+      </div>
+      <p class="mini">두께·자간은 미리보기와 저장한 영상에 똑같이 들어가요. 글씨체에 없는 굵기는 가장 가까운 굵기로 그려요.</p>
     </div>
 
     <div class="panel">
@@ -417,13 +453,13 @@ const FONTS = [
   { id: 'paperlogy', family: 'Paperlogy', name: '페이퍼로지', sample: '요즘 감성',
     badge: '요즘 감성' },
   { id: 'jua', family: 'Jua', name: '배민 주아체', sample: '이거 뭐야',
-    badge: '친근한 살림' },
+    badge: '친근한 살림', single: true },
   { id: 'nanumsquare', family: 'NanumSquareNeo', name: '나눔스퀘어 네오', sample: '물때 안 낌',
     badge: '모던 정보형' },
   { id: 'maruburi', family: 'MaruBuri', name: '마루 부리', sample: '오늘도 천천히',
     badge: '감성 무드' },
   { id: 'dohyeon', family: 'Do Hyeon', name: '배민 도현체', sample: '이건 정착템',
-    badge: '강한 제목 훅' },
+    badge: '강한 제목 훅', single: true },
 ];
 const ACCENTS = {
   lime: { color: '#D7FF3E', name: '라임' },
@@ -435,14 +471,70 @@ const UI = {
   captionStyle: 'outline', // outline | bar
   accent: 'lime',
   safe: false,
+  weight: 700, // 글씨 두께 · 400 | 500 | 700 | 900
+  spacing: 0,  // 자간(px) · -4 ~ +6
 };
 const fontOf = (id) => FONTS.find((f) => f.id === (id || UI.font)) || FONTS[0];
 const fontFamily = () => `"${fontOf().family}", "Noto Sans KR", system-ui, sans-serif`;
 const accentColor = () => (ACCENTS[UI.accent] || ACCENTS.lime).color;
-const fontStr = (weight, size) => `${weight} ${size}px ${fontFamily()}`;
+
+/* ---------- 글씨 두께 ----------
+   틀마다 쓰는 굵기(400~900)는 그대로 두고, 고른 두께만큼 통째로 옮겨요.
+   기본값 '굵게 700'은 틀 원래 굵기 그대로라서 지금까지 보던 화면과 같아요. */
+const WEIGHT_CHOICES = [400, 500, 700, 900];
+const WEIGHT_SHIFT = {
+  400: { 400: 400, 500: 400, 600: 400, 700: 400, 800: 500, 900: 600 },
+  500: { 400: 400, 500: 500, 600: 500, 700: 500, 800: 600, 900: 700 },
+  900: { 400: 600, 500: 700, 600: 800, 700: 900, 800: 900, 900: 900 },
+};
+function tw(base) {
+  const sel = UI.weight || 700;
+  const b = clamp(Math.round((Number(base) || 700) / 100) * 100, 400, 900);
+  if (sel === 700) return b;
+  const row = WEIGHT_SHIFT[sel];
+  return (row && row[b]) || b;
+}
+const fontStr = (weight, size) => `${tw(weight)} ${size}px ${fontFamily()}`;
+
+/* ---------- 자간 ----------
+   글자를 한 자씩 직접 그려서 미리보기·저장 영상이 100% 똑같이 나와요.
+   (ctx.letterSpacing이 없는 iOS 16~17.3 사파리에서도 그대로 동작합니다) */
+const spacingNow = () => UI.spacing || 0;
+const charsOf = (s) => Array.from(String(s == null ? '' : s));
+function eachChar(ctx, str, x, sp, fn) {
+  let cx = x;
+  const run = charsOf(str);
+  for (let i = 0; i < run.length; i += 1) {
+    const c = run[i];
+    const w = ctx.measureText(c).width;
+    fn(c, cx);
+    cx += w + sp;
+  }
+  return cx;
+}
+function measureSpaced(ctx, str, sp) {
+  if (!sp) return ctx.measureText(str).width;
+  const run = charsOf(str);
+  if (run.length < 2) return ctx.measureText(str).width;
+  let w = 0;
+  for (let i = 0; i < run.length; i += 1) w += ctx.measureText(run[i]).width;
+  return w + sp * (run.length - 1);
+}
+const widthOf = (ctx, str) => measureSpaced(ctx, str, spacingNow());
+// 자간만 바꿔 글자 단위로 채우기 (fillText 대신 사용)
+function fillTxt(ctx, str, x, y) {
+  const sp = spacingNow();
+  if (!sp) { ctx.fillText(str, x, y); return; }
+  eachChar(ctx, str, x, sp, (c, xx) => ctx.fillText(c, xx, y));
+}
+// '아주 굵게'는 900 굵기 위에 획을 아주 조금 더해, 900 파일이 없는 폰트에서도 확실히 굵어 보이게
+function fauxPx(size, weight) {
+  if (UI.weight !== 900 || tw(weight) < 900) return 0;
+  return size * (fontOf().single ? 0.008 : 0.014);
+}
 
 // 폰트 파일이 실제로 준비될 때까지 기다립니다 (캔버스는 자동으로 불러오지 않아요)
-async function ensureFont(id = UI.font, weights = [400, 700, 800, 900]) {
+async function ensureFont(id = UI.font, weights = [400, 500, 600, 700, 800, 900]) {
   const f = fontOf(id);
   if (!document.fonts || !document.fonts.load) return false;
   try {
@@ -492,8 +584,8 @@ function drawTracked(ctx, str, x, y, opt = {}) {
 }
 function truncate(ctx, str, maxW) {
   let s = String(str == null ? '' : str);
-  if (ctx.measureText(s).width <= maxW) return s;
-  while (s.length > 1 && ctx.measureText(s + '…').width > maxW) s = s.slice(0, -1);
+  if (widthOf(ctx, s) <= maxW) return s;
+  while (s.length > 1 && widthOf(ctx, s + '…') > maxW) s = s.slice(0, -1);
   return s + '…';
 }
 
@@ -505,7 +597,8 @@ function parsePara(para) {
   let acc = false, cur = '', sp = false;
   const push = () => { if (cur) { tokens.push({ t: cur, a: acc, sp }); cur = ''; sp = false; } };
   for (const ch of String(para)) {
-    if (ch === '*') { push(); acc = !acc; sp = false; continue; }
+    // 별표 앞의 띄어쓰기는 그대로 살립니다 ("수납도 *예쁘게*" → 수납도 / 예쁘게)
+    if (ch === '*') { if (cur) push(); acc = !acc; continue; }
     if (/\s/.test(ch)) { push(); sp = true; continue; }
     cur += ch;
   }
@@ -521,25 +614,26 @@ function parseRich(text) {
 }
 function layoutRich(ctx, text, size, weight, maxW) {
   ctx.font = fontStr(weight, size);
-  const space = ctx.measureText(' ').width * 1.02;
+  const sp = spacingNow();
+  const space = ctx.measureText(' ').width * 1.02 + sp;
   const lines = [];
   const pushLine = (cur, curW) => lines.push({ words: cur, width: curW });
   for (const para of parseRich(text)) {
     if (!para.length) { lines.push({ words: [], width: 0, gap: true }); continue; }
     let cur = [], curW = 0;
     for (const w of para) {
-      let ww = ctx.measureText(w.t).width;
+      let ww = measureSpaced(ctx, w.t, sp);
       if (cur.length && curW + (w.sp ? space : 0) + ww > maxW) { pushLine(cur, curW); cur = []; curW = 0; }
       if (!cur.length && ww > maxW) {
         // 한 단어가 한 줄보다 길면 글자 단위로 쪼갭니다
         let chunk = '';
         for (const ch of w.t) {
-          if (chunk && ctx.measureText(chunk + ch).width > maxW) {
-            pushLine([{ t: chunk, a: w.a, sp: false }], ctx.measureText(chunk).width);
+          if (chunk && measureSpaced(ctx, chunk + ch, sp) > maxW) {
+            pushLine([{ t: chunk, a: w.a, sp: false }], measureSpaced(ctx, chunk, sp));
             chunk = ch;
           } else chunk += ch;
         }
-        ww = ctx.measureText(chunk).width;
+        ww = measureSpaced(ctx, chunk, sp);
         cur = [{ t: chunk, a: w.a, sp: false }]; curW = ww;
         continue;
       }
@@ -586,6 +680,8 @@ function drawRich(ctx, text, opt = {}) {
 
   ctx.textBaseline = 'top';
   ctx.textAlign = 'left';
+  const sp = spacingNow();
+  const fb = fauxPx(size, weight);
   let cy = y0;
   for (const line of lines) {
     if (line.gap) { cy += lh * 0.55; continue; }
@@ -593,8 +689,10 @@ function drawRich(ctx, text, opt = {}) {
     line.words.forEach((w, i) => {
       if (i > 0 && w.sp) cx += space;
       ctx.font = fontStr(weight, size);
-      const ww = ctx.measureText(w.t).width;
+      const ww = measureSpaced(ctx, w.t, sp);
       const ty = cy + (lh - size) / 2;
+      // 자간이 있으면 글자 하나씩, 없으면 한 번에 그립니다 (결과는 같아요)
+      const run = (fn) => (sp ? eachChar(ctx, w.t, cx, sp, (c, xx) => fn(c, xx, ty)) : fn(w.t, cx, ty));
       if (stroke) {
         ctx.save();
         ctx.lineJoin = 'round';
@@ -602,7 +700,7 @@ function drawRich(ctx, text, opt = {}) {
         ctx.lineWidth = Math.max(2, size * 0.085);
         ctx.strokeStyle = 'rgba(0,0,0,0.55)';
         if (shadow) { ctx.shadowColor = 'rgba(0,0,0,0.45)'; ctx.shadowBlur = shadow; ctx.shadowOffsetY = size * 0.06; }
-        ctx.strokeText(w.t, cx, ty);
+        run((t, xx, yy) => ctx.strokeText(t, xx, yy));
         ctx.restore();
       } else if (shadow) {
         ctx.save();
@@ -610,11 +708,22 @@ function drawRich(ctx, text, opt = {}) {
         ctx.shadowBlur = shadow;
         ctx.shadowOffsetY = size * 0.06;
         ctx.fillStyle = w.a ? accent : color;
-        ctx.fillText(w.t, cx, ty);
+        run((t, xx, yy) => ctx.fillText(t, xx, yy));
         ctx.restore();
       }
       ctx.fillStyle = w.a ? accent : color;
-      ctx.fillText(w.t, cx, ty);
+      run((t, xx, yy) => ctx.fillText(t, xx, yy));
+      if (fb) {
+        ctx.save();
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = fb;
+        ctx.strokeStyle = ctx.fillStyle;
+        run((t, xx, yy) => ctx.strokeText(t, xx, yy));
+        ctx.restore();
+      }
       cx += ww;
     });
     cy += lh * lineGap;
@@ -796,8 +905,8 @@ const TEMPLATES = [
         ctx.save();
         ctx.font = fontStr(700, 30);
         const txt = truncate(ctx, t.title, 640);
-        const tw = ctx.measureText(txt).width;
-        const bh = 64, bw = tw + 72;
+        const badgeW = widthOf(ctx, txt);
+        const bh = 64, bw = badgeW + 72;
         const bx = (f.W - bw) / 2, by = 452;
         ctx.globalAlpha = a;
         frostedPanel(ctx, f, bx, by, bw, bh, bh / 2, { tint: 'rgba(255,255,255,0.16)', border: 'rgba(255,255,255,0.3)' });
@@ -806,7 +915,7 @@ const TEMPLATES = [
         ctx.fillStyle = 'rgba(255,255,255,0.97)';
         ctx.font = fontStr(700, 30);
         ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-        ctx.fillText(txt, bx + 50, by + bh / 2 + 1);
+        fillTxt(ctx, txt, bx + 50, by + bh / 2 + 1);
         ctx.restore();
       }
 
@@ -846,12 +955,12 @@ const TEMPLATES = [
       ctx.save();
       ctx.globalAlpha = a0;
       ctx.font = fontStr(800, 28);
-      const bw = Math.min(f.W - 120, ctx.measureText(badge).width + 76);
+      const bw = Math.min(f.W - 120, widthOf(ctx, badge) + 76);
       ctx.fillStyle = 'rgba(255,255,255,0.94)';
       roundRect(ctx, 72, 430, bw, 60, 30); ctx.fill();
       ctx.fillStyle = '#16181f';
       ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-      ctx.fillText(truncate(ctx, badge, bw - 48), 108, 462);
+      fillTxt(ctx, truncate(ctx, badge, bw - 48), 108, 462);
       ctx.restore();
 
       // 훅 (좌측 정렬, 1:1 안전 영역)
@@ -876,20 +985,20 @@ const TEMPLATES = [
         ctx.textAlign = 'left'; ctx.textBaseline = 'top';
         ctx.fillStyle = '#8a8f9a'; ctx.font = fontStr(700, 28);
         if (wasRaw && nowRaw) {
-          ctx.fillText('정가', px + 44, py + 34);
+          fillTxt(ctx, '정가', px + 44, py + 34);
           ctx.fillStyle = '#9a9ea8';
           ctx.font = fontStr(600, 40);
-          const ww = ctx.measureText(wasRaw).width;
-          ctx.fillText(wasRaw, px + 44, py + 76);
+          const ww = widthOf(ctx, wasRaw);
+          fillTxt(ctx, wasRaw, px + 44, py + 76);
           ctx.strokeStyle = '#9a9ea8'; ctx.lineWidth = 3;
           ctx.beginPath(); ctx.moveTo(px + 40, py + 100); ctx.lineTo(px + 48 + ww, py + 100); ctx.stroke();
           ctx.fillStyle = '#6b7180'; ctx.font = fontStr(700, 26);
-          ctx.fillText('지금', px + 44, py + 124);
+          fillTxt(ctx, '지금', px + 44, py + 124);
           ctx.fillStyle = '#16181f'; ctx.font = fontStr(900, 82);
-          ctx.fillText(truncate(ctx, nowRaw, pw - 88), px + 44, py + 158);
+          fillTxt(ctx, truncate(ctx, nowRaw, pw - 88), px + 44, py + 158);
         } else {
           ctx.fillStyle = '#16181f'; ctx.font = fontStr(900, 72);
-          ctx.fillText(truncate(ctx, price, pw - 88), px + 44, py + 60);
+          fillTxt(ctx, truncate(ctx, price, pw - 88), px + 44, py + 60);
         }
         // 포인트 태그
         ctx.save();
@@ -897,7 +1006,7 @@ const TEMPLATES = [
         roundRect(ctx, px + pw - 196, py + 36, 156, 52, 26); ctx.fill();
         ctx.fillStyle = '#14161c'; ctx.font = fontStr(900, 26); ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('내돈내산', px + pw - 118, py + 63);
+        fillTxt(ctx, '내돈내산', px + pw - 118, py + 63);
         ctx.restore();
         ctx.restore();
       }
@@ -929,7 +1038,7 @@ const TEMPLATES = [
         let cur = '';
         for (const w of para.split(' ').filter(Boolean)) {
           const test = cur ? cur + ' ' + w : w;
-          if (ctx.measureText(test).width <= maxW) cur = test;
+          if (widthOf(ctx, test) <= maxW) cur = test;
           else { if (cur) lines.push(cur); cur = w; }
         }
         if (cur) lines.push(cur);
@@ -961,12 +1070,12 @@ const TEMPLATES = [
       ctx.fillText('리', ax + av / 2, ay + av / 2 + 1);
       ctx.textAlign = 'left';
       ctx.fillStyle = '#1A1A22'; ctx.font = fontStr(800, 30);
-      ctx.fillText(String(f.text.channel || 'living.jip').replace(/^@/, ''), ax + av + 20, ay + 22);
+      fillTxt(ctx, String(f.text.channel || 'living.jip').replace(/^@/, ''), ax + av + 20, ay + 22);
       ctx.fillStyle = '#9A9AA8'; ctx.font = fontStr(500, 24);
-      ctx.fillText(f.text.title ? truncate(ctx, f.text.title, bw - 240) : '댓글 · 방금', ax + av + 20, ay + 56);
+      fillTxt(ctx, f.text.title ? truncate(ctx, f.text.title, bw - 240) : '댓글 · 방금', ax + av + 20, ay + 56);
 
       ctx.fillStyle = '#14141A'; ctx.font = fontStr(700, 52); ctx.textBaseline = 'top';
-      lines.slice(0, 3).forEach((l, i) => ctx.fillText(l, bx + 40, by + 150 + i * 74));
+      lines.slice(0, 3).forEach((l, i) => fillTxt(ctx, l, bx + 40, by + 150 + i * 74));
       ctx.restore();
 
       // 답변 자막
@@ -975,7 +1084,7 @@ const TEMPLATES = [
         frostedPanel(ctx, f, px, py, pw, ph, 40, { tint: 'rgba(12,12,18,0.55)', border: 'rgba(255,255,255,0.18)' });
         ctx.fillStyle = accentColor(); ctx.font = fontStr(800, 26);
         ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-        ctx.fillText('REPLY', px + 44, py + 36);
+        fillTxt(ctx, 'REPLY', px + 44, py + 36);
         drawRich(ctx, f.caption, {
           x: px + 44, y: py + 96, size: 54, weight: 700, align: 'left',
           maxW: pw - 88, maxLines: 3, lineHeight: 1.34,
@@ -1037,7 +1146,7 @@ const TEMPLATES = [
         ctx.textAlign = 'left';
         ctx.fillStyle = on ? '#16181f' : '#8a8f9a';
         ctx.font = fontStr(on ? 800 : 600, 44);
-        ctx.fillText(truncate(ctx, it, w - 190), x + 140, ry + 42);
+        fillTxt(ctx, truncate(ctx, it, w - 190), x + 140, ry + 42);
         if (i < items.length - 1) {
           ctx.strokeStyle = 'rgba(20,22,28,0.08)'; ctx.lineWidth = 2;
           ctx.beginPath(); ctx.moveTo(x + 52, ry + 96); ctx.lineTo(x + w - 52, ry + 96); ctx.stroke();
@@ -1166,6 +1275,89 @@ const TEMPLATES = [
       drawCaptionArea(ctx, f, { bottom: f.H - 380, size: 56, weight: 700, maxLines: 2, maxW: f.W * 0.78 });
     },
   },
+  {
+    id: 'label-item',
+    name: '🛒 형광라벨 템소개',
+    label: '템소개·추천',
+    cats: ['review', 'living', 'info'],
+    tagBg: '#ecffd6', tagFg: '#3d7a00',
+    isNew: true,
+    trend: '요즘 뜨는 "1. 2. 3." 형광 라벨 아이템 소개 릴스',
+    desc: '사진은 그대로 두고, 위에 형광 라벨 하나 · 아래에 흰 자막 하나. 라벨만 바꿔 끼우면 아이템이 1·2·3 순서로 소개돼요.',
+    tips: '자막 칸에 "2. 룸 슬리퍼 | 발이 편한 슬리퍼"처럼 쓰면 위 형광 라벨과 아래 흰 자막이 따로 나와요. 한 줄만 쓰면 위에는 훅 문구, 아래에는 그 자막이 들어가요.',
+    sample: { hook: '1. 로프 수납바구니', title: '', items: '', price: '', channel: 'living.pick' },
+    sampleCaptions: ['수납도 예쁘게 하고 싶다면 추천!', '욕실·주방 어디든 잘 어울려요', '만원대라 부담도 없어요'],
+    draw(ctx, f) {
+      drawFullFrame(ctx, f);
+      // 사진은 살리고, 아래 흰 자막이 읽히도록 아래쪽만 살짝 어둡게
+      const g = ctx.createLinearGradient(0, f.H - 780, 0, f.H);
+      g.addColorStop(0, 'rgba(0,0,0,0)');
+      g.addColorStop(1, 'rgba(0,0,0,0.34)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, f.H - 780, f.W, 780);
+
+      // 자막의 "라벨 | 자막" 문법을 읽어요
+      const raw = String(f.caption || '').trim();
+      const pipe = raw.split('|').map((s) => s.trim());
+      const hookPipe = String(f.text.hook || '').split('|').map((s) => s.trim());
+      let label = '';
+      let sub = raw;
+      if (pipe.length > 1) {
+        label = pipe[0];
+        sub = pipe.slice(1).join(' ').trim();
+      }
+      if (!label) {
+        label = hookPipe[0] || String(f.text.title || '').trim();
+        if (hookPipe.length > 1 && !sub) sub = hookPipe.slice(1).join(' ').trim();
+      }
+      // 클립이 여러 개면 라벨 앞에 순서를 붙여 줍니다 (이미 1. 처럼 썼으면 그대로)
+      if (label && pipe.length > 1 && (f.clipCount || 0) > 1 && (f.captionLines || 1) === 1 && !/^\d+[.)]/.test(label)) {
+        label = `${(f.clipIndex || 0) + 1}. ${label}`;
+      }
+
+      // 1) 위쪽 형광 라벨 (1:1 피드 썸네일 안쪽 · 상단 UI 아래)
+      if (label) {
+        const size = 60, lh = size * 1.24, padX = 54, padY = 26;
+        const innerMax = f.W - 72 - padX * 2;
+        ctx.font = fontStr(900, size);
+        const lay = layoutRich(ctx, label, size, 900, innerMax);
+        const rows = lay.lines.slice(0, 2);
+        const widest = rows.reduce((m, l) => Math.max(m, l.width), 0);
+        const bh = rows.length * lh + padY * 2;
+        const bw = Math.min(f.W - 72, widest + padX * 2);
+        const bx = (f.W - bw) / 2;
+        const by = Math.round(f.H * 0.22);
+        const a = ease(f.t / 0.42);
+        ctx.save();
+        ctx.globalAlpha = a;
+        ctx.translate(0, (1 - a) * -22);
+        ctx.save();
+        ctx.shadowColor = 'rgba(0,0,0,0.26)';
+        ctx.shadowBlur = 30;
+        ctx.shadowOffsetY = 10;
+        ctx.fillStyle = '#D4FF32';
+        roundRect(ctx, bx, by, bw, bh, 6);
+        ctx.fill();
+        ctx.restore();
+        drawRich(ctx, label, {
+          x: f.W / 2, y: by + padY, size, weight: 900, align: 'center',
+          maxW: bw - padX * 2 + 2, maxLines: 2, lineHeight: 1.24,
+          color: '#12140b', accent: '#12140b', stroke: false, shadow: 0,
+        });
+        ctx.restore();
+      }
+
+      // 2) 아래쪽 흰 자막 (하단 UI 바로 위 · 얇은 그림자만)
+      if (sub) {
+        drawRich(ctx, sub, {
+          x: f.W / 2, bottom: Math.round(f.H * 0.795), size: 56, weight: 700, align: 'center',
+          maxW: f.W * 0.82, maxLines: 2, lineHeight: 1.32,
+          color: '#FFFFFF', stroke: false, shadow: 18,
+          opacity: Math.min(1, 0.32 + f.captionP * 6),
+        });
+      }
+    },
+  },
 ];
 
 TEMPLATES.forEach((t) => { t.W = t.W || 1080; t.H = t.H || 1920; });
@@ -1174,10 +1366,10 @@ function recommend(srcW, srcH, duration) {
   const vertical = srcH >= srcW;
   const d = duration || 0;
   const order = d <= 15
-    ? ['qna', 'neon-hook', 'deal-review', 'info30', 'step3', 'vlog-film']
+    ? ['qna', 'label-item', 'neon-hook', 'deal-review', 'info30', 'step3', 'vlog-film']
     : d <= 45
-      ? ['info30', 'deal-review', 'step3', 'qna', 'neon-hook', 'vlog-film']
-      : ['vlog-film', 'info30', 'step3', 'deal-review', 'qna', 'neon-hook'];
+      ? ['info30', 'deal-review', 'label-item', 'step3', 'qna', 'neon-hook', 'vlog-film']
+      : ['vlog-film', 'info30', 'step3', 'deal-review', 'qna', 'label-item', 'neon-hook'];
   return order.map((id) => TEMPLATES.find((t) => t.id === id)).filter(Boolean)
     .map((t, i) => ({
       ...t,
@@ -1344,7 +1536,7 @@ function renderFonts() {
     b.className = 'fchip' + (f.custom ? ' custom' : '');
     b.dataset.fontId = f.id;
     b.setAttribute('aria-pressed', String(UI.font === f.id));
-    b.innerHTML = `<span class="sample" style="font-family:'${f.family}','Noto Sans KR',sans-serif">${esc(f.sample)}</span>
+    b.innerHTML = `<span class="sample" style="font-family:'${f.family}','Noto Sans KR',sans-serif;font-weight:${UI.weight}">${esc(f.sample)}</span>
       <span class="fname">${esc(f.name)}</span>
       <span class="fnote${f.top ? ' best' : ''}">${esc(fontTag(f))}</span>`;
     b.onclick = () => pickFont(f);
@@ -1659,6 +1851,42 @@ $('srtInput').addEventListener('change', async (e) => {
     toast('자막 파일을 읽지 못했어요. 다시 시도해 주세요', 4000);
   }
 });
+/* ---------- 글씨 두께 · 자간 ---------- */
+const WEIGHT_NAME = { 400: '보통', 500: '중간', 700: '굵게', 900: '아주 굵게' };
+function paintWeightRow() {
+  document.querySelectorAll('#weightRow .segbutton').forEach((b) => {
+    b.setAttribute('aria-pressed', String(Number(b.dataset.weight) === UI.weight));
+  });
+}
+function paintTrackRow() {
+  $('trackRange').value = String(UI.spacing);
+  $('trackOut').textContent = `${UI.spacing > 0 ? '+' : ''}${UI.spacing}px`;
+  document.querySelectorAll('#trackChips .segbutton').forEach((b) => {
+    b.setAttribute('aria-pressed', String(Number(b.dataset.track) === UI.spacing));
+  });
+}
+async function setWeight(w) {
+  if (!WEIGHT_CHOICES.includes(w)) return;
+  UI.weight = w;
+  paintWeightRow();
+  renderFonts();
+  renderNow();
+  await ensureFont(UI.font);
+  renderNow();
+}
+function setSpacing(v) {
+  UI.spacing = clamp(Math.round(Number(v) || 0), -4, 6);
+  paintTrackRow();
+  renderNow();
+}
+document.querySelectorAll('#weightRow .segbutton').forEach((b) => {
+  b.onclick = () => setWeight(Number(b.dataset.weight));
+});
+document.querySelectorAll('#trackChips .segbutton').forEach((b) => {
+  b.onclick = () => setSpacing(Number(b.dataset.track));
+});
+$('trackRange').addEventListener('input', (e) => setSpacing(e.target.value));
+
 /* ---------- 자막 스타일 ---------- */
 document.querySelectorAll('#capStyle .segbutton').forEach((b) => {
   b.onclick = () => {
@@ -1704,6 +1932,7 @@ function select(t) {
   $('itemsField').hidden = !(t.id === 'step3');
   $('priceField').hidden = !(t.id === 'deal-review');
   applySamples(t, false);
+  if (state.clips.length) renderClips();
   const c = $('preview');
   c.width = t.W / 3;
   c.height = t.H / 3;
@@ -1749,10 +1978,15 @@ function fillExamples() {
 $('btnExample').onclick = fillExamples;
 
 /* ---------- 클립 목록 ---------- */
+function clipPlaceholder() {
+  if (state.selected && state.selected.id === 'label-item') return '라벨 | 자막 · 예: 2. 룸 슬리퍼 | 발이 편한 슬리퍼';
+  return '이 영상에서 나올 자막 · 줄바꿈하면 순서대로';
+}
 function renderClips() {
   const wrap = $('clips');
   wrap.innerHTML = '';
   if (!state.clips.length) { $('clipTotal').hidden = true; return; }
+  const ph = clipPlaceholder();
   state.clips.forEach((c, i) => {
     const row = document.createElement('div');
     row.className = 'clip' + (i === previewIdx ? ' active' : '');
@@ -1768,7 +2002,7 @@ function renderClips() {
           <button class="iconbtn" data-move="1" type="button" aria-label="아래로"${i === state.clips.length - 1 ? ' disabled' : ''}>↓</button>
           <button class="iconbtn del" data-del type="button" aria-label="삭제">✕</button>
         </div>
-        <textarea rows="2" placeholder="이 영상에서 나올 자막 · 줄바꿈하면 순서대로">${esc(c.captions)}</textarea>
+        <textarea rows="2" placeholder="${ph}">${esc(c.captions)}</textarea>
       </div>`;
     const ta = row.querySelector('textarea');
     ta.addEventListener('input', (e) => { c.captions = e.target.value; autoGrow(ta); });
@@ -1964,7 +2198,8 @@ function renderRail() {
     const c = document.createElement('canvas');
     c.width = Math.round(t.W * scale);
     c.height = Math.round(t.H * scale);
-    b.innerHTML = `${t.recommended ? '<span class="badge">추천</span>' : ''}<span class="thumb"></span>
+    const flag = t.isNew ? '<span class="badge new-badge">NEW</span>' : t.recommended ? '<span class="badge">추천</span>' : '';
+    b.innerHTML = `${flag}<span class="thumb"></span>
       <span class="tag" style="background:${t.tagBg};color:${t.tagFg}">${t.label}</span>
       <span class="name">${t.name}</span>`;
     b.querySelector('.thumb').appendChild(c);
@@ -1985,11 +2220,13 @@ document.querySelectorAll('.chip[data-filter]').forEach((b) => (b.onclick = () =
 
 /* ---------- 프레임 ---------- */
 function buildFrame(template, clip, t, dur) {
-  const cap = captionFor(clipLines(clip), t, dur);
+  const lines = clipLines(clip);
+  const cap = captionFor(lines, t, dur);
   return {
     src: clip.video, srcW: clip.video.videoWidth || 1080, srcH: clip.video.videoHeight || 1920,
     t, duration: dur, W: template.W, H: template.H,
     text: readText(), caption: cap.text, captionP: cap.p,
+    clipIndex: Math.max(0, state.clips.indexOf(clip)), clipCount: state.clips.length, captionLines: lines.length,
   };
 }
 // 아직 아무것도 입력하지 않았으면 틀마다 자기 예시 문구로 보여 줍니다
@@ -2009,6 +2246,7 @@ function sampleFrame(template) {
     t: sec, duration: LOOP, W: template.W, H: template.H,
     text: textFor(template),
     caption: cap.text, captionP: cap.p,
+    clipIndex: 0, clipCount: state.clips.length, captionLines: lines.length,
   };
 }
 function frameFor(template) {
@@ -2267,7 +2505,7 @@ async function startRender() {
   $('btnStop').onclick = () => ac.abort();
 
   try {
-    await ensureFont(UI.font, [400, 700, 800, 900]);
+    await ensureFont(UI.font);
     const blob = await renderMovie({
       template: state.selected,
       onProgress: (p) => {
@@ -2453,6 +2691,8 @@ function showResult(blob) {
   $('outDesc').textContent = [String(text.hook || '').replace(/\*/g, '').replace(/\n/g, ' '), tags].filter(Boolean).join('\n\n');
 
   const chips = [fontOf().name, UI.captionStyle === 'bar' ? '반투명 바 자막' : '외곽선 자막', ACCENTS[UI.accent].name + ' 포인트'];
+  if (UI.weight !== 700) chips.push(`두께 ${WEIGHT_NAME[UI.weight]} ${UI.weight}`);
+  if (UI.spacing) chips.push(`자간 ${UI.spacing > 0 ? '+' : ''}${UI.spacing}px`);
   const vp = VOICES[state.voicePreset];
   chips.push(state.voiceBuffer ? `보이스 · ${state.voiceName.slice(0, 16)}` : `보이스 톤 · ${vp.name}`);
   const bg = BGMS.find((b) => b.id === state.bgm);
@@ -2533,6 +2773,8 @@ document.addEventListener('click', async (e) => {
 /* ---------- 시작 ---------- */
 renderFonts();
 renderBgm();
+paintWeightRow();
+paintTrackRow();
 $('voiceRate').value = String(VOICES[state.voicePreset].rate);
 $('voiceRateOut').textContent = `${VOICES[state.voicePreset].rate.toFixed(1)}x`;
 $('bgmVol').value = String(state.bgmVol);
