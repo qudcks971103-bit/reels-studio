@@ -314,11 +314,13 @@ input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border: 3px s
       </div>
       <p class="mini">기기 음성으로 <b>말 빠르기만</b> 미리 들어보는 기능이에요. 실제 샤갈(애덤) 보이스는 아래에 음성 파일을 올리면 그대로 입혀져요.</p>
 
-      <label class="audiofile" id="voicePick">
-        <input id="voiceInput" type="file" accept="audio/*,.mp3,.m4a,.wav,.aac,.ogg" hidden>
-        <span class="af-main"><strong id="voiceName">AI 보이스 파일 올리기</strong><small id="voiceSub">캡컷(애덤)·타입캐스트·브루에서 뽑은 MP3/M4A</small></span>
+      <div style="display:flex;gap:8px;align-items:stretch">
+        <label class="audiofile" id="voicePick" style="flex:1">
+          <input id="voiceInput" type="file" accept="audio/*,.mp3,.m4a,.wav,.aac,.ogg" hidden>
+          <span class="af-main"><strong id="voiceName">AI 보이스 파일 올리기</strong><small id="voiceSub">캡컷(애덤)·타입캐스트·브루에서 뽑은 MP3/M4A</small></span>
+        </label>
         <button class="tbtn" id="btnVoiceClear" type="button" hidden>빼기</button>
-      </label>
+      </div>
       <div class="slider-row"><span>보이스 배속</span><input type="range" id="voiceRate" min="0.8" max="1.6" step="0.05" value="1"><output id="voiceRateOut">1.0x</output></div>
       <div class="slider-row"><span>보이스 볼륨</span><input type="range" id="voiceVol" min="0" max="1.5" step="0.01" value="1"><output id="voiceVolOut">100%</output></div>
       <div class="linkrow">AI 보이스 만들기:
