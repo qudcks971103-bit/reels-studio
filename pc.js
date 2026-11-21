@@ -43,6 +43,13 @@
     { id: 'singleday', family: 'Single Day' },
     { id: 'dohyeon', family: 'Do Hyeon' },
     { id: 'score', family: 'S-CoreDream' },
+    /* 클로드4 실측 3종용 눈누 폰트 (fonts.css) */
+    { id: 'nanumbarun', family: 'NanumBarunGothic' },
+    { id: 'nanumcoding', family: 'NanumGothicCoding' },
+    { id: 'kkubulim', family: 'BM Kkubulim' },
+    { id: 'wavvepado', family: 'Wavve PADO' },
+    { id: 'dangdang', family: 'Cafe24 Dangdanghae' },
+    { id: 'kukdae', family: 'SDKukdetopokki' },
   ];
 
   const state = {
@@ -893,6 +900,65 @@
         a.fx('flash', 3.8, 0.4); a.fx('flash', 7.4, 0.4); a.fx('flash', 11.4, 0.4);
         a.fx('marker', 7.4, 3.6);
         a.fx('vignette', 0, 15, 0.28);
+      },
+    },
+    {
+      /* 클로드4 실측 ① — 노랑 훅 + "N. 제품명" 섹션 + 말 자막 (따뜻·밝게) */
+      id: 'review3', name: '💛 리뷰 BEST 3 (클로드4 실측)', desc: '노랑 훅 → 1·2·3 제품 섹션 + 말 자막 · 30초',
+      ratio: '9:16', len: 30, bgm: 'hook',
+      frame: { top: '리뷰 BEST 3', footer: '' },
+      build(a) {
+        a.video(0, 10, 0); a.video(10, 10, 1); a.video(20, 10, 2);
+        a.text(0.1, 2.9, '리뷰 BEST 3', { style: 'butter', font: 'kukdae', spacing: 0, size: 150, weight: 900, y: 0.5, maxLines: 1 });
+        a.text(3.1, 3.4, '1. 수분 크림', { style: 'boldOutline', font: 'dangdang', spacing: 0, size: 96, weight: 900, y: 0.76, maxLines: 1 });
+        a.text(6.6, 3.4, '바르면 촉촉, 다음 날까지', { style: 'cream', font: 'wavvepado', spacing: -1, size: 72, weight: 700, y: 0.76, maxLines: 2 });
+        a.text(10.1, 3.4, '2. 진정 앰플', { style: 'boldOutline', font: 'dangdang', spacing: 0, size: 96, weight: 900, y: 0.76, maxLines: 1 });
+        a.text(13.6, 3.4, '열감 싹 잡아주는 한 방울', { style: 'cream', font: 'wavvepado', spacing: -1, size: 72, weight: 700, y: 0.76, maxLines: 2 });
+        a.text(17.1, 3.4, '3. 수분 패드', { style: 'boldOutline', font: 'dangdang', spacing: 0, size: 96, weight: 900, y: 0.76, maxLines: 1 });
+        a.text(20.6, 3.4, '가성비 생각하면 이게 1등', { style: 'cream', font: 'wavvepado', spacing: -1, size: 72, weight: 700, y: 0.76, maxLines: 2 });
+        a.text(27.0, 2.6, '댓글에 번호 남겨 주세요', { style: 'butter', font: 'wavvepado', spacing: 0, size: 66, weight: 700, y: 0.8, maxLines: 1 });
+        a.fx('zoom', 0, 30, 0.06);
+        a.fx('flash', 3.0, 0.3); a.fx('flash', 10.0, 0.3); a.fx('flash', 17.0, 0.3);
+      },
+    },
+    {
+      /* 클로드4 실측 ② — 2줄 제목 고정 + 흰 각진 박스 자막 + 📢 ASMR 📢 */
+      id: 'asmrbox', name: '🍠 ASMR 박스 (클로드4 실측)', desc: '2줄 제목 고정 + 각진 흰 박스 자막 · 17초',
+      ratio: '9:16', len: 17, bgm: 'chill',
+      frame: { top: '', footer: '' },
+      build(a) {
+        a.video(0, 5, 0, 0.04); a.video(5, 6, 1, 0.04); a.video(11, 6, 2, 0.04);
+        a.text(0.0, 17, '봉 뜯자마자\n바삭 소리 🍠', { style: 'boldOutline', font: 'kkubulim', spacing: 0, size: 93, weight: 800, y: 0.095, maxLines: 2 });
+        a.text(0.2, 5.4, '한 봉에 1,800원이에요', { style: 'whiteBox', font: 'nanumcoding', spacing: 0, size: 33, weight: 700, y: 0.66, maxLines: 2 });
+        a.text(5.6, 5.4, '소리가 진짜 다르죠', { style: 'whiteBox', font: 'nanumcoding', spacing: 0, size: 33, weight: 700, y: 0.66, maxLines: 2 });
+        a.text(10.8, 6.0, '한입에 다 못 먹어요', { style: 'whiteBox', font: 'nanumcoding', spacing: 0, size: 33, weight: 700, y: 0.66, maxLines: 2 });
+        a.text(0.0, 17, '📢 ASMR 📢', { style: 'outline', font: 'kkubulim', spacing: 0, size: 64, weight: 700, y: 0.585, maxLines: 1 });
+        a.fx('zoom', 0, 17, 0.05);
+        a.fx('vignette', 0, 17, 0.2);
+      },
+    },
+    {
+      /* 클로드4 실측 ③ — 3초 타자 인트로 + 라임 번호 라벨 (매트 톤) */
+      id: 'interior3', name: '🪴 인테리어 찐템 (클로드4 실측)', desc: '3초 타자 인트로 + 라임 번호·제품명·한줄평 · 16초',
+      ratio: '9:16', len: 16, bgm: 'vlog',
+      frame: { top: '', footer: 'living.plant' },
+      build(a) {
+        a.video(0, 4, 0, 0.03); a.video(4, 4, 1, 0.03); a.video(8, 4, 2, 0.03); a.video(12, 4, 0, 0.03);
+        a.text(0.0, 3.0, '3년째', { style: 'outline', font: 'nanumbarun', spacing: 12, size: 128, weight: 700, y: 0.36, maxLines: 1 });
+        a.text(0.0, 3.0, '잘쓰고있는', { style: 'outline', font: 'gmarket', spacing: 0, size: 75, weight: 500, y: 0.44, maxLines: 1 });
+        a.text(0.3, 2.7, '찐템을 소개합니다', { style: 'outline', font: 'nanumbarun', spacing: 0, size: 124, weight: 700, y: 0.52, maxLines: 1 });
+        a.text(3.1, 3.0, '1. 이케아', { style: 'lime', font: 'nanumbarun', spacing: 0, size: 33, weight: 700, y: 0.49, maxLines: 1 });
+        a.text(3.1, 3.0, '원목 수납장', { style: 'outline', font: 'gmarket', spacing: 0, size: 33, weight: 500, y: 0.535, maxLines: 1 });
+        a.text(3.1, 3.0, '3년째 안 바꿔요', { style: 'whiteBox', font: 'nanumbarun', spacing: 0, size: 23, weight: 700, y: 0.565, maxLines: 2 });
+        a.text(6.1, 3.0, '2. 무인양품', { style: 'lime', font: 'nanumbarun', spacing: 0, size: 33, weight: 700, y: 0.49, maxLines: 1 });
+        a.text(6.1, 3.0, '라탄 바구니', { style: 'outline', font: 'gmarket', spacing: 0, size: 33, weight: 500, y: 0.535, maxLines: 1 });
+        a.text(6.1, 3.0, '수납이 예뻐져요', { style: 'whiteBox', font: 'nanumbarun', spacing: 0, size: 23, weight: 700, y: 0.565, maxLines: 2 });
+        a.text(9.1, 3.0, '3. 한샘', { style: 'lime', font: 'nanumbarun', spacing: 0, size: 33, weight: 700, y: 0.49, maxLines: 1 });
+        a.text(9.1, 3.0, '조명 스탠드', { style: 'outline', font: 'gmarket', spacing: 0, size: 33, weight: 500, y: 0.535, maxLines: 1 });
+        a.text(9.1, 3.0, '저녁마다 켜두고 살아요', { style: 'whiteBox', font: 'nanumbarun', spacing: 0, size: 23, weight: 700, y: 0.565, maxLines: 2 });
+        a.text(12.1, 3.4, '이 셋이면 방이 달라져요', { style: 'whiteBox', font: 'nanumbarun', spacing: 0, size: 30, weight: 700, y: 0.72, maxLines: 2 });
+        a.fx('zoom', 0, 16, 0.04);
+        a.fx('vignette', 0, 16, 0.18);
       },
     },
     {

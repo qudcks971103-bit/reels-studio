@@ -331,12 +331,47 @@
       state.voicePreset = 'hype'; state.voiceRate = VOICES.hype.rate;
       await ensureFont(UI.font); refreshSans(); renderBgm();
       toast('무자막 클로즈업 · 자막 없이 제품만 + 줌인 + 팝 BGM(hook)', 4200);
+    } else if (kind === 'review3') {
+      /* 클로드4 실측 ① 쿠팡 뷰티템 리뷰 — R2 리스트 + R1 말하기 */
+      UI.font = 'wavvepado'; UI.weight = 700; UI.spacing = -1;
+      UI.captionStyle = 'outline'; UI.accent = 'yellow';
+      const tpl = TEMPLATES.find((t) => t.id === 'review-best3');
+      if (tpl) selectTemplate(tpl, true);
+      if (!$('fHook').value.trim()) $('fHook').value = '쿠팡 뷰티\n*이거 3개*';
+      if (!$('fTitle').value.trim()) $('fTitle').value = '수분 크림';
+      state.bgm = 'hook'; state.bgmVol = Math.max(state.bgmVol, 0.24);
+      await ensureFont(UI.font); refreshSans(); renderBgm();
+      toast('리뷰 BEST 3 · 노랑 훅 + 섹션 제목 + 말 자막 · 따뜻한 톤', 4200);
+    } else if (kind === 'asmr') {
+      /* 클로드4 실측 ② 과자 ASMR — R1 단일 리뷰, 원본 소리 중심 */
+      UI.font = 'kkubulim'; UI.weight = 700; UI.spacing = 0;
+      UI.captionStyle = 'whiteBox'; UI.accent = 'lime';
+      const tpl = TEMPLATES.find((t) => t.id === 'asmr-box');
+      if (tpl) selectTemplate(tpl, true);
+      if (!$('fHook').value.trim()) $('fHook').value = '봉 뜯자마자\n바삭 소리 🍠';
+      state.bgm = 'chill'; state.bgmVol = 0.22;
+      await ensureFont(UI.font); refreshSans(); renderBgm();
+      toast('ASMR 박스 · 2줄 제목 + 각진 흰 박스 자막 + 📢 ASMR 📢', 4200);
+    } else if (kind === 'interior') {
+      /* 클로드4 실측 ③ 인테리어 찐템 — R5 감성 리스트, 3초 박자 */
+      UI.font = 'nanumbarun'; UI.weight = 700; UI.spacing = 1;
+      UI.captionStyle = 'whiteBox'; UI.accent = 'lime';
+      const tpl = TEMPLATES.find((t) => t.id === 'interior-plant');
+      if (tpl) selectTemplate(tpl, true);
+      if (!$('fHook').value.trim()) $('fHook').value = '3년째';
+      state.bgm = 'vlog'; state.bgmVol = Math.max(state.bgmVol, 0.2);
+      state.photoLen = 15;
+      await ensureFont(UI.font); refreshSans(); renderBgm();
+      toast('인테리어 찐템 · 3초 타자 인트로 + 라임 번호 라벨 · 매트 톤', 4200);
     }
     paintUi(); renderNow(); scheduleSave();
   }
   if ($('btnRefStretch')) $('btnRefStretch').onclick = () => applyRefStyle('stretch');
   if ($('btnRefBold')) $('btnRefBold').onclick = () => applyRefStyle('bold');
   if ($('btnRefCloseup')) $('btnRefCloseup').onclick = () => applyRefStyle('closeup');
+  if ($('btnRefReview3')) $('btnRefReview3').onclick = () => applyRefStyle('review3');
+  if ($('btnRefAsmr')) $('btnRefAsmr').onclick = () => applyRefStyle('asmr');
+  if ($('btnRefInterior')) $('btnRefInterior').onclick = () => applyRefStyle('interior');
   function paintUi() {
     paintWeight(); paintTrack();
     document.querySelectorAll('#capStyle .segbtn').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.style === UI.captionStyle)));
@@ -701,6 +736,7 @@
       t: sec, duration: LOOP, W: t.W, H: t.H, text: sampleText(t),
       caption: cap.text, captionP: cap.p, clipIndex: 0, clipCount: state.clips.length,
       captionLines: lines.length, capLines: lines, items: sampleItems(t), deal: sampleDeal(t),
+      sample: true, /* 틀 카드·빈 미리보기 — 틀의 대표 장면(훅·인트로)을 보여 줍니다 */
     };
     f.media = makeFrameMedia(f);
     return f;
@@ -2238,21 +2274,40 @@
     }
   }
   const ARC_TEMPLATE = { R1: 'info30', R2: 'label-item', R3: 'step3', R4: 'deal-review', R5: 'vlog-film' };
-  /* 셋톡 합의 코드(matchType) — 평균 컷 길이만 보는 임시 규칙이라 '추정'입니다. */
-  function matchType(r) { return r.avg < 1.3 ? 'R2' : r.avg < 2.0 ? 'R1' : r.avg < 3 ? 'R3' : 'R5'; }
-  function arcForAvg(avg, dur) {
-    const r = { avg };
-    const arc = matchType(r);
+  /* 셋톡 실측 코드(클로드4 → 클로드, 2026-11-21) — 평균 컷초만 보던 임시 규칙을
+     '컷 길이 편차율(cv)' + '초반 빠른 미리보기 컷(early)'으로 교체했습니다.
+     레퍼런스 3종(① 쿠팡 뷰티 → R2, ② 과자 ASMR → R1, ③ 인테리어 → R5)이 이 규칙으로 맞아요.
+     반환값이 {type, why, est} 객체라 '추정' 배지 옆에 why를 같이 띄웁니다. */
+  function matchType(r) {
+    const all = (Array.isArray(r.shots) ? r.shots : []).filter((x) => Number.isFinite(x) && x > 0);
+    if (!all.length) {
+      /* 컷 목록 없이 평균만 아는 호출(직접 골랐을 때·길이만 입력했을 때)은 예전 평균 규칙으로 */
+      const a = Number(r.avg) || 0;
+      const type = a < 1.3 ? 'R2' : a < 2.0 ? 'R1' : a < 3 ? 'R3' : 'R5';
+      return { type, why: '평균 컷 ' + a.toFixed(1) + '초', est: true };
+    }
+    const s = all.slice(1, -1).length ? all.slice(1, -1) : all;
+    const m = s.reduce((a, b) => a + b, 0) / s.length;
+    const cv = Math.sqrt(s.reduce((a, b) => a + (b - m) ** 2, 0) / s.length) / m; // 컷 길이 편차율
+    const early = all.slice(0, 3).filter((x) => x < 1.4).length; // 앞부분 빠른 미리보기 컷
+    if (cv < 0.12 && m >= 2.5) return { type: 'R5', why: '컷 길이가 거의 일정(박자 컷)', est: true };
+    if (early >= 2 && all.length >= 15) return { type: 'R2', why: '초반 빠른 미리보기 + 컷 많음', est: true };
+    if (m < 2.4) return { type: 'R1', why: '평균 컷 ' + m.toFixed(1) + '초 말·리뷰형', est: true };
+    return { type: 'R3', why: '긴 컷 위주', est: true };
+  }
+  function arcForAvg(avg, dur, shots) {
+    const hit = matchType({ avg, shots });
+    const arc = hit.type;
     const why = {
       R1: '컷 1.3~2초의 정보형 호흡이에요 → 불만·후기로 시작하는 솔직 리뷰(R1)와 가까워요',
-      R2: '컷이 1.3초보다 짧아요 → 수량·아이템을 빠르게 넘기는 리스트·하울(R2)과 가까워요',
+      R2: '초반에 짧은 미리보기 컷이 몰려 있어요 → 아이템을 빠르게 넘기는 리스트·하울(R2)과 가까워요',
       R3: '컷 2~3초로 과정을 보여주는 호흡이에요 → 비포/애프터 3스텝(R3)과 가까워요',
-      R5: '컷이 3초 이상으로 길어요 → 여백과 무드를 살리는 감성 루틴(R5)과 가까워요',
+      R5: '컷 길이가 일정한 박자 컷이에요 → 여백과 무드를 살리는 감성 루틴(R5)과 가까워요',
     }[arc] || '';
     const extra = (avg >= 1.3 && avg < 2.0 && dur <= 25) ? ' 가격·비교 영상이라면 R4도 잘 맞아요(직접 골라 적용할 수 있어요).' : '';
-    return { arc, why: why + extra };
+    return { arc, why: `${why} · ${hit.why}` + extra, est: !!hit.est, type: hit.type };
   }
-  const ARC_EST_NOTE = '평균 컷 길이만 보는 임시 규칙(matchType)이라 <b>추정</b>이에요. 영상 내용·상품·목적까지 보는 판단은 아니니 R칩으로 직접 바꿔 주세요.';
+  const ARC_EST_NOTE = '실측 규칙(컷 길이 편차율 cv + 초반 1.4초 미만 컷 수 early)으로 고른 <b>추정</b>이에요. 편차율이 0.12보다 작고 평균 2.5초 이상이면 R5, 앞 3컷 중 2컷이 1.4초 미만이고 컷이 15개 이상이면 R2, 평균 2.4초 미만이면 R1, 나머지는 R3예요. 영상 내용·상품·목적까지 보는 판단은 아니니 R칩으로 직접 바꿔 주세요.';
   async function runCutAnalysis(file) {
     const bar = $('cutBarWrap'), fill = $('cutBar'), status = $('cutStatus');
     bar.hidden = false; $('cutResult').hidden = true;
@@ -2265,8 +2320,8 @@
           status.textContent = `히스토그램 비교 ${Math.round(p * 100)}%`;
         },
       });
-      const m = arcForAvg(res.avg, res.dur);
-      res.arc = m.arc; res.why = m.why; res.templateId = ARC_TEMPLATE[m.arc];
+      const m = arcForAvg(res.avg, res.dur, res.shots);
+      res.arc = m.arc; res.type = m.type; res.why = m.why; res.templateId = ARC_TEMPLATE[m.arc];
       state.analysis = res;
       fill.style.width = '100%';
       status.textContent = `‘${file.name}’ 분석 완료 · ${res.dur.toFixed(1)}초 · ${res.samples}프레임 샘플 · ${res.fps}fps`;
@@ -2304,7 +2359,7 @@
         : '장면 전환이 거의 없어요 (한 컷 영상) · 훅 컷 <b>없음</b>';
       const longNote = res.longVideo ? ` · 3분 초과라 fps를 ${res.fpsCap} 이하로 자동 낮췄어요` : '';
       const seekNote = res.seekTimeouts ? ` · seek 응답 지연 ${res.seekTimeouts}회(1초 폴백 사용)` : '';
-      $('cutWhy').innerHTML = `<span class="est">추정</span>${esc(res.why)} · 추천 틀 <b>${esc(TEMPLATES.find((t) => t.id === res.templateId).name)}</b>`
+      $('cutWhy').innerHTML = `<span class="est">추정</span><b>${esc(res.type || res.arc)}</b> · ${esc(res.why)} · 추천 틀 <b>${esc(TEMPLATES.find((t) => t.id === res.templateId).name)}</b>`
         + `<br><span class="hint">${ARC_EST_NOTE}</span>`
         + `<br><span class="hint">측정: ${CUT.w}×${CUT.h} 캔버스 · RGB 히스토그램 · 기준 ${res.th} · 0.3초 중복 컷 제거 · ${res.samples}프레임 · ${res.fps}fps${longNote}${seekNote} · 빨간 구간 = 0~3초 훅 체크</span>`;
       $('cutResult').hidden = false;

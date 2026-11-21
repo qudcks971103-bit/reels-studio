@@ -17,7 +17,26 @@ const FONTS = [
   { id: 'gaegu', family: 'Gaegu', name: '개구체', sample: '쭉쭉 늘려줘요', badge: '참고 릴스 손글씨', single: true },
   { id: 'nanumpen', family: 'Nanum Pen Script', name: '나눔 손글씨 펜', sample: '쭉쭉 늘려줘요', badge: '또박또박 펜글씨', single: true },
   { id: 'singleday', family: 'Single Day', name: '싱글 데이', sample: '이거 진짜 대박', badge: '동글동글 손글씨', single: true },
+  /* 클로드4 실측 3종(2026-11-21)에서 쓰는 눈누 폰트 — fonts.css에 CDN으로 내장 */
+  { id: 'nanumbarun', family: 'NanumBarunGothic', name: '나눔바른고딕', sample: '3년째 잘 쓰는템', badge: '실측 인테리어 기본' },
+  { id: 'nanumcoding', family: 'NanumGothicCoding', name: '나눔고딕코딩', sample: '바삭 소리 ASMR', badge: '실측 ASMR 박스', single: true },
+  { id: 'kkubulim', family: 'BM Kkubulim', name: '꾸불림체', sample: '📢 ASMR 📢', badge: '실측 ASMR 제목', single: true },
+  { id: 'wavvepado', family: 'Wavve PADO', name: '웨이브 파도체', sample: '촉촉 루틴 추천', badge: '실측 리뷰 자막', single: true },
+  { id: 'dangdang', family: 'Cafe24 Dangdanghae', name: '카페24 당당해', sample: '1. 제품명', badge: '실측 섹션 제목', single: true },
+  { id: 'kukdae', family: 'SDKukdetopokki', name: '산돌국대떡볶이체', sample: '리뷰 BEST 3', badge: '실측 리뷰 훅', single: true },
 ];
+/* 실측 틀이 쓰는 글꼴 이름 — fonts.css @font-face 와 짝을 이룹니다.
+   CDN이 막히거나 글꼴이 없으면 아래 STACK의 다음 글꼴(내장 한글 폰트)로 자연스럽게 넘어갑니다. */
+const FONT_STACK = {
+  nanumbarun: '"NanumBarunGothic", "Pretendard", "Noto Sans KR", system-ui, sans-serif',
+  nanumcoding: '"NanumGothicCoding", "Nanum Gothic Coding", "Pretendard", "Noto Sans KR", monospace',
+  kkubulim: '"BM Kkubulim", "Jua", "Gaegu", "Pretendard", "Noto Sans KR", sans-serif',
+  wavvepado: '"Wavve PADO", "GmarketSans", "Pretendard", "Noto Sans KR", sans-serif',
+  dangdang: '"Cafe24 Dangdanghae", "Do Hyeon", "Jua", "Pretendard", "Noto Sans KR", sans-serif',
+  kukdae: '"SDKukdetopokki", "Do Hyeon", "Jua", "Pretendard", "Noto Sans KR", sans-serif',
+  gmarket: '"GmarketSans", "Pretendard", "Noto Sans KR", sans-serif',
+  pretendard: '"Pretendard", "Noto Sans KR", system-ui, sans-serif',
+};
 const ACCENTS = {
   lime: { color: '#D7FF3E', name: '라임' },
   yellow: { color: '#FFD84D', name: '노랑' },
@@ -48,8 +67,15 @@ const safeSubBottom = (f) => (f && f.H > f.W ? SAFE.captionLine : f.H - 120);
 
 const SANS_BASE = '"Pretendard", "Noto Sans KR", system-ui, sans-serif';
 let SANS = SANS_BASE;
+/* 틀별 글꼴 지정 — drawRich·layoutRich 가 그리는 순간의 fontFamily()를 따릅니다. */
+let FONT_OVERRIDE = null;
 const fontOf = (id) => FONTS.find((f) => f.id === (id || UI.font)) || FONTS[0];
-const fontFamily = () => `"${fontOf().family}", "Noto Sans KR", system-ui, sans-serif`;
+const fontFamily = () => (FONT_OVERRIDE ? FONT_OVERRIDE : `"${fontOf().family}", "Noto Sans KR", system-ui, sans-serif`);
+function withFont(stack, fn) {
+  const prev = FONT_OVERRIDE;
+  FONT_OVERRIDE = stack || null;
+  try { return fn(); } finally { FONT_OVERRIDE = prev; }
+}
 const accentColor = () => (ACCENTS[UI.accent] || ACCENTS.lime).color;
 /* 포팅한 원본(index.html) 틀들이 쓰는 글꼴도 사용자가 고른 글씨체를 따릅니다 */
 function refreshSans() { SANS = fontFamily(); }
@@ -127,6 +153,35 @@ function fit(srcW, srcH, boxW, boxH, mode) {
 function drawFullFrame(ctx, f) {
   const r = fit(f.srcW, f.srcH, f.W, f.H, 'cover');
   ctx.drawImage(f.src, r.x, r.y, r.w, r.h);
+}
+/* 색감 — 클로드4가 실측한 레퍼런스 톤을 캔버스에 입힙니다.
+   ctx.filter를 지원하면 한 번에, 아니면 옅은 색 오버레이로 근사합니다(iOS 사파리 폴백). */
+const TONE_FILTER = {
+  warmBright: 'saturate(1.05) brightness(1.05) sepia(0.10)',
+  crispWarm: 'saturate(1.15) contrast(1.05) brightness(1.02) sepia(0.06)',
+  matte: 'saturate(0.62) contrast(0.9) brightness(1.06)',
+};
+function drawTonedFrame(ctx, f, tone) {
+  const key = TONE_FILTER[tone] ? tone : null;
+  let canFilter = false;
+  try { canFilter = typeof ctx.filter === 'string'; } catch { canFilter = false; }
+  ctx.save();
+  if (key && canFilter) ctx.filter = TONE_FILTER[key];
+  drawFullFrame(ctx, f);
+  ctx.restore();
+  if (!key || canFilter) return;
+  ctx.save();
+  if (tone === 'matte') {
+    ctx.fillStyle = 'rgba(255,255,255,0.10)';
+    ctx.fillRect(0, 0, f.W, f.H);
+    ctx.fillStyle = 'rgba(126,122,116,0.10)';
+  } else if (tone === 'crispWarm') {
+    ctx.fillStyle = 'rgba(255,186,105,0.07)';
+  } else {
+    ctx.fillStyle = 'rgba(255,198,130,0.06)';
+  }
+  ctx.fillRect(0, 0, f.W, f.H);
+  ctx.restore();
 }
 function roundRect(ctx, x, y, w, h, r) {
   const rr = Math.min(r, Math.abs(w) / 2, Math.abs(h) / 2);
@@ -2441,6 +2496,395 @@ TEMPLATES.push({
         color: '#FFFFFF', stroke: true, strokeW: 3, strokeCol: 'rgba(0,0,0,0.55)',
         shadow: 20, shadowCol: 'rgba(0,0,0,0.4)', maxW: W * 0.8, maxLines: 1,
       });
+      ctx.restore();
+    }
+  },
+});
+
+/* =========================================================================
+   클로드4 실측 3종 (2026-11-21 셋톡 · 1080×1920 프레임 단위 실측 스펙)
+   · P20 💛 리뷰 BEST 3   : 노랑 훅 + "N. 제품명" 섹션 + 말 자막 (따뜻·밝게)
+   · P21 🍠 ASMR 박스      : 2줄 제목 고정 + 흰 각진 박스 자막 + 📢 ASMR 📢
+   · P22 🪴 인테리어 찐템  : 3초 타자 인트로 + 라임 번호/브랜드 라벨 (매트 톤)
+   글꼴은 fonts.css의 눈누 CDN을 먼저 쓰고, 없으면 내장 한글 폰트로 폴백합니다.
+   ========================================================================= */
+
+/* ---------- P20 · 💛 리뷰 BEST 3 ---------- */
+TEMPLATES.push({
+  id: 'review-best3',
+  presetId: 'P20',
+  name: '💛 리뷰 BEST 3',
+  label: '리뷰·BEST 3',
+  platform: 'reels',
+  cats: ['review', 'living', 'info'],
+  arc: 'R2',
+  dur: 30,
+  W: 1080, H: 1920,
+  need: ['price'],
+  tagBg: '#fff9c9', tagFg: '#7a5a00',
+  isNew: true,
+  trend: '클로드4 실측 · 쿠팡 뷰티템 BEST 3 리뷰(컷 30개 · 평균 1.8초)',
+  desc: '노란 훅이 0.1초에 톡 튀고, 컷마다 "1. 제품명" 섹션 제목과 말 자막이 번갈아 들어가요. 리뷰 3개를 한 편에 담을 때 가장 잘 맞아요.',
+  tips: '자막 칸에 "1. 수분 크림 | 바르면 촉촉해요"처럼 쓰면 위에는 섹션 제목, 아래에는 말 자막이 따로 나와요. 한 줄만 쓰면 윗줄은 제목 칸, 아래는 그 자막이 돼요.',
+  sample: { hook: '쿠팡 뷰티\n*이거 3개*', title: '수분 크림', price: '내돈내산 리뷰', items: '', channel: 'beauty.pick' },
+  sampleCaptions: ['바르면 촉촉, 다음 날까지', '가성비 생각하면 이게 1등'],
+  draw(ctx, f) {
+    const W = f.W, H = f.H;
+    const S = Math.min(W / 1080, H / 1920);
+    const px = (v) => Math.round(v * S);
+    drawTonedFrame(ctx, f, 'warmBright');
+    scrimSmooth(ctx, f, px(420), 0.2, true);
+    scrimSmooth(ctx, f, px(460), 0.3, false);
+
+    /* 상단 로고 — 2줄, 오른쪽 끝 x1010 · 위 y300 (영상 내내 고정)
+       채널명에 점이 있으면(review.pick) 점 기준으로 두 줄로 나눕니다. */
+    const chRaw = String(f.text.channel || '').trim().toUpperCase();
+    const logo = chRaw
+      ? (chRaw.split('.').length === 2 ? chRaw.split('.').join('\n') : chRaw)
+      : 'BEST 3';
+    withFont(FONT_STACK.kkubulim, () => {
+      const size = fitRichSize(ctx, logo, px(96), W * 0.46, 2, 900);
+      drawRich(ctx, logo, {
+        x: W - px(70), y: px(300), size, weight: 900, align: 'right', maxW: W * 0.46,
+        color: '#F6E996', stroke: true, strokeW: px(20), strokeCol: '#F6E996', shadow: 0,
+        lineHeight: 1.0, maxLines: 2,
+      });
+      drawRich(ctx, logo, {
+        x: W - px(70), y: px(300), size, weight: 900, align: 'right', maxW: W * 0.46,
+        color: '#FFFFFF', stroke: true, strokeW: px(11), strokeCol: '#3A2620', shadow: 14,
+        shadowCol: 'rgba(0,0,0,0.35)', lineHeight: 1.0, maxLines: 2,
+      });
+    });
+
+    /* 0~3.3초 — 노랑 훅 + 훅 위 작은 줄 + BEST 3 슬라이드
+       (틀 카드·빈 미리보기에서는 틀의 얼굴인 훅을 계속 보여 줍니다) */
+    if ((f.clipIndex || 0) === 0 && (f.sample || (f.t || 0) < 3.3)) {
+      const pop = 1.32 - 0.32 * ease(clamp(((f.t || 0) - 0.1) / 0.17, 0, 1));
+      const small = String(f.text.price || '').trim() || '리뷰 BEST 3';
+      withFont(FONT_STACK.wavvepado, () => {
+        drawRich(ctx, small, {
+          x: W / 2, bottom: px(990), size: px(64), weight: 700, align: 'center',
+          maxW: W * 0.88, color: '#FFFFFF', stroke: true, strokeW: px(4), strokeCol: '#111111',
+          shadow: 12, lineHeight: 1.1, maxLines: 1,
+        });
+      });
+      ctx.save();
+      ctx.translate(W / 2, px(1390));
+      ctx.scale(pop, pop);
+      withFont(FONT_STACK.kukdae, () => {
+        const hook = String(f.text.hook || '').trim() || '리뷰 BEST 3';
+        const size = fitRichSize(ctx, hook, px(200), W * 0.9, 2, 900);
+        drawRich(ctx, hook, {
+          x: 0, bottom: 0, size, weight: 900, align: 'center', maxW: W * 0.9,
+          color: '#FBF972', stroke: true, strokeW: Math.max(6, size * 0.045), strokeCol: '#111111',
+          shadow: 18, shadowCol: 'rgba(0,0,0,0.5)', lineHeight: 0.92, maxLines: 2, accent: '#FFFFFF',
+        });
+      });
+      ctx.restore();
+      if ((f.t || 0) >= 1.75) {
+        const p = ease(clamp(((f.t || 0) - 1.75) / 0.35, 0, 1));
+        const x = -W * 0.22 + (W / 2 + W * 0.22) * p;
+        withFont(FONT_STACK.gmarket, () => {
+          for (let i = 0; i < 3; i += 1) {
+            ctx.save();
+            ctx.globalAlpha = i === 0 ? 1 : 0.16;
+            ctx.translate(x - i * px(18), px(880));
+            ctx.transform(1, 0, -0.2, 1, 0, 0);
+            drawRich(ctx, 'BEST 3', {
+              x: 0, y: 0, size: px(120), weight: 900, align: 'center', maxW: W,
+              color: '#FFFFFF', stroke: true, strokeW: px(10), strokeCol: '#111111',
+              shadow: 10, maxLines: 1, lineHeight: 1,
+            });
+            ctx.restore();
+          }
+        });
+      }
+    }
+
+    /* 섹션 "N. 제품명"(컷 앞 0.9초) ↔ 말 자막 */
+    const raw = String(f.caption || '').trim();
+    const pipe = raw.split('|').map((s) => s.trim());
+    let secTitle = pipe.length > 1 ? pipe[0] : '';
+    let talk = pipe.length > 1 ? pipe.slice(1).join(' ').trim() : raw;
+    if (!secTitle) secTitle = String(f.text.title || '').trim();
+    if (secTitle && !/^\d+[.)]/.test(secTitle)) secTitle = `${(f.clipIndex || 0) + 1}. ${secTitle}`;
+    if (secTitle && (f.t || 0) < 0.9) {
+      /* 컷 앞 0.9초 — "N. 제품명" 섹션 제목 (흰 + 노랑 글로우, 0.15초 슬라이드) */
+      const e = riseIn(f, 0, 0.15);
+      ctx.save();
+      ctx.globalAlpha = e.a;
+      ctx.translate(W / 2, e.dy);
+      ctx.transform(1, 0, -0.18, 1, 0, 0);
+      withFont(FONT_STACK.dangdang, () => {
+        const size = fitRichSize(ctx, secTitle, px(108), W * 0.84, 2, 900);
+        drawRich(ctx, secTitle, {
+          x: 0, bottom: px(1555), size, weight: 900, align: 'center', maxW: W * 0.84,
+          color: '#FFFFFF', stroke: false, shadow: 0, glow: '#F0E23C',
+          lineHeight: 1.06, maxLines: 2,
+        });
+      });
+      ctx.restore();
+    } else if (talk) {
+      withFont(FONT_STACK.wavvepado, () => {
+        const size = px(72);
+        drawRich(ctx, talk, {
+          x: W / 2, bottom: px(1555), size, weight: 700, align: 'center', maxW: W * 0.86,
+          color: '#FFFFFF', stroke: true, strokeW: Math.max(2, size * 0.05), strokeCol: '#3A2620',
+          shadow: 16, shadowCol: 'rgba(0,0,0,0.45)', lineHeight: 1.22, maxLines: 3,
+          accent: '#FBF972', trackingForce: px(-1.5),
+        });
+      });
+    }
+  },
+});
+
+/* ---------- P21 · 🍠 ASMR 박스 ---------- */
+TEMPLATES.push({
+  id: 'asmr-box',
+  presetId: 'P21',
+  name: '🍠 ASMR 박스',
+  label: 'ASMR·과자',
+  platform: 'reels',
+  cats: ['review', 'living'],
+  arc: 'R1',
+  dur: 17,
+  W: 1080, H: 1920,
+  tagBg: '#f2ece4', tagFg: '#4a3a2a',
+  isNew: true,
+  trend: '클로드4 실측 · 과자 ASMR 17.2초(컷 9개 · 평균 1.9초)',
+  desc: '위에는 두 줄 제목만 딱 고정, 아래에는 각진 흰 박스 자막. 제품 옆에서 바삭한 소리를 들려주는 ASMR 릴스에 맞춰요.',
+  tips: '훅 칸에 제목 두 줄을 쓰세요(예: "봉 뜯자마자\n바삭 소리"). 자막은 한 번에 두 줄까지, 컷이 바뀔 때 같이 바뀌어요.',
+  sample: { hook: '봉 뜯자마자\n바삭 소리 🍠', title: '', price: '', items: '', channel: 'snack.asmr' },
+  sampleCaptions: ['한 봉에 1,800원이에요', '소리가 진짜 다르죠'],
+  draw(ctx, f) {
+    const W = f.W, H = f.H;
+    const S = Math.min(W / 1080, H / 1920);
+    const px = (v) => Math.round(v * S);
+    drawTonedFrame(ctx, f, 'crispWarm');
+    scrimSmooth(ctx, f, px(560), 0.34, true);
+
+    /* 제목 2줄 — 영상 내내 고정 (흰 + 진회색 #282828 테두리) */
+    const title = String(f.text.hook || f.text.title || '').trim();
+    if (title) {
+      withFont(FONT_STACK.kkubulim, () => {
+        const size = fitRichSize(ctx, title, px(93), W * 0.9, 2, 800);
+        drawRich(ctx, title, {
+          x: W / 2, y: px(198), size, weight: 800, align: 'center', maxW: W * 0.9,
+          color: '#FFFFFF', stroke: true, strokeW: Math.max(2, size * 0.027), strokeCol: '#282828',
+          shadow: 14, shadowCol: 'rgba(0,0,0,0.35)', lineHeight: 1.04, maxLines: 2,
+        });
+      });
+    }
+
+    /* 각진 흰 박스 자막 — 불투명 78%, 검정 #111 글자, 컷과 함께 교체 */
+    const cap = String(f.caption || '').trim();
+    const boxTop = Math.round(H * 0.655);
+    if (cap) {
+      withFont(FONT_STACK.nanumcoding, () => {
+        const size = px(33);
+        const padX = px(22), padY = px(13);
+        const lay = layoutRich(ctx, cap, size, 700, Math.min(W * 0.62, W * 0.5) - padX * 2, 0);
+        const rows = lay.lines.slice(0, 2);
+        const widest = rows.reduce((m, l) => Math.max(m, l.width), 0);
+        const bw = Math.min(W * 0.62, widest + padX * 2);
+        const lh = size * 1.28;
+        const bh = rows.length * lh + padY * 2;
+        ctx.save();
+        ctx.fillStyle = 'rgba(255,255,255,0.78)';
+        ctx.fillRect((W - bw) / 2, boxTop, bw, bh);
+        ctx.restore();
+        drawRich(ctx, cap, {
+          x: W / 2, y: boxTop + padY, size, weight: 700, align: 'center',
+          maxW: bw - padX * 2 + 2, color: '#111111', stroke: false, shadow: 0,
+          lineHeight: 1.28, maxLines: 2, tracking: 0,
+        });
+      });
+    }
+
+    /* 📢 ASMR 📢 스티커 — 이모지는 글자의 1.9배 */
+    withFont(FONT_STACK.kkubulim, () => {
+      const core = px(64), em = Math.round(core * 1.9);
+      const y = boxTop - px(26);
+      ctx.save();
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'alphabetic';
+      ctx.font = `${core}px ${FONT_STACK.kkubulim}`;
+      const wCore = ctx.measureText('ASMR').width;
+      ctx.font = `${em}px ${FONT_STACK.kkubulim}`;
+      const wEm = ctx.measureText('📢').width;
+      const gap = px(10);
+      let cx = W / 2 - (wEm * 2 + wCore + gap * 4) / 2;
+      const put = (txt, font, strokeW) => {
+        ctx.font = font;
+        ctx.lineWidth = strokeW;
+        ctx.strokeStyle = 'rgba(120,120,120,0.75)';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.strokeText(txt, cx, y);
+        ctx.fillText(txt, cx, y);
+      };
+      put('📢', `${em}px ${FONT_STACK.kkubulim}`, px(1.5));
+      cx += wEm + gap;
+      put('ASMR', `${core}px ${FONT_STACK.kkubulim}`, px(1.5));
+      cx += wCore + gap;
+      put('📢', `${em}px ${FONT_STACK.kkubulim}`, px(1.5));
+      ctx.restore();
+    });
+  },
+});
+
+/* ---------- P22 · 🪴 인테리어 찐템 ---------- */
+TEMPLATES.push({
+  id: 'interior-plant',
+  presetId: 'P22',
+  name: '🪴 인테리어 찐템',
+  label: '인테리어·찐템',
+  platform: 'reels',
+  cats: ['living', 'mood', 'review'],
+  arc: 'R5',
+  dur: 16,
+  W: 1080, H: 1920,
+  tagBg: '#e9f6dd', tagFg: '#3f6b1e',
+  isNew: true,
+  trend: '클로드4 실측 · 인테리어 찐템 16초(3초마다 베이스 드롭 컷 · 평균 편차율 0.04)',
+  desc: '3초 타자 인트로로 "3년째 잘 쓰고 있는 찐템"을 열고, 컷마다 라임 번호·제품명·한줄평이 붙어요. 매트하고 차분한 인테리어 톤.',
+  tips: '자막 칸에 "브랜드 | 제품명 | 한줄평"처럼 쓰면 라임 번호 박스·제품명·흰 한줄평 박스로 나뉘어요. 컷은 3초에 맞춰 끊으면 박자와 딱 맞아요.',
+  sample: { hook: '3년째', title: '원목 수납장', price: '', items: '', channel: 'living.plant' },
+  sampleCaptions: ['이케아 | 원목 수납장 | 3년째 안 바꿔요', '무인양품 | 라탄 바구니 | 수납이 예뻐져요'],
+  draw(ctx, f) {
+    const W = f.W, H = f.H;
+    const S = Math.min(W / 1080, H / 1920);
+    const px = (v) => Math.round(v * S);
+    drawTonedFrame(ctx, f, 'matte');
+    vignette(ctx, W, H, 0.16);
+    const INTRO = 3.0;
+
+    /* 틀 카드·빈 미리보기에서는 인트로와 컷 라벨을 6초 주기로 번갈아 보여 줍니다 */
+    const showIntro = f.sample ? ((f.t || 0) % 6) < INTRO : (f.t || 0) < INTRO;
+    if (showIntro) {
+      /* 인트로 — 초당 11자 타자 + 흰 커서, 3.0초에 한 번에 사라짐 */
+      let line1 = String(f.text.hook || '').split('\n')[0].trim() || '3년째';
+      if (!/년째/.test(line1) || line1.length > 12) line1 = '3년째';
+      const line3 = '찐템을 소개합니다';
+      const cps = 11;
+      const tt = f.sample ? ((f.t || 0) % 6) : (f.t || 0);
+      const n1 = Math.min(line1.length, Math.floor(tt * cps));
+      const typed1 = line1.slice(0, n1);
+      const done1 = n1 >= line1.length;
+      const t3 = Math.max(0, tt - (line1.length + 1) / cps);
+      const n3 = done1 ? Math.min(line3.length, Math.floor(t3 * cps)) : 0;
+      const typed3 = line3.slice(0, n3);
+      const cursorOn = Math.floor(tt * 2) % 2 === 0;
+
+      withFont(FONT_STACK.nanumbarun, () => {
+        const sp1 = Math.round(px(128) * 0.12);
+        if (typed1) {
+          drawTracked(ctx, typed1, px(180), px(742), {
+            size: px(128), weight: 700, spacing: sp1,
+            color: '#DDF7BC', align: 'left', baseline: 'alphabetic',
+          });
+        }
+        if (typed3) {
+          drawTracked(ctx, typed3, px(66), px(1080), {
+            size: px(124), weight: 700, spacing: 0,
+            color: '#FFFFFF', align: 'left', baseline: 'alphabetic',
+          });
+        }
+        /* 흰 커서 — 지금 타자 중인 줄 끝에서 깜박입니다 */
+        if (cursorOn) {
+          const cur = done1
+            ? { text: typed3, x: px(66), base: px(1080), size: px(124), sp: 0 }
+            : { text: typed1, x: px(180), base: px(742), size: px(128), sp: sp1 };
+          ctx.save();
+          ctx.font = `700 ${cur.size}px ${FONT_STACK.nanumbarun}`;
+          const cw = measureSpaced(ctx, cur.text, cur.sp);
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(cur.x + cw + px(8), cur.base - cur.size * 0.82, px(4), cur.size * 0.9);
+          ctx.restore();
+        }
+      });
+      withFont(FONT_STACK.gmarket, () => {
+        drawTracked(ctx, '잘쓰고있는', px(975), px(880), {
+          size: px(75), weight: 500, spacing: 0, color: '#FFFFFF',
+          align: 'right', baseline: 'alphabetic',
+        });
+      });
+    } else {
+      /* 라벨 가독성 — 흰 글씨가 밝은 배경에서도 읽히도록 아주 옅은 매트 밴드 */
+      const band = ctx.createLinearGradient(0, H * 0.44, 0, H * 0.65);
+      band.addColorStop(0, 'rgba(0,0,0,0)');
+      band.addColorStop(0.5, 'rgba(0,0,0,0.16)');
+      band.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.save();
+      ctx.fillStyle = band;
+      ctx.fillRect(0, H * 0.44, W, H * 0.21);
+      ctx.restore();
+      /* 컷 라벨 — 라임 번호/브랜드 박스 + 제품명 + 흰 한줄평 박스 87% */
+      const raw = String(f.caption || '').trim();
+      const parts = raw.split('|').map((s) => s.trim());
+      let brand = parts.length > 1 ? parts[0] : String(f.text.title || '').trim();
+      const product = parts.length > 1 ? (parts[1] || '') : '';
+      const review = parts.length > 2 ? parts[2] : (parts.length === 1 ? raw : '');
+      brand = brand.replace(/^\d+[.)]\s*/, '');
+      const label = `${(f.clipIndex || 0) + 1}. ${brand || '아이템'}`;
+      const e = riseIn(f, 0, 0.22);
+
+      ctx.save();
+      ctx.globalAlpha = e.a;
+      ctx.translate(0, e.dy);
+      withFont(FONT_STACK.nanumbarun, () => {
+        const size = px(33);
+        const padX = px(24), padY = px(17);
+        ctx.font = `${700} ${size}px ${FONT_STACK.nanumbarun}`;
+        const tw = measureSpaced(ctx, label, 0);
+        const bw = tw + padX * 2;
+        const bh = size + padY * 2;
+        const bx = (W - bw) / 2;
+        const by = px(955) - bh / 2;
+        ctx.save();
+        ctx.fillStyle = '#DDF7BC';
+        roundRect(ctx, bx, by, bw, bh, px(4));
+        ctx.fill();
+        ctx.restore();
+        ctx.save();
+        ctx.fillStyle = '#111111';
+        ctx.font = `700 ${size}px ${FONT_STACK.nanumbarun}`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, W / 2, by + bh / 2 + size * 0.02);
+        ctx.restore();
+      });
+      if (product) {
+        withFont(FONT_STACK.gmarket, () => {
+          drawRich(ctx, product, {
+            x: W / 2, y: px(1047), size: px(33), weight: 500, align: 'center',
+            maxW: W * 0.8, color: '#FFFFFF', stroke: false, shadow: 10,
+            shadowCol: 'rgba(0,0,0,0.35)', maxLines: 1,
+          });
+        });
+      }
+      if (review) {
+        withFont(FONT_STACK.nanumbarun, () => {
+          const size = px(23);
+          const padX = px(20), padY = px(12);
+          const lay = layoutRich(ctx, review, size, 700, W * 0.72 - padX * 2, 0);
+          const rows = lay.lines.slice(0, 2);
+          const widest = rows.reduce((m, l) => Math.max(m, l.width), 0);
+          const bw = Math.min(W * 0.86, widest + padX * 2);
+          const lh = size * 1.3;
+          const bh = rows.length * lh + padY * 2;
+          const bx = (W - bw) / 2;
+          const by = px(1097);
+          ctx.save();
+          ctx.fillStyle = 'rgba(255,255,255,0.87)';
+          ctx.fillRect(bx, by, bw, bh);
+          ctx.restore();
+          drawRich(ctx, review, {
+            x: W / 2, y: by + padY, size, weight: 700, align: 'center',
+            maxW: bw - padX * 2 + 2, color: '#111111', stroke: false, shadow: 0,
+            lineHeight: 1.3, maxLines: 2, tracking: 0,
+          });
+        });
+      }
       ctx.restore();
     }
   },

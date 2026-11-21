@@ -40,3 +40,27 @@
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2'); }
 @font-face { font-family: 'Paperlogy'; font-weight: 850 900; font-style: normal; font-display: swap;
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2') format('woff2'); }
+
+/* ---------------------------------------------------------------------------
+   클로드4 실측 3종(2026-11-21) 글꼴 — 눈누·fonts-archive CDN
+   · P20 리뷰 BEST 3 : 산돌국대떡볶이체(훅) · 웨이브 파도체(자막) · 카페24 당당해(섹션)
+   · P21 ASMR 박스   : 꾸불림체(제목) · 나눔고딕코딩(박스 자막)
+   · P22 인테리어    : 나눔바른고딕(Bold 포함) · G마켓 산스(기존)
+   CDN이 막히거나 글꼴이 없으면 engine.js의 FONT_STACK이 기존 내장 한글 폰트로
+   자연스럽게 폴백합니다(꾸불림체→주아·개구, 당당해·국대떡볶이→도현·주아,
+   파도체→G마켓 산스, 나눔바른고딕·코딩→프리텐다드).
+   --------------------------------------------------------------------------- */
+@font-face { font-family: 'NanumBarunGothic'; font-weight: 400 500; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/NanumBarunGothic/NanumBarunGothic.woff2') format('woff2'); }
+@font-face { font-family: 'NanumBarunGothic'; font-weight: 600 900; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/NanumBarunGothic/NanumBarunGothicBold.woff2') format('woff2'); }
+@font-face { font-family: 'NanumGothicCoding'; font-weight: 100 900; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/NanumGothicCoding/NanumGothicCoding.woff2') format('woff2'); }
+@font-face { font-family: 'BM Kkubulim'; font-weight: 100 900; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/BMKkubulim/BMKkubulim.woff2') format('woff2'); }
+@font-face { font-family: 'Wavve PADO'; font-weight: 100 900; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fontbee/font@main/Wavve/WavvePADO-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'Cafe24 Dangdanghae'; font-weight: 100 900; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/Cafe24Dangdanghae/Cafe24Dangdanghae.woff2') format('woff2'); }
+@font-face { font-family: 'SDKukdetopokki'; font-weight: 600 900; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/SDKukdetopokki.woff') format('woff'); }

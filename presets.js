@@ -1,6 +1,6 @@
 /* 자동 생성: build_presets.py — presets.json과 같은 내용 */
 window.PRESETS = {
- "version": "2026.11.21-1",
+ "version": "2026.11.21-2",
  "canvas": {
   "w": 1080,
   "h": 1920,
@@ -1059,6 +1059,157 @@ window.PRESETS = {
     }
    },
    "arc_name": "N가지 리스트·하울"
+  },
+  {
+   "id": "P20",
+   "name": "리뷰 BEST 3",
+   "src": "studio2/review-best3",
+   "cat": "R2",
+   "frame": "9:16",
+   "dur_target": 30,
+   "hook": "쿠팡 뷰티\n*이거 3개*",
+   "number_beat": "BEST 3",
+   "bgm": "hook",
+   "cta": "댓글에 번호",
+   "font": "wavvepado",
+   "accent": "yellow",
+   "voice": "chagal",
+   "beats": [
+    {
+     "t": "0-1.0",
+     "role": "수량+장소",
+     "text": "수량+장소"
+    },
+    {
+     "t": "1.0-3.0",
+     "role": "비교 배수",
+     "text": "비교 배수"
+    },
+    {
+     "t": "3-25",
+     "role": "아이템×3비트(가격·사용·한줄평)",
+     "text": "노랑 훅 → \"1. 제품명\" 섹션 → 말 자막"
+    },
+    {
+     "t": "25-30",
+     "role": "저장 CTA",
+     "text": "저장 CTA"
+    }
+   ],
+   "caption": {
+    "top_label": "리뷰 BEST 3",
+    "bottom_sub": "바르면 촉촉, 다음 날까지",
+    "anchor": {
+     "top_label": 230,
+     "bottom_sub": 330,
+     "captionLine": 1540
+    }
+   },
+   "arc_name": "N가지 리스트·하울"
+  },
+  {
+   "id": "P21",
+   "name": "ASMR 박스",
+   "src": "studio2/asmr-box",
+   "cat": "R1",
+   "frame": "9:16",
+   "dur_target": 17,
+   "hook": "봉 뜯자마자\n바삭 소리 🍠",
+   "number_beat": "9컷",
+   "bgm": "chill",
+   "cta": "저장해두고 소리로 확인",
+   "font": "kkubulim",
+   "accent": "lime",
+   "voice": null,
+   "beats": [
+    {
+     "t": "0-1.5",
+     "role": "불만·후회 훅",
+     "text": "불만·후회 훅"
+    },
+    {
+     "t": "1.5-3",
+     "role": "가격 라벨",
+     "text": "가격 라벨"
+    },
+    {
+     "t": "3-8",
+     "role": "언박싱",
+     "text": "언박싱"
+    },
+    {
+     "t": "8-20",
+     "role": "실사용 3장면",
+     "text": "실사용 3장면"
+    },
+    {
+     "t": "20-30",
+     "role": "단점+대상",
+     "text": "단점+대상"
+    },
+    {
+     "t": "30-35",
+     "role": "CTA",
+     "text": "CTA"
+    }
+   ],
+   "caption": {
+    "top_label": "봉 뜯자마자 바삭 소리 🍠",
+    "bottom_sub": "한 봉에 1,800원이에요",
+    "anchor": {
+     "top_label": 230,
+     "bottom_sub": 330,
+     "captionLine": 1540
+    }
+   },
+   "arc_name": "단일 제품 솔직 리뷰"
+  },
+  {
+   "id": "P22",
+   "name": "인테리어 찐템",
+   "src": "studio2/interior-plant",
+   "cat": "R5",
+   "frame": "9:16",
+   "dur_target": 16,
+   "hook": "3년째\n잘쓰고있는 찐템",
+   "number_beat": "3초 박자",
+   "bgm": "vlog",
+   "cta": "저장해두고 비교",
+   "font": "nanumbarun",
+   "accent": "lime",
+   "voice": "calm",
+   "beats": [
+    {
+     "t": "0-2",
+     "role": "ASMR/손끝",
+     "text": "ASMR/손끝"
+    },
+    {
+     "t": "2-3",
+     "role": "시간·상황",
+     "text": "3년째 쓰는 이유"
+    },
+    {
+     "t": "3-25",
+     "role": "루틴 3-4장면",
+     "text": "3초마다 아이템 한 컷"
+    },
+    {
+     "t": "25-27",
+     "role": "여백",
+     "text": "여백"
+    }
+   ],
+   "caption": {
+    "top_label": "3년째 잘쓰고있는 찐템",
+    "bottom_sub": "이케아 | 원목 수납장 | 3년째 안 바꿔요",
+    "anchor": {
+     "top_label": 230,
+     "bottom_sub": 330,
+     "captionLine": 1540
+    }
+   },
+   "arc_name": "감성 루틴 브이로그"
   }
  ],
  "creatorStyles": [
@@ -1371,7 +1522,7 @@ window.PRESETS = {
   "captionLine": 1540
  },
  "schema": {
-  "version": "2026.11.21-1",
+  "version": "2026.11.21-2",
   "note": "클로드가 같은 스키마로 답하면 분석 탭에 붙여넣어 커스텀 프리셋으로 쓸 수 있어요.",
   "preset_fields": [
    "id",
