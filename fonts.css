@@ -1,0 +1,42 @@
+/* 공용 웹폰트 — 스튜디오 2.0(모바일) · PC 에디터가 함께 씁니다 */
+@font-face { font-family: 'Pretendard'; font-weight: 45 920; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/woff2/PretendardVariable.woff2') format('woff2'); }
+@font-face { font-family: 'GmarketSans'; font-weight: 300 449; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff'); }
+@font-face { font-family: 'GmarketSans'; font-weight: 450 649; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff'); }
+@font-face { font-family: 'GmarketSans'; font-weight: 650 900; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff'); }
+@font-face { font-family: 'NanumSquareNeo'; font-weight: 300 549; font-style: normal; font-display: swap;
+  src: url('https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-bRg.woff2') format('woff2'); }
+@font-face { font-family: 'NanumSquareNeo'; font-weight: 550 749; font-style: normal; font-display: swap;
+  src: url('https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-cBd.woff2') format('woff2'); }
+@font-face { font-family: 'NanumSquareNeo'; font-weight: 750 900; font-style: normal; font-display: swap;
+  src: url('https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-dEb.woff2') format('woff2'); }
+@font-face { font-family: 'MaruBuri'; font-weight: 300 549; font-style: normal; font-display: swap;
+  src: url('https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'MaruBuri'; font-weight: 550 900; font-style: normal; font-display: swap;
+  src: url('https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2') format('woff2'); }
+@font-face { font-family: 'S-CoreDream'; font-weight: 300 449; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamRegular.woff2') format('woff2'); }
+@font-face { font-family: 'S-CoreDream'; font-weight: 450 549; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamMedium.woff2') format('woff2'); }
+@font-face { font-family: 'S-CoreDream'; font-weight: 550 749; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamBold.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff') format('woff'); }
+@font-face { font-family: 'S-CoreDream'; font-weight: 750 849; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamExtraBold.woff2') format('woff2'); }
+@font-face { font-family: 'S-CoreDream'; font-weight: 850 900; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamBlack.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 300 449; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 450 549; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 550 649; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 650 749; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 750 849; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 850 900; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2') format('woff2'); }

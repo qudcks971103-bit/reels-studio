@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>틀편집 스튜디오 PC — 캡컷 타임라인 에디터</title>
+<meta name="description" content="PC에서 5트랙 타임라인으로 릴스를 자르고 옮기고 자막·보이스·BGM·효과를 얹어 MP4로 내보내는 캡컷 스타일 편집기">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gaegu&family=Jua&family=Nanum+Pen+Script&family=Single+Day&family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap">
+<link rel="stylesheet" href="fonts.css">
+<style>
+:root {
+  --bg: #0b0c10; --panel: #13151b; --panel-2: #181b22; --line: #262a33;
+  --ink: #eef0f4; --muted: #8b93a3; --accent: #D4FF32; --accent-ink: #10130a;
+  --t-video: #2f6bff; --t-text: #ff5fa2; --t-voice: #33d6a6; --t-bgm: #ffb02e; --t-fx: #a679ff;
+  --head: 54px; --tl: 312px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink);
+  font-family: 'Pretendard', 'Noto Sans KR', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font-family: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; }
+.app { display: grid; grid-template-rows: var(--head) minmax(0, 1fr) var(--tl); height: 100vh; min-width: 1180px; }
+
+/* ---------- 상단 ---------- */
+.top { display: flex; align-items: center; gap: 12px; padding: 0 14px; background: var(--panel);
+  border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 7px; font-weight: 900; font-size: 15px; letter-spacing: -.02em; }
+.brand .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+.brand b { font-size: 10px; background: var(--accent); color: var(--accent-ink); border-radius: 5px; padding: 2px 5px; letter-spacing: .04em; }
+.proj { display: flex; align-items: center; gap: 8px; }
+.proj input { width: 210px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 7px 10px; font-size: 13px; font-weight: 800; }
+.top .grow { flex: 1; }
+.save { font-size: 11px; color: var(--muted); }
+.seg { display: inline-flex; background: var(--panel-2); border: 1px solid var(--line); border-radius: 9px; padding: 2px; gap: 2px; }
+.seg button { font-size: 11.5px; font-weight: 800; padding: 5px 9px; border-radius: 7px; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.btn { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--panel-2);
+  border-radius: 9px; padding: 7px 11px; font-size: 12px; font-weight: 800; }
+.btn:hover { border-color: #3a4050; }
+.btn.accent { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.ghost { background: transparent; }
+.btn:disabled { opacity: .5; cursor: default; }
+select.mini { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 7px 8px; font-size: 12px; font-weight: 700; }
+
+/* ---------- 본문 3분할 ---------- */
+.main { display: grid; grid-template-columns: 300px minmax(0, 1fr) 300px; min-height: 0; }
+.left { border-right: 1px solid var(--line); background: var(--panel); display: flex; flex-direction: column; min-height: 0; }
+.ptabs { display: flex; padding: 8px 8px 0; gap: 4px; }
+.ptab { flex: 1; font-size: 11.5px; font-weight: 800; color: var(--muted); padding: 8px 4px; border-radius: 8px; }
+.ptab[aria-selected="true"] { background: var(--panel-2); color: var(--ink); box-shadow: inset 0 -2px 0 var(--accent); }
+.ppanel { flex: 1; overflow: auto; padding: 12px; display: none; }
+.ppanel.on { display: block; }
+.ptitle { font-size: 11px; font-weight: 900; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; margin: 12px 0 7px; }
+.ptitle:first-child { margin-top: 0; }
+.tile { width: 100%; text-align: left; border: 1px solid var(--line); background: var(--panel-2); border-radius: 10px;
+  padding: 9px 11px; font-size: 12px; font-weight: 800; margin-bottom: 6px; display: flex; gap: 8px; align-items: center; }
+.tile:hover { border-color: #3d4456; }
+.tile small { display: block; font-size: 10.5px; font-weight: 500; color: var(--muted); margin-top: 2px; }
+.tile .em { font-size: 15px; }
+.media-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.mitem { position: relative; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; background: #000; aspect-ratio: 9/16; }
+.mitem img, .mitem video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mitem .mlabel { position: absolute; left: 0; right: 0; bottom: 0; font-size: 10px; padding: 4px 6px;
+  background: linear-gradient(transparent, rgba(0,0,0,.8)); color: #fff; }
+.mitem .add { position: absolute; top: 5px; right: 5px; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--accent); color: var(--accent-ink); font-weight: 900; font-size: 13px; display: grid; place-items: center; }
+.styletags { display: flex; flex-wrap: wrap; gap: 5px; }
+.styletag { display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--line); background: var(--panel-2);
+  border-radius: 8px; padding: 6px 8px; font-size: 10.5px; font-weight: 800; }
+.styletag i { width: 11px; height: 11px; border-radius: 3px; }
+.styletag:hover { border-color: var(--accent); }
+.refbtn { width: 100%; text-align: left; border: 1px solid var(--line); background: var(--panel-2); border-radius: 10px; padding: 9px 10px; margin-bottom: 6px; }
+.refbtn b { display: block; font-size: 11.5px; }
+.refbtn small { display: block; font-size: 10px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+.refbtn .demo { display: inline-block; margin-top: 5px; font-size: 13px; }
+label.fld { display: block; font-size: 10.5px; font-weight: 800; color: var(--muted); margin-bottom: 8px; }
+label.fld input, label.fld select, label.fld textarea { display: block; width: 100%; margin-top: 4px;
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 7px 8px;
+  font-size: 12px; font-weight: 700; color: var(--ink); }
+label.fld textarea { resize: vertical; min-height: 64px; line-height: 1.45; }
+/* TTS 패널은 모바일과 같은 마크업을 씁니다 */
+#ttsAudio .sec-head { display: flex; justify-content: space-between; align-items: center; }
+#ttsAudio .sec-head h2 { margin: 0; }
+#ttsAudio .side { font-size: 10px; color: var(--muted); }
+#ttsAudio .seg { display: flex; flex-wrap: wrap; gap: 4px; background: none; border: 0; padding: 0; }
+#ttsAudio .segbtn { flex: 1 1 44%; font-size: 10.5px; font-weight: 800; padding: 6px 4px; border-radius: 7px;
+  border: 1px solid var(--line); background: var(--panel-2); color: var(--muted); }
+#ttsAudio .segbtn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+#ttsAudio .field { display: block; font-size: 10.5px; font-weight: 800; color: var(--muted); }
+#ttsAudio .field small { font-weight: 500; opacity: .85; }
+#ttsAudio .field input, #ttsAudio .field textarea { display: block; width: 100%; margin-top: 4px;
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 7px 8px;
+  font-size: 12px; color: var(--ink); }
+#ttsAudio .field textarea { min-height: 58px; resize: vertical; }
+#ttsAudio .row { display: flex; gap: 6px; }
+#ttsAudio .row > .field { flex: 1; min-width: 0; }
+#ttsAudio .btn { flex: 1; justify-content: center; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.hint { font-size: 10.5px; color: var(--muted); line-height: 1.5; margin: 6px 0 0; }
+
+/* ---------- 중앙 미리보기 ---------- */
+.center { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: radial-gradient(120% 100% at 50% 0%, #16181f, #0b0c10 70%); }
+.stage { flex: 1; display: grid; place-items: center; min-height: 0; padding: 16px; }
+.stage canvas { background: #000; border-radius: 8px; box-shadow: 0 18px 50px rgba(0,0,0,.55); max-height: 100%; }
+.transport { display: flex; align-items: center; gap: 8px; padding: 8px 14px 12px; }
+.tbtn { width: 34px; height: 34px; border-radius: 9px; background: var(--panel-2); border: 1px solid var(--line); display: grid; place-items: center; font-size: 13px; }
+.tbtn.play { width: 46px; background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-size: 15px; }
+.tc { font-variant-numeric: tabular-nums; font-size: 12.5px; font-weight: 800; letter-spacing: .02em; }
+.tc small { color: var(--muted); font-weight: 600; }
+.transport .grow { flex: 1; }
+
+/* ---------- 오른쪽 인스펙터 ---------- */
+.right { border-left: 1px solid var(--line); background: var(--panel); overflow: auto; padding: 12px; }
+.right h3 { font-size: 12px; margin: 0 0 4px; }
+.badge { display: inline-block; font-size: 10px; font-weight: 900; padding: 2px 7px; border-radius: 999px; color: #0b0c10; }
+.empty { font-size: 11.5px; color: var(--muted); line-height: 1.6; border: 1px dashed var(--line); border-radius: 10px; padding: 12px; }
+.section { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 10px; }
+.section:first-of-type { border-top: 0; margin-top: 0; padding-top: 0; }
+input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 22px; background: transparent; }
+input[type="range"]::-webkit-slider-runnable-track { height: 4px; border-radius: 999px; background: #2a2f3a; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 15px; height: 15px; margin-top: -5.5px;
+  border-radius: 50%; background: var(--accent); border: 2px solid var(--panel); }
+.sliderline { display: grid; grid-template-columns: 60px 1fr 48px; gap: 6px; align-items: center; font-size: 10.5px; font-weight: 800; color: var(--muted); }
+.sliderline output { text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* ---------- 타임라인 ---------- */
+.timeline { border-top: 1px solid var(--line); background: var(--panel); display: flex; flex-direction: column; min-height: 0; }
+.tl-tools { display: flex; align-items: center; gap: 7px; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+.tl-tools .vsep { width: 1px; height: 20px; background: var(--line); margin: 0 3px; }
+.tl-tools .grow { flex: 1; }
+.tl-tools .zoomlabel { font-size: 10.5px; color: var(--muted); font-weight: 800; min-width: 44px; text-align: center; }
+.snap { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: var(--muted); }
+.tl-body { flex: 1; display: grid; grid-template-columns: 104px minmax(0, 1fr); min-height: 0; }
+.tl-heads { border-right: 1px solid var(--line); padding-top: 26px; }
+.thead { height: 44px; display: flex; align-items: center; gap: 6px; padding: 0 10px; font-size: 11px; font-weight: 800; color: var(--muted); }
+.thead i { width: 8px; height: 8px; border-radius: 2px; }
+.tl-scroll { overflow-x: auto; overflow-y: hidden; position: relative; }
+.tl-inner { position: relative; height: 100%; }
+.ruler { height: 26px; position: relative; border-bottom: 1px solid var(--line); cursor: pointer; }
+.ruler .tick { position: absolute; top: 0; bottom: 0; width: 1px; background: #222833; }
+.ruler .tick.major { background: #333b4a; }
+.ruler .tlabel { position: absolute; top: 4px; font-size: 9.5px; color: var(--muted); font-weight: 800; transform: translateX(3px); }
+.tracks { position: relative; }
+.lane { height: 44px; border-bottom: 1px solid #1d2129; position: relative; }
+.lane:nth-child(even) { background: rgba(255,255,255,.012); }
+.blk { position: absolute; top: 5px; height: 32px; border-radius: 6px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,.22); font-size: 10.5px; font-weight: 800; color: #0b0c10;
+  display: flex; align-items: center; padding: 0 10px; cursor: grab; user-select: none; white-space: nowrap; }
+.blk.sel { outline: 2px solid #fff; outline-offset: 1px; z-index: 3; }
+.blk .lbl { overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
+.blk .h { position: absolute; top: 0; bottom: 0; width: 9px; cursor: ew-resize; background: rgba(0,0,0,.18); }
+.blk .h.l { left: 0; } .blk .h.r { right: 0; }
+.blk .h:hover { background: rgba(0,0,0,.35); }
+.blk.v { background: linear-gradient(180deg, #5a8dff, #2f6bff); }
+.blk.t { background: linear-gradient(180deg, #ff86bb, #ff5fa2); }
+.blk.a { background: linear-gradient(180deg, #5be9bf, #33d6a6); }
+.blk.b { background: linear-gradient(180deg, #ffc766, #ffb02e); }
+.blk.f { background: linear-gradient(180deg, #bda1ff, #a679ff); }
+.blk.dragging { opacity: .85; cursor: grabbing; }
+.playhead { position: absolute; top: 0; bottom: 0; width: 2px; background: #ff3b3b; z-index: 6; pointer-events: none; }
+.playhead::before { content: ''; position: absolute; top: 0; left: -5px; width: 12px; height: 12px; background: #ff3b3b;
+  clip-path: polygon(0 0, 100% 0, 50% 100%); }
+.playhead .grab { position: absolute; top: 0; left: -8px; width: 18px; height: 18px; pointer-events: auto; cursor: ew-resize; }
+
+/* ---------- 내보내기 ---------- */
+.overlay { position: fixed; inset: 0; background: rgba(6,7,10,.86); display: grid; place-items: center; z-index: 60; }
+.overlay[hidden] { display: none; }
+.expcard { width: 520px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
+.expcard h2 { font-size: 15px; margin: 0 0 8px; }
+.progress { height: 8px; border-radius: 999px; background: #22262f; overflow: hidden; margin: 10px 0 6px; }
+.progress i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .15s; }
+.expcard video { width: 100%; max-height: 300px; margin-top: 10px; border-radius: 10px; background: #000; }
+.expcard .row { display: flex; gap: 7px; margin-top: 10px; }
+.toast { position: fixed; left: 50%; top: 64px; transform: translateX(-50%); background: var(--ink); color: var(--bg);
+  font-size: 12px; font-weight: 800; padding: 8px 14px; border-radius: 999px; z-index: 70; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ================= 상단 바 ================= -->
+  <header class="top">
+    <div class="brand"><span class="dot"></span>틀편집 <b>PC</b></div>
+    <div class="proj">
+      <input id="projName" value="새 프로젝트" maxlength="40" aria-label="프로젝트 이름">
+      <span class="save" id="saveState">자동 저장</span>
+    </div>
+    <div class="seg" id="ratioSeg" role="group" aria-label="화면 비율">
+      <button data-ratio="9:16" aria-pressed="true">9:16 릴스</button>
+      <button data-ratio="16:9" aria-pressed="false">16:9 롱폼</button>
+    </div>
+    <span class="grow"></span>
+    <select id="expFormat" class="mini" aria-label="내보내기 형식">
+      <option value="mp4">MP4</option>
+      <option value="webm">WebM</option>
+    </select>
+    <button class="btn accent" id="btnExport">⬇ 내보내기</button>
+    <a class="btn ghost" href="studio2.html">📱 모바일 버전</a>
+  </header>
+
+  <!-- ================= 본문 ================= -->
+  <div class="main">
+
+    <!-- 좌측 패널 -->
+    <aside class="left">
+      <div class="ptabs" role="tablist">
+        <button class="ptab" role="tab" aria-selected="true" data-ptab="media">미디어</button>
+        <button class="ptab" role="tab" aria-selected="false" data-ptab="text">텍스트</button>
+        <button class="ptab" role="tab" aria-selected="false" data-ptab="audio">오디오</button>
+        <button class="ptab" role="tab" aria-selected="false" data-ptab="fx">효과</button>
+        <button class="ptab" role="tab" aria-selected="false" data-ptab="frame">틀</button>
+      </div>
+
+      <div class="ppanel on" id="panel-media">
+        <div class="ptitle">내 미디어</div>
+        <label class="tile" for="fileMedia">
+          <span class="em">＋</span>
+          <span>영상 · 사진 올리기<small>여러 개 한 번에 · 브라우저 안에서만 처리</small></span>
+          <input id="fileMedia" type="file" accept="video/*,image/*" multiple hidden>
+        </label>
+        <button class="tile" id="btnSampleMedia">
+          <span class="em">🛋</span>
+          <span>샘플 제품 컷 3장 넣기<small>데모용 실사 사진 (홈리빙·가전)</small></span>
+        </button>
+        <div class="ptitle">올린 미디어</div>
+        <div class="media-grid" id="mediaList"></div>
+        <p class="hint" id="mediaHint">미디어를 누르면 재생 헤드 위치에 영상/사진 블록이 생겨요.</p>
+      </div>
+
+      <div class="ppanel" id="panel-text">
+        <div class="ptitle">참고 릴스 3종 (한 번에)</div>
+        <button class="refbtn" id="btnRefStretch">
+          <b>🩷 파스텔 손글씨 · DfRcwTAqOkK</b>
+          <small>개구체 + 자간 +10px + 핑크 글씨·흰 테두리</small>
+          <span class="demo" style="font-family:'Gaegu','Jua',sans-serif;color:#FF6FA5;-webkit-text-stroke:1.6px #fff;text-shadow:0 2px 4px #0006;letter-spacing:1.2px">쭉쭉 늘려줘요</span>
+        </button>
+        <button class="refbtn" id="btnRefBold">
+          <b>🖤 굵은 외곽선 고딕 · thingthing.kr</b>
+          <small>상단 중앙 두 줄 · 굵은 고딕 흰 글씨 + 두꺼운 검정 외곽선</small>
+          <span class="demo" style="font-family:'GmarketSans','Pretendard',sans-serif;font-weight:900;color:#fff;-webkit-text-stroke:3px #000">진짜 속이 다르네</span>
+        </button>
+        <button class="refbtn" id="btnRefCloseup">
+          <b>🔍 무자막 클로즈업 · _bbangya_bbangya_</b>
+          <small>자막 없이 제품만 · 클로즈업 줌인 · 경쾌한 팝 BGM</small>
+          <span class="demo" style="font-family:'Jua',sans-serif;color:#fff;text-shadow:0 2px 6px #0009">한입에 반으로</span>
+        </button>
+        <div class="ptitle">자막 스타일 13종</div>
+        <div class="styletags" id="styleTags"></div>
+        <p class="hint">스타일을 누르면 재생 헤드 위치에 자막 블록이 생겨요. 오른쪽 인스펙터에서 글씨·자간·위치를 바로 바꿀 수 있어요.</p>
+      </div>
+
+      <div class="ppanel" id="panel-audio">
+        <div class="ptitle">BGM 4곡</div>
+        <div id="bgmList"></div>
+        <div class="ptitle">보이스</div>
+        <label class="tile" for="fileVoice">
+          <span class="em">🎙</span>
+          <span>보이스 파일 올리기<small>MP3 · M4A · WAV</small></span>
+          <input id="fileVoice" type="file" accept="audio/*,.mp3,.m4a,.wav,.aac,.ogg" hidden>
+        </label>
+        <div id="voiceList" class="media-grid" style="grid-template-columns:1fr"></div>
+        <div class="ptitle">외부 TTS API</div>
+        <div id="ttsAudio"></div>
+      </div>
+
+      <div class="ppanel" id="panel-fx">
+        <div class="ptitle">효과 5종</div>
+        <div id="fxList"></div>
+        <p class="hint">재생 헤드 위치에 1.2초 효과 블록이 생겨요. 길이는 타임라인에서 늘릴 수 있어요.</p>
+      </div>
+
+      <div class="ppanel" id="panel-frame">
+        <div class="ptitle">틀 프리셋 (자동 구성)</div>
+        <div id="frameList"></div>
+        <p class="hint">틀을 고르면 5개 트랙에 영상·자막·보이스·BGM·효과가 자동으로 깔려요. 그 뒤에는 블록을 드래그해 타이밍만 고치면 됩니다.</p>
+      </div>
+    </aside>
+
+    <!-- 중앙 미리보기 -->
+    <section class="center">
+      <div class="stage"><canvas id="cv" width="1080" height="1920"></canvas></div>
+      <div class="transport">
+        <button class="tbtn" id="btnPrev" aria-label="이전 프레임">◀|</button>
+        <button class="tbtn play" id="btnPlay" aria-label="재생">▶</button>
+        <button class="tbtn" id="btnNext" aria-label="다음 프레임">|▶</button>
+        <span class="tc" id="tc">00:00.00 <small>/ 00:08.00</small></span>
+        <span class="grow"></span>
+        <button class="btn ghost" id="btnSafe" aria-pressed="false">세이프존</button>
+        <button class="btn ghost" id="btnFit">화면 맞춤</button>
+      </div>
+    </section>
+
+    <!-- 우측 인스펙터 -->
+    <aside class="right" id="inspector"></aside>
+  </div>
+
+  <!-- ================= 타임라인 ================= -->
+  <section class="timeline">
+    <div class="tl-tools">
+      <button class="btn accent" id="btnAuto">✨ 프리셋으로 자동 구성</button>
+      <select id="autoPreset" class="mini" aria-label="자동 구성 프리셋"></select>
+      <span class="vsep"></span>
+      <button class="btn" id="btnSplit" title="재생 헤드에서 분할 (S)">✂ 분할</button>
+      <button class="btn" id="btnDelete" title="선택 블록 삭제 (Delete)">🗑 삭제</button>
+      <button class="btn" id="btnUndo" title="실행 취소 (Ctrl+Z)">↺ 실행취소</button>
+      <span class="vsep"></span>
+      <button class="btn" id="btnZoomOut">−</button>
+      <span class="zoomlabel" id="zoomLabel">64px/s</span>
+      <button class="btn" id="btnZoomIn">＋</button>
+      <label class="snap"><input type="checkbox" id="chkSnap" checked> 스냅</label>
+      <span class="grow"></span>
+      <span class="save" id="durTotal">총 0.0초</span>
+    </div>
+    <div class="tl-body">
+      <div class="tl-heads" id="tlHeads"></div>
+      <div class="tl-scroll" id="tlScroll">
+        <div class="tl-inner" id="tlInner">
+          <div class="ruler" id="ruler"></div>
+          <div class="tracks" id="tracks"></div>
+          <div class="playhead" id="playhead"><span class="grab"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- 내보내기 -->
+<div class="overlay" id="exportOverlay" hidden>
+  <div class="expcard">
+    <h2>영상 내보내기</h2>
+    <p class="hint" id="expStatus">준비 중…</p>
+    <div class="progress"><i id="expBar"></i></div>
+    <video id="expVideo" controls playsinline hidden></video>
+    <div class="row">
+      <button class="btn accent" id="btnDownload" hidden>파일 저장</button>
+      <button class="btn" id="btnExpClose">닫기</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="engine.js"></script>
+<script src="tts.js"></script>
+<script src="pc.js"></script>
+</body>
+</html>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0d0e12">
 <title>틀편집 스튜디오 2.0</title>
-<meta name="description" content="인스타 릴스·유튜브 쇼츠를 13개 틀과 크리에이터 스타일로 한 번에 만드는 편집 스튜디오">
+<meta name="description" content="인스타 릴스·유튜브 쇼츠를 15개 틀과 13가지 자막 스타일로 만드는 편집 스튜디오">
 <!-- iOS '홈 화면에 추가' PWA -->
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,51 +18,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gaegu&family=Jua&family=Nanum+Pen+Script&family=Single+Day&family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap">
+<link rel="stylesheet" href="fonts.css">
 <style>
-/* 인플루언서 추천 폰트 8종 (CDN 내장) */
-@font-face { font-family: 'Pretendard'; font-weight: 45 920; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/woff2/PretendardVariable.woff2') format('woff2'); }
-@font-face { font-family: 'GmarketSans'; font-weight: 300 449; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff'); }
-@font-face { font-family: 'GmarketSans'; font-weight: 450 649; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff'); }
-@font-face { font-family: 'GmarketSans'; font-weight: 650 900; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff'); }
-@font-face { font-family: 'NanumSquareNeo'; font-weight: 300 549; font-style: normal; font-display: swap;
-  src: url('https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-bRg.woff2') format('woff2'); }
-@font-face { font-family: 'NanumSquareNeo'; font-weight: 550 749; font-style: normal; font-display: swap;
-  src: url('https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-cBd.woff2') format('woff2'); }
-@font-face { font-family: 'NanumSquareNeo'; font-weight: 750 900; font-style: normal; font-display: swap;
-  src: url('https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-dEb.woff2') format('woff2'); }
-@font-face { font-family: 'MaruBuri'; font-weight: 300 549; font-style: normal; font-display: swap;
-  src: url('https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2') format('woff2'); }
-@font-face { font-family: 'MaruBuri'; font-weight: 550 900; font-style: normal; font-display: swap;
-  src: url('https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2') format('woff2'); }
-@font-face { font-family: 'S-CoreDream'; font-weight: 300 449; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamRegular.woff2') format('woff2'); }
-@font-face { font-family: 'S-CoreDream'; font-weight: 450 549; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamMedium.woff2') format('woff2'); }
-@font-face { font-family: 'S-CoreDream'; font-weight: 550 749; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamBold.woff2') format('woff2'),
-       url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff') format('woff'); }
-@font-face { font-family: 'S-CoreDream'; font-weight: 750 849; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamExtraBold.woff2') format('woff2'); }
-@font-face { font-family: 'S-CoreDream'; font-weight: 850 900; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamBlack.woff2') format('woff2'); }
-@font-face { font-family: 'Paperlogy'; font-weight: 300 449; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2') format('woff2'); }
-@font-face { font-family: 'Paperlogy'; font-weight: 450 549; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2') format('woff2'); }
-@font-face { font-family: 'Paperlogy'; font-weight: 550 649; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2') format('woff2'); }
-@font-face { font-family: 'Paperlogy'; font-weight: 650 749; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2'); }
-@font-face { font-family: 'Paperlogy'; font-weight: 750 849; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2'); }
-@font-face { font-family: 'Paperlogy'; font-weight: 850 900; font-style: normal; font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2') format('woff2'); }
-
 :root {
   --bg: #0d0e12;
   --surface: #17191f;
@@ -292,6 +250,18 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border: 3px s
 .swatch { flex: 1; font-size: 11.5px; font-weight: 800; padding: 7px 4px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface-2); display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
 .swatch i { width: 11px; height: 11px; border-radius: 50%; display: block; }
 .swatch[aria-pressed="true"] { border-color: var(--ink); }
+/* 자막 스타일 13종 그리드 */
+.capgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
+.capgrid .capbtn { display: flex; align-items: center; gap: 6px; justify-content: flex-start; text-align: left; font-size: 10.5px; padding: 8px 8px; line-height: 1.15; }
+.capbtn i { flex: none; width: 15px; height: 15px; border-radius: 5px; display: block; }
+.capbtn b { font-weight: 800; }
+/* 참고 릴스 3종 */
+.refrow { display: flex; flex-direction: column; gap: 6px; }
+.refcard { text-align: left; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); padding: 9px 11px; display: flex; flex-direction: column; gap: 3px; }
+.refcard b { font-size: 12.5px; }
+.refcard small { font-size: 10.5px; color: var(--muted); line-height: 1.4; }
+.refcard .demo { align-self: flex-start; margin-top: 3px; padding: 3px 7px; border-radius: 6px; font-size: 15px; }
+.refcard:active { border-color: var(--accent); }
 
 /* ---------- BGM ---------- */
 .bgm-item { display: flex; align-items: center; gap: 9px; padding: 9px 11px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); margin-top: 6px; }
@@ -510,24 +480,59 @@ dialog::backdrop { background: rgba(0,0,0,.65); }
             <button class="segbtn" data-weight="700" aria-pressed="true">굵게 700</button>
             <button class="segbtn" data-weight="900" aria-pressed="false">아주 굵게 900</button>
           </div>
-          <div class="slider-row"><span>자간</span><input type="range" id="trackRange" min="-4" max="6" step="1" value="0" aria-label="자간"><output id="trackOut">0px</output></div>
+          <div class="slider-row"><span>자간</span><input type="range" id="trackRange" min="-4" max="14" step="1" value="0" aria-label="자간"><output id="trackOut">0px</output></div>
           <div class="seg" id="trackChips" role="group" aria-label="자간 빠른 설정">
             <button class="segbtn" data-track="-2" aria-pressed="false">좁게 -2</button>
             <button class="segbtn" data-track="0" aria-pressed="true">기본 0</button>
-            <button class="segbtn" data-track="2" aria-pressed="false">넓게 +2</button>
+            <button class="segbtn" data-track="4" aria-pressed="false">넓게 +4</button>
+            <button class="segbtn" data-track="10" aria-pressed="false">쭉쭉 +10</button>
           </div>
+          <p class="hint" style="margin-top:5px">참고 릴스처럼 글자 사이를 넓게 벌리려면 <b>+8~+14px</b>로 올려 보세요.</p>
         </div>
 
         <div class="card">
-          <div class="sec-head" style="margin-bottom:7px"><h2 style="font-size:13px">자막 스타일</h2><span class="side">릴스 가독성 기준</span></div>
-          <div class="seg" id="capStyle" role="group" aria-label="자막 스타일">
-            <button class="segbtn" data-style="outline" aria-pressed="true">흰 글자 + 외곽선</button>
-            <button class="segbtn" data-style="bar" aria-pressed="false">반투명 바</button>
+          <div class="sec-head" style="margin-bottom:7px"><h2 style="font-size:13px">자막 스타일</h2><span class="side">13종 · 참고 릴스 포함</span></div>
+          <div class="capgrid" id="capStyle" role="group" aria-label="자막 스타일">
+            <button class="segbtn capbtn" data-style="outline" aria-pressed="true"><i style="background:#fff;box-shadow:inset 0 0 0 1px #0006"></i>순백 + 그림자</button>
+            <button class="segbtn capbtn" data-style="pinkPuff" aria-pressed="false"><i style="background:#FF6FA5;box-shadow:inset 0 0 0 2px #fff"></i>핑크 + 흰 테두리</button>
+            <button class="segbtn capbtn" data-style="butter" aria-pressed="false"><i style="background:#FFE066;box-shadow:inset 0 0 0 2px #14110C"></i>버터 + 검정 테두리</button>
+            <button class="segbtn capbtn" data-style="lime" aria-pressed="false"><i style="background:#D7FF3E"></i>라임 형광 마커</button>
+            <button class="segbtn capbtn" data-style="coral" aria-pressed="false"><i style="background:#FF6B5B;box-shadow:inset 0 0 0 2px #fff"></i>코랄 + 흰 테두리</button>
+            <button class="segbtn capbtn" data-style="mint" aria-pressed="false"><i style="background:#4FE0BC;box-shadow:inset 0 0 0 2px #fff"></i>민트 + 흰 테두리</button>
+            <button class="segbtn capbtn" data-style="sky" aria-pressed="false"><i style="background:#5BC8FF;box-shadow:inset 0 0 0 2px #fff"></i>스카이 + 흰 테두리</button>
+            <button class="segbtn capbtn" data-style="darkPill" aria-pressed="false"><i style="background:#0c0d12"></i>반투명 다크 알약</button>
+            <button class="segbtn capbtn" data-style="whiteBox" aria-pressed="false"><i style="background:#fff"></i>화이트 박스</button>
+            <button class="segbtn capbtn" data-style="neon" aria-pressed="false"><i style="background:#fff;box-shadow:0 0 0 2px #FF3DDA"></i>네온 아웃라인</button>
+            <button class="segbtn capbtn" data-style="cream" aria-pressed="false"><i style="background:#FFF6E2;box-shadow:inset 0 0 0 2px #6B4A2F"></i>크림 + 브라운 테두리</button>
+            <button class="segbtn capbtn" data-style="butterBox" aria-pressed="false"><i style="background:#FFE066"></i>버터 박스 + 검정 글씨</button>
+            <button class="segbtn capbtn" data-style="boldOutline" aria-pressed="false"><i style="background:#fff;box-shadow:0 0 0 3px #000"></i>굵은 외곽선 고딕</button>
           </div>
           <div class="swatches" id="accentRow" role="group" aria-label="포인트 컬러">
             <button class="swatch" data-accent="lime" aria-pressed="true"><i style="background:#D7FF3E"></i>라임</button>
             <button class="swatch" data-accent="yellow" aria-pressed="false"><i style="background:#FFD84D"></i>노랑</button>
             <button class="swatch" data-accent="pink" aria-pressed="false"><i style="background:#FF5FA2"></i>핑크</button>
+          </div>
+          <p class="hint" style="margin-top:6px">자막 스타일은 틀과 상관없이 자유롭게 섞어 쓸 수 있어요. 7원칙에 맞추지 않아도 됩니다.</p>
+        </div>
+
+        <div class="card">
+          <div class="sec-head" style="margin-bottom:7px"><h2 style="font-size:13px">참고 릴스 3종</h2><span class="side">한 번에 적용</span></div>
+          <div class="refrow">
+            <button class="refcard" type="button" id="btnRefStretch">
+              <b>🩷 파스텔 손글씨 · DfRcwTAqOkK</b>
+              <small>개구체 + 자간 +10px · 핑크 글씨에 두꺼운 흰 테두리</small>
+              <span class="demo" style="font-family:'Gaegu','Jua',sans-serif;color:#FF6FA5;-webkit-text-stroke:2px #fff;text-shadow:0 2px 4px #0004;letter-spacing:1.4px">쭉쭉 늘려줘요</span>
+            </button>
+            <button class="refcard" type="button" id="btnRefBold">
+              <b>🖤 굵은 외곽선 고딕 · thingthing.kr</b>
+              <small>상단 중앙 두 줄 · 굵은 고딕 흰 글씨 + 두꺼운 검정 외곽선/그림자</small>
+              <span class="demo" style="font-family:'GmarketSans','Pretendard',sans-serif;font-weight:900;color:#fff;-webkit-text-stroke:3.5px #000;letter-spacing:-.5px">진짜 속이 다르네</span>
+            </button>
+            <button class="refcard" type="button" id="btnRefCloseup">
+              <b>🔍 무자막 클로즈업 · _bbangya_bbangya_</b>
+              <small>자막 없이 제품만 · 클로즈업 줌인 · 경쾌한 팝 BGM(hook)</small>
+              <span class="demo" style="font-family:'Jua','Pretendard',sans-serif;color:#fff;text-shadow:0 2px 6px #0008">한입에 반으로</span>
+            </button>
           </div>
         </div>
       </section>
@@ -557,18 +562,21 @@ dialog::backdrop { background: rgba(0,0,0,.65); }
           <div class="slider-row"><span>보이스 볼륨</span><input type="range" id="voiceVol" min="0" max="1.5" step="0.01" value="1"><output id="voiceVolOut">100%</output></div>
         </div>
 
+        <div class="card" id="ttsVoice"></div>
+
         <div class="card">
           <div class="sec-head" style="margin-bottom:7px"><h2 style="font-size:13px">배경음악</h2><span class="side">무료 4곡 + 페이드</span></div>
           <div id="bgmList"></div>
           <div class="slider-row"><span>BGM 볼륨</span><input type="range" id="bgmVol" min="0" max="1" step="0.01" value="0.25"><output id="bgmVolOut">25%</output></div>
           <p class="hint" style="margin-top:6px">모든 곡은 직접 만든 15~18초 루프예요. 저장할 때 영상 길이에 맞춰 반복되고, 클립 원음·보이스와 한 트랙으로 섞여요.</p>
+          <p class="hint" style="margin-top:5px;color:#c8b26a">🎧 앱 내 음원은 <b>저작권 프리</b>이며, A2O·ILLIT 등 인스타 유행 원곡은 업로드 시 <b>인스타 앱에서 붙이는 걸 권장</b>해요.</p>
         </div>
       </section>
     </section>
 
     <!-- ================= 틀 ================= -->
     <section class="view" id="view-templates" hidden>
-      <div class="sec-head"><h2>틀 13종 · 크리에이터 스타일</h2><span class="side">한 번에 적용</span></div>
+      <div class="sec-head"><h2>틀 15종 · 크리에이터 스타일</h2><span class="side">한 번에 적용</span></div>
       <div class="chips" id="arcChips" role="group" aria-label="아키타입">
         <button class="chip" data-arc="all" aria-pressed="true">전체</button>
         <button class="chip" data-arc="R1" aria-pressed="false">R1 솔직 리뷰</button>
@@ -582,7 +590,7 @@ dialog::backdrop { background: rgba(0,0,0,.65); }
       <div class="sec-head" style="margin-top:14px"><h2>크리에이터 스타일</h2><span class="side">6종 원클릭</span></div>
       <div class="grid2" id="stylesGrid"></div>
 
-      <div class="sec-head" style="margin-top:14px"><h2>전체 프리셋</h2><span class="side" id="tplCount">13개</span></div>
+      <div class="sec-head" style="margin-top:14px"><h2>전체 프리셋</h2><span class="side" id="tplCount">15개</span></div>
       <div class="grid2" id="templateGrid"></div>
       <div class="tdesc" id="tdesc2"></div>
 
@@ -766,13 +774,17 @@ dialog::backdrop { background: rgba(0,0,0,.65); }
       <button class="btn btn-ghost btn-sm" id="btnSaveClient" type="button">클라이언트 ID 저장</button>
     </div>
     <div class="sec">
+      <div id="ttsSettings"></div>
+    </div>
+    <div class="sec">
       <h4>이 기기의 저장 형식 (코덱 점검)</h4>
       <div class="kv" id="codecDiag"></div>
       <p class="hint">MP4 · H.264로 저장돼야 인스타그램·유튜브에 바로 올라가요. WEBM만 되면 아이폰 <b>사파리</b>에서 열어 다시 만들어 주세요.</p>
     </div>
     <div class="sec">
       <h4>앱 정보</h4>
-      <p class="hint">틀편집 스튜디오 2.0 · 틀 13종 · 프리셋 <span id="presetCount">13</span>개 · 모든 처리는 이 브라우저 안에서만 이뤄져요.</p>
+      <p class="hint">틀편집 스튜디오 2.0 · 틀 15종 · 프리셋 <span id="presetCount">13</span>개 · 모든 처리는 이 브라우저 안에서만 이뤄져요.</p>
+      <p class="hint">PC·노트북에서는 <a href="pc.html" style="color:var(--accent);font-weight:800;text-decoration:none">PC 버전(캡컷 타임라인)</a>으로 5개 트랙을 끌어 편집하고 MP4로 바로 내보낼 수 있어요.</p>
     </div>
     <div class="end">
       <button value="close" class="btn btn-ghost btn-sm">닫기</button>
@@ -781,6 +793,7 @@ dialog::backdrop { background: rgba(0,0,0,.65); }
 </dialog>
 
 <script src="engine.js"></script>
+<script src="tts.js"></script>
 <script src="presets.js"></script>
 <script src="app.js"></script>
 </body>

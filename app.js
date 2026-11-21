@@ -287,7 +287,7 @@
     await ensureFont(UI.font); renderNow(); scheduleSave();
   }
   function setSpacing(v) {
-    UI.spacing = clamp(Math.round(Number(v) || 0), -4, 6);
+    UI.spacing = clamp(Math.round(Number(v) || 0), -4, 14);
     paintTrack(); renderNow(); scheduleSave();
   }
   document.querySelectorAll('#weightRow .segbtn').forEach((b) => { b.onclick = () => setWeight(Number(b.dataset.weight)); });
@@ -305,6 +305,37 @@
       UI.accent = b.dataset.accent; renderNow(); scheduleSave();
     };
   });
+
+  /* 참고 릴스 3종 — 한 번에 폰트·자간·자막 스타일·BGM을 맞춥니다 */
+  async function applyRefStyle(kind) {
+    if (kind === 'stretch') {
+      UI.font = 'gaegu'; UI.weight = 700; UI.spacing = 10;
+      UI.captionStyle = 'pinkPuff'; UI.accent = 'pink';
+      await ensureFont(UI.font); refreshSans();
+      toast('파스텔 손글씨 · 개구체 + 자간 +10px + 핑크+흰 테두리', 4200);
+    } else if (kind === 'bold') {
+      UI.font = 'gmarket'; UI.weight = 900; UI.spacing = 0;
+      UI.captionStyle = 'boldOutline'; UI.accent = 'yellow';
+      const tpl = TEMPLATES.find((t) => t.id === 'bold-outline');
+      if (tpl) selectTemplate(tpl, true);
+      if (!$('fHook').value.trim()) $('fHook').value = '반으로 쪼개봤어요';
+      await ensureFont(UI.font); refreshSans();
+      toast('굵은 외곽선 고딕 · 상단 두 줄 + 두꺼운 검정 테두리', 4200);
+    } else if (kind === 'closeup') {
+      UI.font = 'jua'; UI.weight = 700; UI.spacing = 2;
+      UI.captionStyle = 'outline'; UI.accent = 'lime';
+      const tpl = TEMPLATES.find((t) => t.id === 'minimal-closeup');
+      if (tpl) selectTemplate(tpl, true);
+      state.bgm = 'hook'; state.bgmVol = Math.max(state.bgmVol, 0.3);
+      state.voicePreset = 'hype'; state.voiceRate = VOICES.hype.rate;
+      await ensureFont(UI.font); refreshSans(); renderBgm();
+      toast('무자막 클로즈업 · 자막 없이 제품만 + 줌인 + 팝 BGM(hook)', 4200);
+    }
+    paintUi(); renderNow(); scheduleSave();
+  }
+  if ($('btnRefStretch')) $('btnRefStretch').onclick = () => applyRefStyle('stretch');
+  if ($('btnRefBold')) $('btnRefBold').onclick = () => applyRefStyle('bold');
+  if ($('btnRefCloseup')) $('btnRefCloseup').onclick = () => applyRefStyle('closeup');
   function paintUi() {
     paintWeight(); paintTrack();
     document.querySelectorAll('#capStyle .segbtn').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.style === UI.captionStyle)));
@@ -1119,6 +1150,34 @@
     state.voiceVol = Number(e.target.value);
     $('voiceVolOut').textContent = `${Math.round(state.voiceVol * 100)}%`;
   });
+
+  /* ---------------------------------------------------------------- 외부 TTS
+     생성된 음성은 업로드한 파일과 똑같이 state.voiceBuffer로 들어가
+     보이스 트랙·저장(MP4) 믹싱에 그대로 쓰입니다. 키는 localStorage에만. */
+  async function useTtsAudio({ blob, ext, providerName }) {
+    $('voiceSub').textContent = '음성 읽는 중…';
+    try {
+      const ac = state.audioCtx || (state.audioCtx = new (window.AudioContext || window.webkitAudioContext)());
+      const buffer = await ac.decodeAudioData((await blob.arrayBuffer()).slice(0));
+      state.voiceBuffer = buffer;
+      state.voiceName = `TTS · ${providerName}`;
+      $('voiceName').textContent = state.voiceName;
+      $('voiceSub').textContent = `${fmt(buffer.duration)} · ${providerName} · 영상 길이에 맞춰 믹싱돼요`;
+      $('voicePick').classList.add('has');
+      $('btnVoiceClear').hidden = false;
+      toast(`외부 TTS 음성을 보이스 트랙에 넣었어요 (${fmt(buffer.duration)})`, 3800);
+      scheduleSave();
+    } catch {
+      $('voiceSub').textContent = '이 형식은 브라우저가 읽지 못했어요. MP3로 다시 뽑아 주세요.';
+      toast('생성된 음성을 해석하지 못했어요 (MP3/WAV)', 4600);
+    }
+  }
+  const ttsOpts = {
+    getText: () => String($('fScript').value || $('fHook').value || '').trim(),
+    onAudio: useTtsAudio,
+  };
+  mountTtsPanel(document.getElementById('ttsVoice'), ttsOpts);
+  mountTtsPanel(document.getElementById('ttsSettings'), ttsOpts);
 
   /* ---------------------------------------------------------------- BGM */
   const bgmEl = typeof Audio !== 'undefined' ? new Audio() : null;
@@ -2478,5 +2537,6 @@
   window.__studio2 = {
     state, UI, SAFE, TEMPLATES, detectCuts, cutPlan, seekTo, CUT, matchType, arcForAvg,
     projectData, applyProject, pickMime, containerOf, mimeLabel,
+    CAPTION_STYLES, capStyleOf, demoLoaded, DEMO_SHOTS, FONTS, applyRefStyle, renderNow, sampleFrame, refreshCards, selectTemplate,
   };
 })();

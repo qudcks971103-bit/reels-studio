@@ -14,6 +14,9 @@ const FONTS = [
   { id: 'nanumsquare', family: 'NanumSquareNeo', name: '나눔스퀘어 네오', sample: '물때 안 낌', badge: '모던 정보형' },
   { id: 'maruburi', family: 'MaruBuri', name: '마루 부리', sample: '오늘도 천천히', badge: '감성 무드' },
   { id: 'dohyeon', family: 'Do Hyeon', name: '배민 도현체', sample: '이건 정착템', badge: '강한 제목 훅', single: true },
+  { id: 'gaegu', family: 'Gaegu', name: '개구체', sample: '쭉쭉 늘려줘요', badge: '참고 릴스 손글씨', single: true },
+  { id: 'nanumpen', family: 'Nanum Pen Script', name: '나눔 손글씨 펜', sample: '쭉쭉 늘려줘요', badge: '또박또박 펜글씨', single: true },
+  { id: 'singleday', family: 'Single Day', name: '싱글 데이', sample: '이거 진짜 대박', badge: '동글동글 손글씨', single: true },
 ];
 const ACCENTS = {
   lime: { color: '#D7FF3E', name: '라임' },
@@ -26,7 +29,7 @@ const UI = {
   accent: 'lime',
   safe: false,
   weight: 700,   // 400 | 500 | 700 | 900
-  spacing: 0,    // 자간 px · -4 ~ +6
+  spacing: 0,    // 자간 px · -4 ~ +14 (참고 릴스처럼 넓게 벌리기)
 };
 /* 셋톡에서 클로드와 합의한 캡션 고정선
    · top_label : 인스타 상단 UI 아래(safe.top 230)부터
@@ -218,7 +221,7 @@ function drawRich(ctx, text, opt = {}) {
     barColor = 'rgba(10,11,16,0.46)', barPadX = 34, barPadY = 20, barRadius = 26,
     accent = accentColor(), lineGap = 1,
     hl = false, hlColor = null, hlInk = null, tracking = null, trackingForce = 0,
-    strokeW = null, strokeCol = null, shadowCol = null,
+    strokeW = null, strokeCol = null, shadowCol = null, glow = null, shadowY = null,
   } = opt;
   if (!String(text || '').trim()) return { h: 0, y0: y };
   ctx.save();
@@ -274,16 +277,33 @@ function drawRich(ctx, text, opt = {}) {
         ctx.lineCap = 'round';
         ctx.lineWidth = strokeW || Math.max(2, size * 0.085);
         ctx.strokeStyle = strokeCol || 'rgba(0,0,0,0.55)';
-        if (shadow) { ctx.shadowColor = shadowCol || 'rgba(0,0,0,0.45)'; ctx.shadowBlur = shadow; ctx.shadowOffsetY = size * 0.06; }
+        if (shadow) {
+          ctx.shadowColor = shadowCol || 'rgba(0,0,0,0.45)';
+          ctx.shadowBlur = shadow;
+          ctx.shadowOffsetY = shadowY == null ? size * 0.06 : shadowY;
+        }
         run((t, xx, yy) => ctx.strokeText(t, xx, yy));
         ctx.restore();
       } else if (shadow) {
         ctx.save();
         ctx.shadowColor = shadowCol || 'rgba(0,0,0,0.5)';
         ctx.shadowBlur = shadow;
-        ctx.shadowOffsetY = size * 0.06;
+        ctx.shadowOffsetY = shadowY == null ? size * 0.06 : shadowY;
         ctx.fillStyle = wc;
         run((t, xx, yy) => ctx.fillText(t, xx, yy));
+        ctx.restore();
+      }
+      if (glow && !(hl && w.a)) {
+        /* 네온: 글씨 색과 같은 빛 번짐을 한 번 더 그립니다 */
+        ctx.save();
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.lineWidth = Math.max(2, size * 0.1);
+        ctx.strokeStyle = glow;
+        ctx.shadowColor = glow;
+        ctx.shadowBlur = size * 0.5;
+        ctx.shadowOffsetY = 0;
+        run((t, xx, yy) => ctx.strokeText(t, xx, yy));
         ctx.restore();
       }
       ctx.fillStyle = wc;
@@ -307,9 +327,30 @@ function drawRich(ctx, text, opt = {}) {
   return { h: totalH, y0 };
 }
 
+/* ---------- 자막 스타일 12종 ----------
+   참고 릴스(DfRcwTAqOkK)의 "*쭉쭉 늘려줘요*"처럼 파스텔 채우기 + 두꺼운 흰 테두리 +
+   부드러운 그림자를 한 번에 고를 수 있게 표로 정리했습니다. 값은 drawRich 옵션으로 그대로 넘어갑니다. */
+const CAPTION_STYLES = [
+  { id: 'outline', name: '순백 + 그림자', hint: '가장 무난한 기본', ink: '#FFFFFF', stroke: 'rgba(0,0,0,0.34)', strokeW: 0.045, shadow: 22, shadowCol: 'rgba(0,0,0,0.45)' },
+  { id: 'pinkPuff', name: '파스텔 핑크 + 흰 테두리', hint: '파스텔 손글씨', ink: '#FF6FA5', stroke: '#FFFFFF', strokeW: 0.085, shadow: 18, shadowCol: 'rgba(255,80,145,0.45)' },
+  { id: 'butter', name: '버터옐로우 + 검정 테두리', hint: '눈에 확 띄는 훅', ink: '#FFE066', stroke: '#14110C', strokeW: 0.07, shadow: 16, shadowCol: 'rgba(0,0,0,0.45)' },
+  { id: 'lime', name: '라임 형광 마커', hint: '정보·꿀팁 강조', ink: '#12130C', bar: { color: '#D7FF3E', radius: 10, padX: 20, padY: 8 }, shadow: 0 },
+  { id: 'coral', name: '코랄 + 흰 테두리', hint: '리뷰·후기', ink: '#FF6B5B', stroke: '#FFFFFF', strokeW: 0.085, shadow: 18, shadowCol: 'rgba(255,80,60,0.35)' },
+  { id: 'mint', name: '민트 + 흰 테두리', hint: '살림·청소', ink: '#4FE0BC', stroke: '#FFFFFF', strokeW: 0.085, shadow: 18, shadowCol: 'rgba(30,190,160,0.35)' },
+  { id: 'sky', name: '스카이 + 흰 테두리', hint: '가전·테크', ink: '#5BC8FF', stroke: '#FFFFFF', strokeW: 0.085, shadow: 18, shadowCol: 'rgba(40,150,240,0.35)' },
+  { id: 'darkPill', name: '반투명 다크 알약', hint: '밝은 배경에 안전', ink: '#FFFFFF', bar: { color: 'rgba(12,13,18,0.66)', radius: 999, padX: 34, padY: 16 }, shadow: 0 },
+  { id: 'whiteBox', name: '화이트 박스', hint: '깔끔한 정보형', ink: '#17181D', bar: { color: 'rgba(255,255,255,0.95)', radius: 12, padX: 26, padY: 12 }, shadow: 12, shadowCol: 'rgba(0,0,0,0.28)' },
+  { id: 'neon', name: '네온 아웃라인', hint: '밤·클럽 무드', ink: '#FFFFFF', stroke: '#FF3DDA', strokeW: 0.075, glow: '#FF3DDA', shadow: 30, shadowCol: 'rgba(255,61,218,0.65)' },
+  { id: 'cream', name: '크림 + 브라운 테두리', hint: '감성 브이로그', ink: '#FFF6E2', stroke: '#6B4A2F', strokeW: 0.075, shadow: 18, shadowCol: 'rgba(60,40,20,0.4)' },
+  { id: 'butterBox', name: '버터 박스 + 검정 글씨', hint: '가격·혜택 강조', ink: '#1A1508', bar: { color: 'rgba(255,224,102,0.96)', radius: 10, padX: 24, padY: 10 }, shadow: 12, shadowCol: 'rgba(0,0,0,0.3)' },
+  { id: 'boldOutline', name: '굵은 외곽선 고딕', hint: '상단 제목·훅 전용', ink: '#FFFFFF', stroke: '#000000', strokeW: 0.13, shadow: 16, shadowCol: 'rgba(0,0,0,0.6)' },
+];
+const CAPTION_ALIAS = { bar: 'darkPill' };
+const capStyleOf = (id) => CAPTION_STYLES.find((s) => s.id === (CAPTION_ALIAS[id] || id)) || CAPTION_STYLES[0];
+
 function drawCaptionArea(ctx, f, o = {}) {
   if (!f.caption) return;
-  const style = UI.captionStyle;
+  const st = capStyleOf(UI.captionStyle);
   const size = o.size || 56;
   const rise = (1 - ease(Math.min(1, (f.captionP || 0) * 4))) * 8;
   ctx.save();
@@ -321,17 +362,21 @@ function drawCaptionArea(ctx, f, o = {}) {
     align: o.align || 'center',
     maxW: o.maxW || f.W * 0.78, maxLines: o.maxLines || 2,
     lineHeight: o.lineHeight || 1.3,
-    color: 'rgba(255,255,255,0.98)',
-    stroke: style === 'outline',
-    strokeW: Math.max(2, size * 0.045),
-    strokeCol: 'rgba(0,0,0,0.3)',
-    shadow: 22,
-    shadowCol: 'rgba(0,0,0,0.35)',
-    bar: style === 'bar',
+    color: st.ink,
+    stroke: !!st.stroke,
+    strokeW: st.stroke ? Math.max(2, size * st.strokeW) : null,
+    strokeCol: st.stroke || null,
+    shadow: st.shadow == null ? 22 : st.shadow,
+    shadowCol: st.shadowCol || 'rgba(0,0,0,0.4)',
+    glow: st.glow || null,
+    bar: !!st.bar,
+    barColor: (st.bar && st.bar.color) || o.barColor || 'rgba(14,14,18,0.56)',
+    barRadius: (st.bar && st.bar.radius) || 20,
+    barPadX: (st.bar && st.bar.padX) || 34,
+    barPadY: (st.bar && st.bar.padY) || 18,
     opacity: Math.min(1, 0.35 + f.captionP * 6),
-    barColor: o.barColor || 'rgba(14,14,18,0.56)',
-    barRadius: 20,
   });
+  ctx.restore();
 }
 
 /* ---------- 유리 패널 · 효과 ---------- */
@@ -867,23 +912,35 @@ function titleRich(ctx, text, opt = {}) {
 /* 본문 자막 — 흰 글씨 600 + 옅은 그림자 */
 function captionClean(ctx, text, opt = {}) {
   if (!String(text || '').trim()) return { h: 0, y0: 0 };
+  /* 자막 스타일 13종이 틀과 상관없이 적용되도록 색·테두리·바·그림자를 여기서 한 번에 정합니다.
+     (목록 항목·제목처럼 자막이 아닌 글자는 opt.plain = true 로 기존 모습 유지) */
+  const st = opt.plain ? null : capStyleOf(UI.captionStyle || 'outline');
+  const size = opt.size || 56;
   return drawRich(ctx, text, {
     x: opt.x == null ? 540 : opt.x,
     y: opt.y == null ? 0 : opt.y,
     bottom: opt.bottom == null ? null : opt.bottom,
-    size: opt.size || 56,
+    size,
     weight: opt.weight || 600,
     align: opt.align || 'center',
     maxW: opt.maxW || 860,
     maxLines: opt.maxLines || 2,
     lineHeight: opt.lineHeight || 1.32,
-    color: opt.color || 'rgba(255,255,255,0.98)',
-    stroke: false,
-    shadow: opt.shadow == null ? 22 : opt.shadow,
+    color: opt.color || (st ? st.ink : 'rgba(255,255,255,0.98)'),
+    stroke: !!(st && st.stroke),
+    strokeW: st && st.stroke ? Math.max(2, size * st.strokeW) : null,
+    strokeCol: (st && st.stroke) || null,
+    glow: st ? st.glow : null,
+    bar: !!(st && st.bar),
+    barColor: (st && st.bar && st.bar.color) || 'rgba(12,13,18,0.6)',
+    barRadius: (st && st.bar && st.bar.radius) || 18,
+    barPadX: (st && st.bar && st.bar.padX) || 28,
+    barPadY: (st && st.bar && st.bar.padY) || 12,
+    shadow: opt.shadow == null ? (st && st.shadow != null ? st.shadow : 22) : opt.shadow,
     shadowCol: opt.shadowCol || 'rgba(0,0,0,0.35)',
     opacity: opt.opacity == null ? 1 : opt.opacity,
     hl: !!opt.hl,
-    accent: accentNow(),
+    accent: opt.accent || accentNow(),
     trackingForce: opt.trackingForce || 0,
     lineGap: opt.lineGap || 1,
   });
@@ -1384,7 +1441,7 @@ TEMPLATES.push({
     thinNumeral(ctx, pad2(rank), 60, 1424, 232, { weight: 300, color: 'rgba(255,255,255,0.96)' });
     captionClean(ctx, items[idx] || '', {
       x: 372, y: 1300, size: 72, weight: 600, align: 'left', maxW: W - 436,
-      maxLines: 2, lineHeight: 1.24, shadow: 24,
+      maxLines: 2, lineHeight: 1.24, shadow: 24, plain: true,
     });
     ctx.restore();
 
@@ -2008,7 +2065,7 @@ TEMPLATES.push({
       if (f.text.title) {
         captionClean(ctx, f.text.title, {
           x: W / 2, y: 652, size: 50, weight: 600, align: 'center', maxW: W * 0.8,
-          maxLines: 1, lineHeight: 1.5, color: 'rgba(255,255,255,0.88)', shadow: 12,
+          maxLines: 1, lineHeight: 1.5, color: 'rgba(255,255,255,0.88)', shadow: 12, plain: true,
         });
       }
       ctx.restore();
@@ -2207,72 +2264,186 @@ function recommend(srcW, srcH, duration, mode) {
   }));
 }
 
-/* ---------- 샘플 영상(직접 그린 그래픽) ---------- */
+/* ---------- 샘플 미리보기: 실제 제품 사진 3장 ----------
+   예전에는 창문·잎사귀를 벡터로 그렸지만, 릴스 화면처럼 보이도록
+   실사 제품 컷(demo_product_1~3.jpg)을 천천히 밀어 넣으며 크로스페이드합니다. */
+const DEMO_SHOTS = ['demo_product_1.jpg', 'demo_product_2.jpg', 'demo_product_3.jpg'];
+const DEMO_IMGS = DEMO_SHOTS.map((src) => {
+  const img = new Image();
+  img.decoding = 'async';
+  img.src = src;
+  return img;
+});
+const DEMO_LOOP = 9; // 3장 × 3초
+const demoLoaded = () => DEMO_IMGS.filter((i) => i.complete && i.naturalWidth > 0);
 function makeSampleSource(aspect = 'portrait') {
+  const land = aspect !== 'portrait';
   const c = document.createElement('canvas');
-  c.width = aspect === 'portrait' ? 540 : 960;
-  c.height = aspect === 'portrait' ? 960 : 540;
+  c.width = land ? 960 : 540;
+  c.height = land ? 540 : 960;
   const x = c.getContext('2d');
-  const bokeh = Array.from({ length: 9 }, () => ({
-    x: Math.random(), y: Math.random(), r: 26 + Math.random() * 70,
-    s: 0.03 + Math.random() * 0.07, p: Math.random() * 6.28,
-  }));
   return {
     canvas: c,
+    shots: DEMO_IMGS,
     draw(t) {
-      const g = x.createLinearGradient(0, 0, c.width * 0.4, c.height);
-      g.addColorStop(0, '#6c5c4b');
-      g.addColorStop(0.42, '#a08b73');
-      g.addColorStop(1, '#3a322b');
-      x.fillStyle = g; x.fillRect(0, 0, c.width, c.height);
-
-      const warm = x.createRadialGradient(c.width * 0.72, c.height * 0.2, 0, c.width * 0.72, c.height * 0.2, c.width * 0.85);
-      warm.addColorStop(0, 'rgba(255,238,206,0.55)');
-      warm.addColorStop(0.42, 'rgba(255,220,180,0.18)');
-      warm.addColorStop(1, 'rgba(255,220,180,0)');
-      x.fillStyle = warm; x.fillRect(0, 0, c.width, c.height);
-
-      x.save();
-      x.globalAlpha = 0.12;
-      const wx = c.width * 0.6, wy = c.height * 0.1, ww = c.width * 0.3, wh = c.height * 0.4;
-      x.fillStyle = '#fff7e8';
-      roundRect(x, wx, wy, ww, wh, 18);
-      x.fill();
-      x.globalAlpha = 0.5;
-      x.fillStyle = '#4a3d31';
-      x.fillRect(wx + ww / 2 - 3, wy, 6, wh);
-      x.fillRect(wx, wy + wh * 0.52 - 3, ww, 6);
-      x.restore();
-
-      x.save();
-      x.translate(c.width * 0.16, c.height * 0.84);
-      x.rotate(-0.2 + Math.sin(t * 0.3) * 0.012);
-      x.fillStyle = 'rgba(28,34,26,0.55)';
-      for (let i = 0; i < 7; i++) {
+      const W = c.width, H = c.height;
+      const ready = demoLoaded();
+      if (!ready.length) {
+        /* 사진이 아직 안 열렸을 때만 쓰는 단색 바탕 (가짜 배경 없음) */
+        const g = x.createLinearGradient(0, 0, 0, H);
+        g.addColorStop(0, '#2b2724');
+        g.addColorStop(1, '#151310');
+        x.fillStyle = g;
+        x.fillRect(0, 0, W, H);
+        return;
+      }
+      const n = ready.length;
+      const seg = DEMO_LOOP / n;
+      const cyc = ((t % DEMO_LOOP) + DEMO_LOOP) % DEMO_LOOP;
+      const idx = Math.min(n - 1, Math.floor(cyc / seg));
+      const local = cyc - idx * seg;
+      const fade = Math.min(0.8, seg * 0.32);
+      const drawShot = (im, p, alpha, dir) => {
+        const sw = im.naturalWidth || 1, sh = im.naturalHeight || 1;
+        const zoom = 1.06 + 0.1 * clamp(p, 0, 1);
+        const base = Math.max(W / sw, H / sh) * zoom;
+        const dw = sw * base, dh = sh * base;
+        const fx = clamp(0.5 + dir * (clamp(p, 0, 1) - 0.5) * 0.5, 0, 1);
+        const fy = clamp(0.5 + (clamp(p, 0, 1) - 0.5) * 0.3, 0, 1);
         x.save();
-        x.rotate(-1.5 + i * 0.34);
-        x.beginPath();
-        x.ellipse(0, -110 - i * 8, 26, 88, 0, 0, Math.PI * 2);
-        x.fill();
+        x.globalAlpha = alpha;
+        x.imageSmoothingQuality = 'high';
+        x.drawImage(im, -(dw - W) * fx, -(dh - H) * fy, dw, dh);
         x.restore();
+      };
+      if (local < fade && n > 1) {
+        const prev = (idx - 1 + n) % n;
+        drawShot(ready[prev], 1, 1, prev % 2 ? -1 : 1);
+        drawShot(ready[idx], local / fade, local / fade, idx % 2 ? -1 : 1);
+      } else {
+        const p = (local - fade) / Math.max(0.001, seg - fade);
+        drawShot(ready[idx], p, 1, idx % 2 ? -1 : 1);
       }
-      x.restore();
-
-      for (const b of bokeh) {
-        const cx = (((b.x + t * b.s) % 1.2) - 0.1) * c.width;
-        const cy = (((b.y + t * b.s * 0.35) % 1.2) - 0.1) * c.height + Math.sin(t * 0.5 + b.p) * 18;
-        const rg = x.createRadialGradient(cx, cy, 0, cx, cy, b.r);
-        rg.addColorStop(0, 'rgba(255,240,214,0.22)');
-        rg.addColorStop(1, 'rgba(255,240,214,0)');
-        x.fillStyle = rg;
-        x.beginPath(); x.arc(cx, cy, b.r, 0, Math.PI * 2); x.fill();
-      }
-      const v = x.createRadialGradient(c.width / 2, c.height * 0.45, c.width * 0.2, c.width / 2, c.height * 0.5, c.height * 0.8);
-      v.addColorStop(0, 'rgba(0,0,0,0)');
-      v.addColorStop(1, 'rgba(0,0,0,0.4)');
-      x.fillStyle = v; x.fillRect(0, 0, c.width, c.height);
+      /* 자막이 읽히도록 위·아래만 살짝 어둡게 */
+      const top = x.createLinearGradient(0, 0, 0, H * 0.32);
+      top.addColorStop(0, 'rgba(0,0,0,0.32)');
+      top.addColorStop(1, 'rgba(0,0,0,0)');
+      x.fillStyle = top;
+      x.fillRect(0, 0, W, H * 0.32);
+      const bot = x.createLinearGradient(0, H * 0.6, 0, H);
+      bot.addColorStop(0, 'rgba(0,0,0,0)');
+      bot.addColorStop(1, 'rgba(0,0,0,0.38)');
+      x.fillStyle = bot;
+      x.fillRect(0, H * 0.6, W, H * 0.4);
     },
   };
 }
+
+/* ---------- P18 · 🖤 띵띵 볼드 아울라인 ----------
+   @thingthing.kr 참고: 상단 중앙 두 줄, 굵은 고딕 흰 글씨 + 두꺼운 검정 외곽선/그림자 */
+TEMPLATES.push({
+  id: 'bold-outline',
+  presetId: 'P18',
+  name: '🖤 굵은 외곽선 고딕',
+  label: '제목·훅 강조',
+  platform: 'reels',
+  cats: ['review', 'living', 'info'],
+  arc: 'R1',
+  dur: 20,
+  W: 1080, H: 1920,
+  tagBg: '#ffffff', tagFg: '#111111',
+  isNew: true,
+  trend: '@thingthing.kr 참고 · 상단 중앙 두 줄 굵은 흰 글씨 + 두꺼운 검정 테두리',
+  desc: '사진은 그대로 두고 상단 중앙에 두 줄 체목만 딱. 굵은 고딕 흰 글씨에 두꺼운 검정 외곽선을 넣어 밝은 배경에서도 또렷하게 읽혀요.',
+  tips: '제목을 비우면 첫 3초 훅이 그대로 제목이 돼요. 자막은 한 줄로 짧게 — 글자가 적을수록 제품이 더 커 보여요.',
+  sample: { hook: '반으로 쪼개봤어요', title: '진짜 속이 다르네', price: '', items: '', channel: 'thingthing.kr' },
+  sampleCaptions: ['겉만 봐선 몰라요', '단면이 말해줍니다'],
+  draw(ctx, f) {
+    const W = f.W, H = f.H;
+    drawFullFrame(ctx, f);
+    scrimSmooth(ctx, f, 520, 0.3, true);
+    scrimSmooth(ctx, f, 420, 0.3, false);
+    vignette(ctx, W, H, 0.26);
+
+    const text = f.text.hook || '';
+    const sub = String(f.text.title || '').trim();
+    const size = fitRichSize(ctx, text, 104, W * 0.84, 2, 900);
+    const e = riseIn(f, 0.02, 0.22);
+    ctx.save();
+    ctx.globalAlpha = e.a;
+    ctx.translate(0, e.dy);
+    const lay = layoutRich(ctx, text, size, 900, W * 0.84, spacingNow() + tight(size));
+    const lh = size * 1.14;
+    const total = lay.lines.length * lh;
+    const y0 = Math.round(H * 0.145);
+    drawRich(ctx, text, {
+      x: W / 2, y: y0, size, weight: 900, align: 'center', maxW: W * 0.84,
+      color: '#FFFFFF',
+      stroke: true, strokeW: Math.max(6, size * 0.13), strokeCol: '#000000',
+      shadow: 18, shadowCol: 'rgba(0,0,0,0.55)',
+      lineHeight: 1.14, maxLines: 2,
+      trackingForce: tight(size),
+    });
+    if (sub) {
+      drawTracked(ctx, sub, W / 2, y0 + total + 34, {
+        size: 30, weight: 800, spacing: 2, color: 'rgba(255,255,255,0.92)', align: 'center',
+      });
+    }
+    ctx.restore();
+
+    drawCaptionArea(ctx, f, { bottom: f.H - 360, size: 50, weight: 700, maxLines: 1, maxW: f.W * 0.8 });
+  },
+});
+
+/* ---------- P19 · 🔍 미니멀 클로즈업 ----------
+   @_bbangya_bbangya_ 참고: 자막을 최소화하고 제품 클로즈업 + 잔잔한 줌인 */
+TEMPLATES.push({
+  id: 'minimal-closeup',
+  presetId: 'P19',
+  name: '🔍 무자막 클로즈업',
+  label: '제품 단면·클로즈업',
+  platform: 'reels',
+  cats: ['review', 'living'],
+  arc: 'R1',
+  dur: 15,
+  W: 1080, H: 1920,
+  tagBg: '#f1efe8', tagFg: '#3a3a34',
+  isNew: true,
+  trend: '@_bbangya_bbangya_ 참고 · 자막 최소화 + 제품 클로즈업(반으로 쪼개기·단면) + 경쾌한 팝 BGM',
+  desc: '글자를 거의 빼고 화면을 제품으로 가득 채워요. 천천히 밀어 넣는 줌인 한 번, 아래 한 줄만.',
+  tips: '제품을 반으로 자르거나 단면을 보여주는 컷을 넣으면 훨씬 잘 보여요. 자막은 한 줄, 채널 이름만 위에 작게.',
+  sample: { hook: '', title: '한입에 반으로', price: '', items: '', channel: 'bbangya.bbangya' },
+  sampleCaptions: [],
+  draw(ctx, f) {
+    const W = f.W, H = f.H;
+    const zoom = 1.03 + 0.07 * clamp((f.t || 0) / Math.max(0.6, (f.duration || 1)), 0, 1);
+    const r = fit(f.srcW, f.srcH, W, H, 'cover');
+    ctx.save();
+    ctx.translate(W / 2, H / 2);
+    ctx.scale(zoom, zoom);
+    ctx.drawImage(f.src, r.x - W / 2, r.y - H / 2, r.w, r.h);
+    ctx.restore();
+    vignette(ctx, W, H, 0.3);
+
+    const ch = String(f.text.channel || '').trim();
+    if (ch) {
+      drawTracked(ctx, ch, 56, 96, {
+        size: 26, weight: 700, spacing: 5, color: 'rgba(255,255,255,0.8)', align: 'left',
+      });
+    }
+    const cap = String(f.caption || '').trim();
+    if (cap) {
+      const e = riseIn(f, 0.05, 0.24);
+      ctx.save();
+      ctx.globalAlpha = e.a;
+      drawRich(ctx, cap, {
+        x: W / 2, bottom: f.H - 300, size: 48, weight: 700, align: 'center',
+        color: '#FFFFFF', stroke: true, strokeW: 3, strokeCol: 'rgba(0,0,0,0.55)',
+        shadow: 20, shadowCol: 'rgba(0,0,0,0.4)', maxW: W * 0.8, maxLines: 1,
+      });
+      ctx.restore();
+    }
+  },
+});
 
 refreshSans();
