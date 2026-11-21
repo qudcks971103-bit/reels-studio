@@ -309,12 +309,16 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border: 3px s
 #btnAutoAI[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 #autoResult { margin-top: 4px; }
 #autoResult .capcard textarea { min-height: 64px; }
+.autoresult-head { display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  margin: 12px 0 2px; font-size: 13.5px; font-weight: 900; }
+.autoresult-head span { font-size: 11px; font-weight: 700; color: var(--muted); }
 #autoResult .hookline { font-size: 14px; font-weight: 900; margin: 2px 0 7px; letter-spacing: -.01em; }
 #autoResult .scenes { display: flex; flex-direction: column; gap: 5px; font-size: 11.5px; color: var(--muted); }
 #autoResult .scenes .srow { display: flex; gap: 7px; align-items: baseline; }
 #autoResult .scenes b { color: var(--accent); flex: none; width: 10px; }
-#autoResult .scenes .sl { flex: none; width: 82px; color: var(--ink); font-weight: 800; }
-#autoResult .scenes .sb { flex: 1; min-width: 0; }
+#autoResult .scenes .sl { flex: none; width: 84px; color: var(--ink); font-weight: 800;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#autoResult .scenes .sb { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .copybtn { font-size: 11px; font-weight: 800; border: 1px solid var(--line); background: var(--surface-2); border-radius: 8px; padding: 5px 9px; }
 .rtabs { display: flex; gap: 5px; margin-bottom: 10px; }
 .rtab { flex: 1; font-size: 12px; font-weight: 800; padding: 8px 6px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-2); color: var(--muted); }

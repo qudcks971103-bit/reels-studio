@@ -995,6 +995,7 @@
       `<div class="srow"><b>${i + 1}</b><span class="sl">${esc(s.top_label)}</span><span class="sb">${esc(s.sub)}</span></div>`).join('');
     box.hidden = false;
     box.innerHTML = `
+      <div class="autoresult-head">📋 인스타 캡션 &amp; 해시태그 <span>원터치 복사</span></div>
       <div class="capcard">
         <header><h3>🪝 훅 · 컷 자막 ${out.scenes.length}개</h3></header>
         <p class="hookline">${esc(out.hook)}</p>
