@@ -1290,11 +1290,189 @@
     });
   }
 
+  /* ================================================ ✨ 주제만 넣고 자동 구성 (autogen.js · P4)
+     주제 한 줄 → 영상/샘플 컷 + 컷별 자막 + 훅 + BGM + 전환 효과 + 추천 스타일을
+     타임라인에 바로 깔고, 우측에 인스타 캡션·해시태그 복사 박스를 엽니다. */
+  const AG = window.Autogen || null;
+  let autoStyleId = 'auto';
+  const PC_FONT_MAP = {
+    pretendard: 'pretendard', gmarket: 'gmarket', jua: 'jua', gaegu: 'gaegu', nanumpen: 'nanumpen',
+    singleday: 'singleday', dohyeon: 'dohyeon', score: 'score', nanumsquare: 'pretendard',
+    paperlogy: 'pretendard', maruburi: 'singleday',
+  };
+
+  function renderAutoStyles() {
+    const sel = $('autoStyle');
+    if (!sel || !AG) return;
+    sel.innerHTML = AG.STYLES.map((s) => `<option value="${s.id}">${s.emoji || ''} ${esc(s.label)}</option>`).join('');
+    autoStyleId = sel.value || 'auto';
+    sel.onchange = () => { autoStyleId = sel.value; };
+  }
+  function pcCuts() {
+    const vids = state.blocks.filter((b) => b.track === 'video').length;
+    const media = state.media.filter((m) => m.kind !== 'audio').length;
+    return clamp(vids || media || 5, 3, 8);
+  }
+  function autoLayout(out) {
+    const st = out.recommendedSubtitleStyle;
+    if (st === 'boldOutline') return { hookY: 0.12, y: 0.16, hookSize: 104, size: 86 };
+    if (st === 'pinkPuff') return { hookY: 0.2, y: 0.24, hookSize: 84, size: 66 };
+    if (out.recommendedTemplateId === 'minimal-closeup') return { hookY: 0.76, y: 0.82, hookSize: 54, size: 48 };
+    return { hookY: 0.2, y: 0.74, hookSize: 92, size: 64 };
+  }
+  async function copyAny(text) {
+    const t = String(text || '');
+    if (!t) return;
+    try { await navigator.clipboard.writeText(t); toast('복사했어요 ✅'); }
+    catch {
+      const ta = document.createElement('textarea');
+      ta.value = t; ta.style.position = 'fixed'; ta.style.top = '-1000px';
+      document.body.appendChild(ta); ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch { /* 무시 */ }
+      ta.remove();
+      toast(ok ? '복사했어요 ✅' : '길게 눌러 복사해 주세요');
+    }
+  }
+  async function voiceFromScript(text) {
+    const cfg = window.__tts ? window.__tts.ttsLoad() : null;
+    if (!cfg || (!cfg.key && cfg.provider !== 'custom')) {
+      toast('오디오 탭의 외부 TTS에 키를 넣으면 대본으로 목소리를 만들어요');
+      return false;
+    }
+    const src = String(text || '').trim();
+    if (!src) { toast('대본이 비어 있어요'); return false; }
+    const res = await window.__tts.ttsGenerate(cfg, src);
+    const url = URL.createObjectURL(res.blob);
+    const m = addAudioMedia(`TTS · ${res.providerName}.${res.ext}`, url, 'audio', 3);
+    try {
+      const ac = new (window.AudioContext || window.webkitAudioContext)();
+      const buf = await ac.decodeAudioData(await res.blob.arrayBuffer());
+      m.dur = buf.duration;
+      await ac.close();
+    } catch { /* 길이를 못 재면 기본값 */ }
+    addVoiceBlock(m.id, 0);
+    renderVoiceList();
+    toast('보이스 트랙에 넣었어요 · 타임라인에서 길이를 맞춰 보세요');
+    return true;
+  }
+
+  function showAutoBox(out) {
+    const box = $('autoBox');
+    if (!box) return;
+    box.hidden = false;
+    box.innerHTML = `
+      <h3>✨ 자동 구성 · 캡션 & 해시태그</h3>
+      <p class="ahint" id="abRec"></p>
+      <div class="alabel">훅 (${out.hook.length}자)</div>
+      <textarea id="abHook" rows="1" readonly spellcheck="false"></textarea>
+      <div class="alabel">인스타 캡션</div>
+      <textarea id="abCaption" rows="5" readonly spellcheck="false"></textarea>
+      <div class="arow">
+        <button class="btn" type="button" data-copy-one="abCaption">캡션 복사</button>
+        <button class="btn" type="button" data-copy-one="abTags">태그 복사</button>
+      </div>
+      <div class="alabel">해시태그 ${out.hashtagList.length}개</div>
+      <textarea id="abTags" rows="3" readonly spellcheck="false"></textarea>
+      <div class="alabel">저장·팔로우 CTA</div>
+      <textarea id="abCta" rows="2" readonly spellcheck="false"></textarea>
+      <div class="alabel">보이스 대본</div>
+      <textarea id="abScript" rows="4" readonly spellcheck="false"></textarea>
+      <div class="arow">
+        <button class="btn" type="button" id="abVoice">🎙 보이스 만들기</button>
+        <button class="btn accent" type="button" id="abCopyAll">캡션+태그 복사</button>
+      </div>
+      <div class="arow">
+        <button class="btn ghost" type="button" id="abPrompt">📋 P4 프롬프트 복사</button>
+      </div>
+      <p class="ahint">제휴 링크를 붙이는 포스팅이면 캡션 맨 아래 고지를 함께 남겨 주세요. 필요 없으면 지우셔도 돼요.</p>`;
+    $('abRec').textContent = `${out.categoryName} · 틀 ${out.recommendedTemplateId} · 자막 ${out.recommendedSubtitleStyle} · BGM ${out.recommendedBgm}${out.source === 'ai' ? ' · AI(gpt-4o-mini)' : ' · 내장 생성기'} · 컷 ${out.scenes.length}개`;
+    $('abHook').value = out.hook;
+    $('abCaption').value = out.caption;
+    $('abTags').value = out.hashtags;
+    $('abCta').value = out.cta;
+    $('abScript').value = out.voiceScript;
+    box.querySelectorAll('[data-copy-one]').forEach((b) => { b.onclick = () => copyAny($(b.dataset.copyOne).value); });
+    $('abCopyAll').onclick = () => copyAny(`${out.caption}\n\n${out.hashtags}\n\n${out.disclosure}`);
+    $('abPrompt').onclick = () => copyAny(AG.buildP4Prompt($('autoTopic').value.trim() || out.topic, autoStyleId, out.cuts));
+    $('abVoice').onclick = async () => {
+      const b = $('abVoice');
+      b.disabled = true; b.textContent = '만드는 중…';
+      try { await voiceFromScript(out.voiceScript); } catch (e) { toast('⚠ ' + ((e && e.message) || e)); }
+      finally { b.disabled = false; b.textContent = '🎙 보이스 만들기'; }
+    };
+  }
+
+  async function autoCompose() {
+    if (!AG) return toast('자동 생성기를 불러오지 못했어요 (autogen.js)');
+    const topic = $('autoTopic').value.trim();
+    if (!topic) { toast('주제를 한 줄 적어 주세요'); $('autoTopic').focus(); return; }
+    const btn = $('btnAutoCompose');
+    const label = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = $('chkAutoAI').checked ? '🤖 만드는 중…' : '✨ 만드는 중…';
+    try {
+      const cuts = pcCuts();
+      const useAI = $('chkAutoAI').checked;
+      const out = useAI
+        ? await AG.generateAsync(topic, autoStyleId, { ai: true, cuts })
+        : AG.generate(topic, autoStyleId, { cuts });
+      if (!out) throw new Error('주제를 다시 확인해 주세요');
+      if (!state.media.some((m) => m.kind !== 'audio')) await addSamples();
+      pushHistory();
+      state.blocks = [];
+      state.selected = null;
+      state.ratio = '9:16';
+      state.name = topic.slice(0, 40);
+      $('projName').value = state.name;
+      state.frame = { top: out.badge, footer: '' };
+      paintRatio();
+      const per = 3;
+      const len = Math.round(out.scenes.length * per * 10) / 10;
+      const imgs = state.media.filter((m) => m.kind !== 'audio');
+      const L = autoLayout(out);
+      const font = PC_FONT_MAP[out.recommendedFont] || 'pretendard';
+      const hookDur = Math.min(1.6, per * 0.55);
+      out.scenes.forEach((sc, i) => {
+        const m = imgs[i % imgs.length];
+        if (m) state.blocks.push(baseBlock('video', i * per, per, { mediaId: m.id, zoom: 0.08, fit: 'cover', label: m.name }));
+        const tStart = i === 0 ? hookDur + 0.1 : i * per + 0.18;
+        const tDur = i === 0 ? (per - hookDur - 0.25) : (per - 0.45);
+        state.blocks.push(baseBlock('text', tStart, tDur, {
+          text: sc.sub, styleId: out.recommendedSubtitleStyle, font,
+          size: L.size, weight: out.recommendedWeight || 800, spacing: out.recommendedSpacing || 0,
+          x: 0.5, y: L.y, align: 'center', maxLines: 2,
+        }));
+        if (i > 0) state.blocks.push(baseBlock('fx', i * per, 0.45, { effect: 'flash', intensity: 0.6 }));
+      });
+      state.blocks.push(baseBlock('text', 0.1, hookDur, {
+        text: out.hook, styleId: out.recommendedSubtitleStyle, font,
+        size: L.hookSize, weight: 900, spacing: out.recommendedSpacing || 0,
+        x: 0.5, y: L.hookY, align: 'center', maxLines: 2,
+      }));
+      addBgmBlock(out.recommendedBgm, 0, len);
+      state.blocks.push(baseBlock('fx', 0, len, { effect: 'zoom', intensity: 0.5 }));
+      state.blocks.push(baseBlock('fx', 0, len, { effect: 'vignette', intensity: 0.28 }));
+      const vm = state.media.find((m) => m.kind === 'audio' && !BGMS.some((b) => m.url.endsWith(b.file)));
+      if (vm) state.blocks.push(baseBlock('voice', 0, len, { mediaId: vm.id, volume: 1, fadeIn: 0.05, fadeOut: 0.15, name: vm.name }));
+      renderAll();
+      scheduleSave();
+      showAutoBox(out);
+      toast(`✨ ${out.categoryName} · 컷 ${out.scenes.length}개 · 5개 트랙 구성 완료${out.source === 'ai' ? ' (AI)' : ''}`, 4200);
+    } catch (e) {
+      toast('⚠ ' + ((e && e.message) || e), 4600);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = label;
+    }
+  }
+
   /* ---------------------------------------------------------------- 시작 */
   async function init() {
     renderHeads();
     renderStylesPanel();
     renderStaticPanels();
+    renderAutoStyles();
     bindUI();
     initMediaButtons();
     initTts();
@@ -1305,6 +1483,10 @@
     }
     $('saveState').textContent = restored ? '지난 작업을 불러왔어요' : '자동 저장';
     $('zoomLabel').textContent = `${Math.round(state.px)}px/s`;
+    if ($('btnAutoCompose')) {
+      $('btnAutoCompose').onclick = autoCompose;
+      $('autoTopic').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); autoCompose(); } });
+    }
     renderAll();
     fitCanvas();
     // 글꼴이 늦게 열려도 한 번 더 그립니다
@@ -1318,5 +1500,6 @@
     state, duration, compose, seek, play, pause, applyPreset, exportVideo, PRESETS, TRACKS, BGMS, FX,
     addTextBlock, addFxBlock, addBgmBlock, addVideoBlock, addSamples, splitAt, deleteSelected,
     pickMime, blockById, select, renderAll, CAPTION_STYLES, snapTime, FX_ON: FX,
+    Autogen: AG, autoCompose, showAutoBox, voiceFromScript,
   };
 })();

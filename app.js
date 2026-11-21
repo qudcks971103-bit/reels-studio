@@ -51,6 +51,7 @@
     analysis: null,
     mine: [],
     pendingCaptions: {},
+    autoCaptions: [],
     saveTimer: null,
   };
   const dirty = { hook: false, title: false, price: false, items: false, channel: false, script: false, deal: false };
@@ -593,6 +594,8 @@
       previewPlay();
       toast(`${state.clips.length}개 미디어 · 총 ${fmt(totalDuration())} · ${selected().name} 틀을 추천했어요`, 4200);
     }
+    /* ✨ 자동 생성으로 미리 만들어 둔 자막이 있으면 새 클립에 순서대로 나눠 넣습니다 */
+    if (state.autoCaptions.length && state.clips.every((c) => !c.captions)) distributeCaptions(state.autoCaptions);
     renderClips(); renderNow(); scheduleSave();
     $('fileInput').value = '';
   }
@@ -689,7 +692,9 @@
     const sec = ((performance.now() - t0) / 1000) % LOOP;
     const s = t.H > t.W ? samplePortrait : sampleLandscape;
     s.draw(sec);
-    const lines = (t.sampleCaptions && t.sampleCaptions.length) ? t.sampleCaptions : [''];
+    const lines = (state.autoCaptions && state.autoCaptions.length)
+      ? state.autoCaptions
+      : ((t.sampleCaptions && t.sampleCaptions.length) ? t.sampleCaptions : ['']);
     const cap = captionFor(lines, sec, LOOP);
     const f = {
       src: s.canvas, srcW: s.canvas.width, srcH: s.canvas.height, kind: 'video',
@@ -906,6 +911,245 @@
     renderClips(); renderNow(); syncCaption(); scheduleSave();
     toast('이 틀의 예시 문구와 자막을 채웠어요', 2600);
   };
+
+  /* ================================================ ✨ 주제 자동 생성 (autogen.js · P4)
+     주제 한 줄 → 추천 틀 · 훅 · 컷 자막(top_label/sub) · 보이스 대본 · CTA · 캡션 · 해시태그 15
+     키가 없으면 내장 생성기(즉시), [🤖 AI로 생성]을 켜면 gpt-4o-mini → 실패 시 폴백
+     키가 없어도 [📋 P4 프롬프트 복사]로 GPT·클로드에 붙여 쓰고, 받은 JSON을 다시 붙여넣을 수 있어요. */
+  const AG = window.Autogen || null;
+  let autoStyleId = 'auto';
+  let autoAIOn = false;
+  let autoOut = null;
+  const autoCuts = () => clamp(state.clips.length || 5, 3, 8);
+  const autoSubs = (out) => (out.scenes || []).map((s) => s.sub);
+
+  function renderAutoChips() {
+    const wrap = $('autoStyleChips');
+    if (!wrap) return;
+    wrap.innerHTML = (AG ? AG.STYLES : []).map((s) =>
+      `<button class="chip" type="button" data-auto-style="${s.id}" aria-pressed="${s.id === autoStyleId}" title="${s.desc || ''}">${s.emoji ? s.emoji + ' ' : ''}${s.label}</button>`).join('');
+    wrap.querySelectorAll('[data-auto-style]').forEach((b) => {
+      b.onclick = () => {
+        autoStyleId = b.dataset.autoStyle;
+        renderAutoChips();
+        const s = AG && AG.styleOf(autoStyleId);
+        if (s) $('autoStatus').textContent = autoStyleId === 'auto'
+          ? '주제만 넣고 눌러보세요. 키 없이도 바로 자막·훅·캡션·해시태그를 만들어요.'
+          : `스타일 힌트 · ${s.label} — ${s.desc}`;
+      };
+    });
+  }
+
+  function syncAutoKey() {
+    if (!$('autoKeyField')) return;
+    let stored = false;
+    try { stored = !!(window.__tts && window.__tts.ttsLoad().key); } catch { stored = false; }
+    $('autoKeyField').hidden = !autoAIOn || stored;
+    if (!autoAIOn) return;
+    $('autoStatus').textContent = stored
+      ? '🤖 저장된 키로 주제 맞춤 카피를 만듭니다. 실패하면 내장 생성기로 만들어요.'
+      : '🤖 키를 넣으면 AI가 주제에 맞춰 새로 씁니다. 실패하면 내장 생성기로 만들어요.';
+  }
+
+  function distributeCaptions(caps) {
+    if (!state.clips.length || !caps || !caps.length) return false;
+    if (state.clips.length === 1) {
+      state.clips[0].captions = caps.join('\n');
+    } else {
+      const per = Math.ceil(caps.length / state.clips.length);
+      state.clips.forEach((c, i) => { c.captions = caps.slice(i * per, i * per + per).join('\n'); });
+    }
+    renderClips();
+    return true;
+  }
+
+  function ttsReady() {
+    try {
+      const c = ttsLoad();
+      return !!(c.key || (c.provider === 'custom' && c.endpoint));
+    } catch { return false; }
+  }
+
+  function copyWithBtn(sel) {
+    document.querySelectorAll('[data-auto-copy]').forEach((b) => {
+      b.onclick = () => {
+        const k = b.dataset.autoCopy;
+        if (k === 'caption') copyText($('autoCaption').value);
+        else if (k === 'tags') copyText($('autoTags').value);
+        else if (k === 'script') copyText($('autoScript').value);
+        else if (k === 'cta') copyText($('autoCta').value);
+        else if (k === 'prompt') copyText(AG.buildP4Prompt($('autoTopic').value.trim() || (autoOut && autoOut.topic) || '', autoStyleId, autoCuts()));
+        else copyText($('autoAll').value);
+      };
+    });
+  }
+
+  function renderAutoResult(out) {
+    const box = $('autoResult');
+    if (!box) return;
+    const tplName = (TEMPLATES.find((t) => t.id === out.recommendedTemplateId) || {}).name || out.recommendedTemplateId;
+    const bgmName = (BGMS.find((b) => b.id === out.recommendedBgm) || {}).name || out.recommendedBgm;
+    const styleName = ((CAPTION_STYLES.find((s) => s.id === out.recommendedSubtitleStyle) || {}).name) || out.recommendedSubtitleStyle;
+    const ready = ttsReady();
+    const sceneRows = (out.scenes || []).map((s, i) =>
+      `<div class="srow"><b>${i + 1}</b><span class="sl">${esc(s.top_label)}</span><span class="sb">${esc(s.sub)}</span></div>`).join('');
+    box.hidden = false;
+    box.innerHTML = `
+      <div class="capcard">
+        <header><h3>🪝 훅 · 컷 자막 ${out.scenes.length}개</h3></header>
+        <p class="hookline">${esc(out.hook)}</p>
+        <div class="scenes">${sceneRows}</div>
+      </div>
+      <div class="capcard">
+        <header><h3>📋 인스타 캡션</h3><button class="copybtn" type="button" data-auto-copy="caption">복사</button></header>
+        <textarea id="autoCaption" rows="6" readonly spellcheck="false"></textarea>
+      </div>
+      <div class="capcard">
+        <header><h3>#️⃣ 해시태그 ${out.hashtagList.length}개</h3><button class="copybtn" type="button" data-auto-copy="tags">복사</button></header>
+        <textarea id="autoTags" class="mono" rows="3" readonly spellcheck="false"></textarea>
+      </div>
+      <div class="capcard">
+        <header><h3>📣 저장·팔로우 CTA</h3><button class="copybtn" type="button" data-auto-copy="cta">복사</button></header>
+        <textarea id="autoCta" rows="2" readonly spellcheck="false"></textarea>
+      </div>
+      <div class="capcard">
+        <header><h3>🎙 보이스 대본</h3><button class="copybtn" type="button" data-auto-copy="script">복사</button></header>
+        <textarea id="autoScript" rows="5" readonly spellcheck="false"></textarea>
+        <div class="row" style="margin-top:8px">
+          <button class="btn btn-ghost btn-sm" type="button" id="btnAutoVoice">🎙 대본으로 보이스 만들기</button>
+        </div>
+        <p class="hint" id="autoVoiceNote" style="margin-top:5px">${ready ? 'TTS 키가 있어서 한 번에 목소리까지 만들 수 있어요.' : '⚙ 설정에서 외부 TTS 키를 넣으면 이 대본으로 목소리를 만들어 보이스 트랙에 넣어요.'}</p>
+      </div>
+      <div class="capcard">
+        <header><h3>🧾 캡션 + 해시태그 한 번에</h3><button class="copybtn" type="button" data-auto-copy="all">전체 복사</button></header>
+        <textarea id="autoAll" class="mono" rows="4" readonly spellcheck="false"></textarea>
+        <p class="hint" style="margin-top:5px">제휴 링크를 붙이는 포스팅이면 맨 아래 고지 문구를 함께 남겨 주세요(공정위 표시 요건). 필요 없으면 지우셔도 돼요.</p>
+      </div>
+      <div class="capcard">
+        <header><h3>🤖 키 없이 AI에게 맡기기</h3><button class="copybtn" type="button" data-auto-copy="prompt">P4 프롬프트 복사</button></header>
+        <p class="hint">클로드·GPT에 붙여넣고, 돌아온 JSON을 아래에 붙여넣으면 그대로 적용돼요.</p>
+        <textarea id="autoJson" rows="3" placeholder='{"hook":"...","scenes":[...],"cta":"...","caption":"...","hashtags":[...]}' spellcheck="false"></textarea>
+        <div class="row" style="margin-top:6px">
+          <button class="btn btn-ghost btn-sm" type="button" id="btnAutoJson">📥 받은 JSON 적용</button>
+        </div>
+        <p class="hint" id="autoJsonNote" style="margin-top:5px"></p>
+      </div>
+      <p class="hint" id="autoRec" style="margin-top:8px"></p>`;
+    $('autoCaption').value = out.caption;
+    $('autoTags').value = out.hashtags;
+    $('autoCta').value = out.cta;
+    $('autoScript').value = out.voiceScript;
+    $('autoAll').value = `${out.caption}\n\n${out.hashtags}\n\n${out.disclosure}`;
+    $('autoRec').textContent = `추천 · 틀 ${tplName} / 자막 ${styleName} / BGM ${bgmName} · ${out.categoryName} 카테고리${out.source === 'ai' ? ' · AI(gpt-4o-mini)' : ' · 내장 생성기'} · 컷 ${out.cuts}개`;
+    copyWithBtn(box);
+    $('btnAutoVoice').onclick = async () => {
+      const btn = $('btnAutoVoice');
+      if (!ttsReady()) {
+        toast('⚙ 설정 → 외부 TTS에 키를 넣으면 대본으로 목소리를 만들어요', 4600);
+        return;
+      }
+      btn.disabled = true; btn.textContent = '목소리 만드는 중…';
+      try {
+        const res = await ttsGenerate(ttsLoad(), $('fScript').value.trim() || out.voiceScript);
+        await useTtsAudio({ blob: res.blob, ext: res.ext, providerName: res.providerName });
+        $('autoVoiceNote').textContent = `보이스 트랙에 넣었어요 · ${res.providerName}`;
+      } catch (e) {
+        $('autoVoiceNote').textContent = `⚠ ${(e && e.message) || e}`;
+      } finally {
+        btn.disabled = false; btn.textContent = '🎙 대본으로 보이스 만들기';
+      }
+    };
+    $('btnAutoJson').onclick = async () => {
+      const raw = $('autoJson').value.trim();
+      if (!raw) { toast('AI가 돌려준 JSON을 붙여넣어 주세요'); return; }
+      try {
+        const parsed = JSON.parse(raw.replace(/^```(?:json)?/i, '').replace(/```$/, '').trim());
+        const base = AG.generate($('autoTopic').value.trim() || out.topic, autoStyleId, { cuts: autoCuts() });
+        const merged = AG.normalizeAI(parsed, base);
+        autoOut = merged;
+        await applyAutoResult(merged);
+        $('autoJsonNote').textContent = '붙여넣은 JSON으로 화면을 채웠어요.';
+      } catch (e) {
+        $('autoJsonNote').textContent = `⚠ JSON을 읽지 못했어요 · ${(e && e.message) || e}`;
+      }
+    };
+  }
+
+  async function applyAutoResult(out) {
+    state.autoCaptions = autoSubs(out);
+    const tpl = TEMPLATES.find((t) => t.id === out.recommendedTemplateId) || selected();
+    selectTemplate(tpl, true);
+    $('fHook').value = out.hook;
+    $('fTitle').value = out.badge;
+    if (out.priceText && (tpl.need || []).includes('price')) $('fPrice').value = out.priceText;
+    if (out.priceSale) {
+      $('fNew').value = out.priceSale;
+      if (out.priceOrig) $('fOld').value = out.priceOrig;
+      dirty.deal = true;
+      autoOff();
+    }
+    $('fScript').value = out.voiceScript;
+    dirty.hook = true; dirty.title = true; dirty.script = true; dirty.price = true;
+    UI.captionStyle = out.recommendedSubtitleStyle;
+    UI.accent = ACCENTS[out.recommendedAccent] ? out.recommendedAccent : UI.accent;
+    UI.weight = WEIGHT_CHOICES.includes(out.recommendedWeight) ? out.recommendedWeight : UI.weight;
+    UI.spacing = clamp(Number(out.recommendedSpacing) || 0, -4, 14);
+    UI.font = out.recommendedFont || UI.font;
+    state.bgm = out.recommendedBgm;
+    state.bgmVol = Math.max(state.bgmVol, 0.22);
+    try { await ensureFont(UI.font); } catch { /* 폰트가 늦게 와도 그대로 그립니다 */ }
+    refreshSans(); paintUi(); renderBgm();
+    distributeCaptions(state.autoCaptions);
+    renderClips(); renderNow(); syncCaption(); scheduleSave();
+    renderAutoResult(out);
+    const e1 = out.scenes && out.scenes[0] ? ` · 자막 ${out.scenes.length}줄` : '';
+    toast(`✨ ${out.categoryName} · ${tpl.name}${e1} · 캡션·해시태그 ${out.hashtagList.length}개 준비 완료`, 4400);
+  }
+
+  async function runAutoFill() {
+    if (!AG) { toast('자동 생성기를 불러오지 못했어요 (autogen.js)', 4200); return; }
+    const topic = $('autoTopic').value.trim();
+    if (!topic) { toast('주제를 한 줄 적어 주세요. 예: 다이소 욕실 수납템 3선', 3600); $('autoTopic').focus(); return; }
+    const btn = $('btnAutoFill');
+    const label = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = autoAIOn ? '🤖 만드는 중…' : '✨ 만드는 중…';
+    $('autoStatus').textContent = autoAIOn ? 'OpenAI로 주제 맞춤 카피를 만드는 중…' : '주제에서 훅·자막·캡션을 만드는 중…';
+    try {
+      const cuts = autoCuts();
+      const out = autoAIOn
+        ? await AG.generateAsync(topic, autoStyleId, { ai: true, key: $('autoKey').value.trim(), cuts })
+        : AG.generate(topic, autoStyleId, { cuts });
+      if (!out) throw new Error('주제를 다시 확인해 주세요');
+      autoOut = out;
+      await applyAutoResult(out);
+      const note = autoAIOn
+        ? (out.source === 'ai' ? '🤖 AI(gpt-4o-mini)로 만들었어요.' : `내장 생성기로 만들었어요. ${out.aiError || ''}`)
+        : '내장 생성기로 바로 만들었어요.';
+      $('autoStatus').textContent = `${note} 아래 카드에서 복사하거나, JSON을 붙여넣어 다시 적용할 수 있어요.`;
+    } catch (e) {
+      $('autoStatus').textContent = `⚠ ${(e && e.message) || e}`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = label;
+    }
+  }
+
+  if ($('btnAutoFill')) {
+    renderAutoChips();
+    syncAutoKey();
+    $('btnAutoFill').onclick = runAutoFill;
+    $('btnAutoAI').onclick = () => {
+      autoAIOn = !autoAIOn;
+      $('btnAutoAI').setAttribute('aria-pressed', String(autoAIOn));
+      syncAutoKey();
+    };
+    $('autoTopic').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); runAutoFill(); }
+    });
+  }
+
+
   document.querySelectorAll('#arcChips .chip').forEach((b) => {
     b.onclick = () => {
       document.querySelectorAll('#arcChips .chip').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
@@ -2424,6 +2668,7 @@
       state.bgmVol = num(p.audio.bgmVol, state.bgmVol);
     }
     state.pendingCaptions = {};
+    state.autoCaptions = [];
     (p.clips || []).forEach((c) => { if (c.captions) state.pendingCaptions[c.name] = c.captions; });
     paintUi(); renderBgm(); refreshSans();
     $('itemsField').hidden = !(selected().need || []).includes('items');
@@ -2538,5 +2783,6 @@
     state, UI, SAFE, TEMPLATES, detectCuts, cutPlan, seekTo, CUT, matchType, arcForAvg,
     projectData, applyProject, pickMime, containerOf, mimeLabel,
     CAPTION_STYLES, capStyleOf, demoLoaded, DEMO_SHOTS, FONTS, applyRefStyle, renderNow, sampleFrame, refreshCards, selectTemplate,
+    Autogen: AG, autoFill: runAutoFill, autoOut: () => autoOut, renderAutoChips,
   };
 })();

@@ -129,6 +129,23 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 15p
 
 /* ---------- 타임라인 ---------- */
 .timeline { border-top: 1px solid var(--line); background: var(--panel); display: flex; flex-direction: column; min-height: 0; }
+.auto-row { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, rgba(212,255,50,.07), transparent 65%); }
+.auto-row .atitle { font-size: 11.5px; font-weight: 900; color: var(--accent); white-space: nowrap; }
+.auto-row #autoTopic { flex: 1; min-width: 0; background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: 8px; padding: 7px 10px; font-size: 12.5px; font-weight: 700; }
+.auto-row #autoTopic:focus { outline: 1px solid var(--accent); }
+.auto-row select.mini { flex: 0 0 164px; }
+#autoBox { border: 1px solid rgba(212,255,50,.35); border-radius: 10px; padding: 10px; margin-bottom: 12px;
+  background: rgba(212,255,50,.05); }
+#autoBox[hidden] { display: none; }
+#autoBox h3 { font-size: 12px; margin: 0 0 4px; color: var(--accent); }
+#autoBox .alabel { font-size: 10.5px; font-weight: 900; color: var(--muted); margin: 8px 0 4px; }
+#autoBox textarea { display: block; width: 100%; background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: 8px; padding: 7px 8px; font-size: 11.5px; line-height: 1.45; color: var(--ink); resize: vertical; }
+#autoBox .arow { display: flex; gap: 6px; margin-top: 6px; }
+#autoBox .arow .btn { flex: 1; justify-content: center; font-size: 11px; padding: 6px 6px; }
+#autoBox .ahint { font-size: 10px; color: var(--muted); line-height: 1.45; margin: 5px 0 0; }
 .tl-tools { display: flex; align-items: center; gap: 7px; padding: 7px 10px; border-bottom: 1px solid var(--line); }
 .tl-tools .vsep { width: 1px; height: 20px; background: var(--line); margin: 0 3px; }
 .tl-tools .grow { flex: 1; }
@@ -295,11 +312,21 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 15p
     </section>
 
     <!-- 우측 인스펙터 -->
-    <aside class="right" id="inspector"></aside>
+    <aside class="right">
+      <div id="autoBox" hidden></div>
+      <div id="inspector"></div>
+    </aside>
   </div>
 
   <!-- ================= 타임라인 ================= -->
   <section class="timeline">
+    <div class="auto-row">
+      <span class="atitle">✨ 주제만 넣고 자동 영상 구성</span>
+      <input id="autoTopic" maxlength="60" placeholder="예: 다이소 욕실 수납템 3선 · 알리 에어프라이어 자취 꿀템 — 자막·캡션·해시태그까지 한 번에" autocomplete="off">
+      <select id="autoStyle" class="mini" aria-label="스타일 힌트"></select>
+      <label class="snap"><input type="checkbox" id="chkAutoAI"> AI</label>
+      <button class="btn accent" id="btnAutoCompose">자동 구성</button>
+    </div>
     <div class="tl-tools">
       <button class="btn accent" id="btnAuto">✨ 프리셋으로 자동 구성</button>
       <select id="autoPreset" class="mini" aria-label="자동 구성 프리셋"></select>
@@ -346,6 +373,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 15p
 
 <script src="engine.js"></script>
 <script src="tts.js"></script>
+<script src="autogen.js"></script>
 <script src="pc.js"></script>
 </body>
 </html>

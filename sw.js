@@ -1,7 +1,7 @@
 /* 틀편집 스튜디오 2.0 — 앱 셸 서비스워커
    편집 화면·프리셋·아이콘·BGM을 캐시해 오프라인에서도 열립니다.
    (폰트 CDN은 브라우저 캐시에 맡기고 여기서는 가로채지 않아요) */
-const VERSION = 'studio2-v3';
+const VERSION = 'studio2-v4';
 const PREFIX = 'studio2-'; // 이 앱 캐시만 골라 지웁니다(같은 오리진의 reels-studio 캐시는 건드리지 않아요)
 const SHELL = [
   './studio2.html',
@@ -12,6 +12,7 @@ const SHELL = [
   './pc.js',
   './tts.js',
   './presets.js',
+  './autogen.js',
   './presets.json',
   './demo_product_1.jpg',
   './demo_product_2.jpg',

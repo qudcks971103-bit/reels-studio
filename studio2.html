@@ -305,6 +305,16 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border: 3px s
 .capcard header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
 .capcard h3 { font-size: 12.5px; }
 .capcard textarea { font-size: 12px; min-height: 92px; background: var(--bg); }
+#autoCard .field small { line-height: 1.35; }
+#btnAutoAI[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+#autoResult { margin-top: 4px; }
+#autoResult .capcard textarea { min-height: 64px; }
+#autoResult .hookline { font-size: 14px; font-weight: 900; margin: 2px 0 7px; letter-spacing: -.01em; }
+#autoResult .scenes { display: flex; flex-direction: column; gap: 5px; font-size: 11.5px; color: var(--muted); }
+#autoResult .scenes .srow { display: flex; gap: 7px; align-items: baseline; }
+#autoResult .scenes b { color: var(--accent); flex: none; width: 10px; }
+#autoResult .scenes .sl { flex: none; width: 82px; color: var(--ink); font-weight: 800; }
+#autoResult .scenes .sb { flex: 1; min-width: 0; }
 .copybtn { font-size: 11px; font-weight: 800; border: 1px solid var(--line); background: var(--surface-2); border-radius: 8px; padding: 5px 9px; }
 .rtabs { display: flex; gap: 5px; margin-bottom: 10px; }
 .rtab { flex: 1; font-size: 12px; font-weight: 800; padding: 8px 6px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-2); color: var(--muted); }
@@ -368,12 +378,35 @@ dialog::backdrop { background: rgba(0,0,0,.65); }
         </div>
       </div>
       <div class="stepchips" role="tablist" aria-label="편집 단계">
-        <button class="stepchip on" data-go="sec-media">1 미디어</button>
+        <button class="stepchip on" data-go="sec-auto">✨ 주제</button>
+        <button class="stepchip" data-go="sec-media">1 미디어</button>
         <button class="stepchip" data-go="sec-tpl">2 틀</button>
         <button class="stepchip" data-go="sec-text">3 글자</button>
         <button class="stepchip" data-go="sec-style">4 스타일</button>
         <button class="stepchip" data-go="sec-sound">5 소리</button>
       </div>
+
+      <section id="sec-auto">
+        <div class="card" id="autoCard">
+          <div class="sec-head" style="margin-bottom:7px">
+            <h2 style="font-size:14px">✨ 주제만 입력하면 알아서 채우기</h2>
+            <span class="side">자막 · 제목 · 대본 · 캡션</span>
+          </div>
+          <label class="field">주제 한 줄 <small>예: 다이소 욕실 수납템 3선 · 알리 에어프라이어 자취 꿀템</small>
+            <input id="autoTopic" maxlength="60" placeholder="다이소 욕실 수납템 3선" autocomplete="off">
+          </label>
+          <div class="chips" id="autoStyleChips" role="group" aria-label="스타일 힌트" style="margin-top:9px"></div>
+          <div class="row" style="margin-top:9px;align-items:stretch">
+            <button class="btn btn-accent" id="btnAutoFill" type="button">✨ 자동 생성</button>
+            <button class="btn btn-ghost btn-sm" id="btnAutoAI" type="button" style="flex:0 0 34%" aria-pressed="false">🤖 AI로 생성</button>
+          </div>
+          <label class="field" id="autoKeyField" hidden style="margin-top:8px">OpenAI API 키 <small>이번 생성에만 사용 · ⚙에 저장된 키가 있으면 그걸 써요</small>
+            <input id="autoKey" type="password" autocomplete="new-password" spellcheck="false" placeholder="sk-...">
+          </label>
+          <p class="hint" id="autoStatus" style="margin-top:7px">주제만 넣고 눌러보세요. 키 없이도 0.1초 만에 자막·제목·캡션·해시태그를 만들어요.</p>
+          <div id="autoResult" hidden></div>
+        </div>
+      </section>
 
       <section id="sec-media">
         <div class="sec-head"><h2><span class="n">1</span>미디어</h2><span class="side" id="mediaCount">영상 또는 사진 2~6장</span></div>
@@ -795,6 +828,7 @@ dialog::backdrop { background: rgba(0,0,0,.65); }
 <script src="engine.js"></script>
 <script src="tts.js"></script>
 <script src="presets.js"></script>
+<script src="autogen.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
