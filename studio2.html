@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d0e12">
+<title>틀편집 스튜디오 2.0</title>
+<meta name="description" content="인스타 릴스·유튜브 쇼츠를 13개 틀과 크리에이터 스타일로 한 번에 만드는 편집 스튜디오">
+<!-- iOS '홈 화면에 추가' PWA -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="틀편집">
+<link rel="apple-touch-icon" sizes="180x180" href="studio2_icon_180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="studio2_icon_192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="studio2_icon_512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap">
+<style>
+/* 인플루언서 추천 폰트 8종 (CDN 내장) */
+@font-face { font-family: 'Pretendard'; font-weight: 45 920; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/woff2/PretendardVariable.woff2') format('woff2'); }
+@font-face { font-family: 'GmarketSans'; font-weight: 300 449; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff'); }
+@font-face { font-family: 'GmarketSans'; font-weight: 450 649; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff'); }
+@font-face { font-family: 'GmarketSans'; font-weight: 650 900; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff'); }
+@font-face { font-family: 'NanumSquareNeo'; font-weight: 300 549; font-style: normal; font-display: swap;
+  src: url('https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-bRg.woff2') format('woff2'); }
+@font-face { font-family: 'NanumSquareNeo'; font-weight: 550 749; font-style: normal; font-display: swap;
+  src: url('https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-cBd.woff2') format('woff2'); }
+@font-face { font-family: 'NanumSquareNeo'; font-weight: 750 900; font-style: normal; font-display: swap;
+  src: url('https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-dEb.woff2') format('woff2'); }
+@font-face { font-family: 'MaruBuri'; font-weight: 300 549; font-style: normal; font-display: swap;
+  src: url('https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'MaruBuri'; font-weight: 550 900; font-style: normal; font-display: swap;
+  src: url('https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2') format('woff2'); }
+@font-face { font-family: 'S-CoreDream'; font-weight: 300 449; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamRegular.woff2') format('woff2'); }
+@font-face { font-family: 'S-CoreDream'; font-weight: 450 549; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamMedium.woff2') format('woff2'); }
+@font-face { font-family: 'S-CoreDream'; font-weight: 550 749; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamBold.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff') format('woff'); }
+@font-face { font-family: 'S-CoreDream'; font-weight: 750 849; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamExtraBold.woff2') format('woff2'); }
+@font-face { font-family: 'S-CoreDream'; font-weight: 850 900; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/SCDreamBlack.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 300 449; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 450 549; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 550 649; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 650 749; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 750 849; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2'); }
+@font-face { font-family: 'Paperlogy'; font-weight: 850 900; font-style: normal; font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2') format('woff2'); }
+
+:root {
+  --bg: #0d0e12;
+  --surface: #17191f;
+  --surface-2: #1d2027;
+  --ink: #eef0f5;
+  --muted: #8e94a5;
+  --line: #2a2d37;
+  --accent: #D4FF32;
+  --accent-ink: #101405;
+  --danger: #ff5a5f;
+  --ok: #4ccf86;
+  --radius: 16px;
+  --body: "Pretendard", "Noto Sans KR", system-ui, -apple-system, sans-serif;
+  --tab-h: 62px;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); }
+body {
+  font-family: var(--body); font-size: 15px; line-height: 1.55;
+  padding-left: max(14px, env(safe-area-inset-left, 0px));
+  padding-right: max(14px, env(safe-area-inset-right, 0px));
+  -webkit-text-size-adjust: 100%;
+}
+body.lock { overflow: hidden; }
+h1, h2, h3, h4 { margin: 0; font-weight: 800; letter-spacing: -0.01em; }
+p { margin: 0; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: var(--accent); text-decoration: none; }
+.app { max-width: 560px; margin: 0 auto; min-height: 100vh; }
+
+/* ---------- 상단 바 ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 30;
+  display: flex; align-items: center; gap: 10px;
+  padding: calc(10px + env(safe-area-inset-top, 0px)) 2px 10px;
+  background: linear-gradient(var(--bg) 78%, rgba(13,14,18,.86));
+  backdrop-filter: blur(10px);
+}
+.brand { display: flex; align-items: center; gap: 7px; font-weight: 900; font-size: 16px; white-space: nowrap; }
+.brand .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(212,255,50,.14); }
+.brand small { font-size: 10px; font-weight: 900; color: var(--accent-ink); background: var(--accent); border-radius: 5px; padding: 1px 5px; margin-left: 2px; }
+.proj { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.proj input { width: 100%; border: 0; background: transparent; padding: 0; font-size: 13px; font-weight: 700; color: var(--ink); }
+.proj input:focus { outline: none; }
+.proj span { font-size: 10.5px; color: var(--muted); }
+.iconbtn {
+  flex: none; width: 38px; height: 38px; display: grid; place-items: center;
+  border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 16px;
+}
+.iconbtn:active { transform: scale(.96); }
+
+/* ---------- 탭 ---------- */
+.view { padding-bottom: calc(var(--tab-h) + 116px + env(safe-area-inset-bottom, 0px)); }
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  height: calc(var(--tab-h) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  background: rgba(13,14,18,.94); backdrop-filter: blur(14px);
+  border-top: 1px solid var(--line);
+}
+.tab {
+  border: 0; background: transparent; color: var(--muted);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  font-size: 10.5px; font-weight: 700; padding: 0; position: relative;
+}
+.tab i { font-style: normal; font-size: 18px; line-height: 1; filter: grayscale(.6) opacity(.7); }
+.tab[aria-selected="true"] { color: var(--accent); }
+.tab[aria-selected="true"] i { filter: none; }
+.tab[aria-selected="true"]::after { content: ''; position: absolute; top: 0; width: 26px; height: 3px; border-radius: 0 0 3px 3px; background: var(--accent); }
+
+/* ---------- 도크 ---------- */
+.dock {
+  position: fixed; left: 0; right: 0; z-index: 35;
+  bottom: calc(var(--tab-h) + env(safe-area-inset-bottom, 0px));
+  padding: 10px max(14px, env(safe-area-inset-right, 0px)) 10px max(14px, env(safe-area-inset-left, 0px));
+  background: linear-gradient(rgba(13,14,18,.6), rgba(13,14,18,.97) 45%);
+  backdrop-filter: blur(10px);
+}
+.dock-inner { max-width: 560px; margin: 0 auto; display: flex; gap: 8px; }
+.btn {
+  font: inherit; font-weight: 800; font-size: 15px; border: 0; border-radius: 14px;
+  padding: 14px 16px; min-height: 50px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn:disabled { opacity: .45; }
+.btn-accent { background: var(--accent); color: var(--accent-ink); flex: 1; }
+.btn-ghost { background: var(--surface); color: var(--ink); border: 1px solid var(--line); }
+.btn-line { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.btn-sm { min-height: 40px; font-size: 13px; padding: 9px 12px; border-radius: 11px; }
+.meter { flex: 1; position: relative; height: 50px; border-radius: 14px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
+.meter i { position: absolute; inset: 0 auto 0 0; width: 0; background: rgba(212,255,50,.28); transition: width .2s; }
+.meter span { position: relative; display: flex; height: 100%; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+
+/* ---------- 카드/섹션 ---------- */
+section { margin-top: 18px; }
+.sec-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
+.sec-head h2 { font-size: 16px; display: flex; align-items: center; gap: 7px; }
+.sec-head .n { width: 20px; height: 20px; border-radius: 7px; background: var(--accent); color: var(--accent-ink); font-size: 11px; font-weight: 900; display: grid; place-items: center; }
+.sec-head .side { font-size: 11.5px; color: var(--muted); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 13px; }
+.card + .card { margin-top: 10px; }
+.hint { font-size: 12px; color: var(--muted); }
+.warn { font-size: 12.5px; color: var(--danger); }
+.ok { color: var(--ok); }
+.mono { font-variant-numeric: tabular-nums; }
+
+/* ---------- 스텝 칩 ---------- */
+.stepchips { display: flex; gap: 6px; overflow-x: auto; padding: 2px 0 6px; scrollbar-width: none; position: sticky; top: calc(58px + env(safe-area-inset-top, 0px)); z-index: 20; background: var(--bg); }
+.stepchips::-webkit-scrollbar { display: none; }
+.stepchip {
+  flex: none; border: 1px solid var(--line); background: var(--surface); color: var(--muted);
+  border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 800;
+}
+.stepchip.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+/* ---------- 미디어 ---------- */
+.pick {
+  display: flex; align-items: center; gap: 12px; padding: 15px; cursor: pointer;
+  background: var(--surface); border: 1.5px dashed var(--line); border-radius: var(--radius);
+}
+.pick.has { border-style: solid; border-color: rgba(212,255,50,.5); }
+.pick .icon { flex: none; width: 44px; height: 44px; border-radius: 13px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-size: 20px; font-weight: 900; }
+.pick strong { display: block; font-size: 14.5px; }
+.pick small { color: var(--muted); font-size: 12px; }
+.clips { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.clip { display: flex; gap: 9px; padding: 9px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+.clip.active { border-color: rgba(212,255,50,.65); box-shadow: 0 0 0 2px rgba(212,255,50,.12); }
+.clip .num { flex: none; width: 22px; height: 22px; border-radius: 7px; background: var(--surface-2); color: var(--accent); font-size: 11px; font-weight: 900; display: grid; place-items: center; margin-top: 2px; }
+.clip .thumb { flex: none; width: 46px; border-radius: 8px; background: #0a0b0f center / cover no-repeat; border: 1px solid var(--line); min-height: 84px; }
+.clip .body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.clip .top { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.clip .cname { font-size: 12px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
+.clip .cdur { flex: none; font-size: 11px; font-weight: 800; color: var(--muted); }
+.mini-btn { flex: none; width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); font-size: 11px; font-weight: 800; display: grid; place-items: center; padding: 0; }
+.mini-btn:disabled { opacity: .28; }
+.mini-btn.del { color: var(--danger); }
+.clip textarea { font-size: 13.5px; padding: 7px 9px; border-radius: 9px; min-height: 40px; resize: vertical; }
+.trimrow { display: flex; gap: 6px; }
+.trimrow label { flex: 1; display: flex; align-items: center; gap: 4px; font-size: 10.5px; color: var(--muted); font-weight: 700; }
+.trimrow input { padding: 5px 6px; font-size: 12px; border-radius: 7px; min-height: 30px; }
+.subtools { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+
+/* ---------- 입력 ---------- */
+label.field { display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: var(--muted); }
+label.field small { font-weight: 500; color: #6f7585; font-size: 11px; }
+input, textarea, select {
+  width: 100%; background: var(--surface-2); border: 1px solid var(--line); color: var(--ink);
+  border-radius: 11px; padding: 11px 12px; font-size: 15px; min-height: 44px;
+}
+input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+textarea { resize: vertical; line-height: 1.45; }
+.row { display: flex; gap: 8px; }
+.row > * { flex: 1; min-width: 0; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 0.8fr; gap: 6px; }
+.fields { display: flex; flex-direction: column; gap: 10px; }
+select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: calc(100% - 16px) 20px, calc(100% - 11px) 20px; background-size: 5px 5px; background-repeat: no-repeat; }
+
+/* ---------- 미리보기 ---------- */
+.stage-wrap { position: relative; }
+.stage { background: #05060a; border: 1px solid var(--line); border-radius: var(--radius); display: grid; place-items: center; padding: 8px; position: relative; overflow: hidden; }
+.stage canvas { display: block; width: auto; height: auto; max-width: 100%; max-height: 52vh; margin: 0 auto; border-radius: 10px; }
+.stage .note { position: absolute; top: 14px; right: 14px; background: rgba(0,0,0,.6); color: #fff; font-size: 10px; padding: 3px 8px; border-radius: 999px; }
+.safebtn { position: absolute; left: 14px; top: 14px; z-index: 2; font: inherit; font-size: 11px; font-weight: 800; padding: 6px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.4); background: rgba(0,0,0,.5); color: #fff; backdrop-filter: blur(6px); }
+.safebtn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.stage-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 7px; font-size: 11.5px; color: var(--muted); }
+.stage-meta b { color: var(--ink); font-weight: 800; }
+
+/* ---------- 틀 카드 ---------- */
+.rail { display: flex; gap: 10px; overflow-x: auto; padding: 2px 0 8px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.rail::-webkit-scrollbar { display: none; }
+.tcard {
+  flex: none; width: 118px; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 14px; padding: 7px; text-align: left; color: var(--ink); position: relative;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.tcard[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(212,255,50,.18); }
+.tcard .thumb { aspect-ratio: 9 / 14; border-radius: 9px; background: #05060a; overflow: hidden; display: grid; place-items: center; }
+.tcard .thumb.ls { aspect-ratio: 16 / 9; }
+.tcard canvas { display: block; max-width: 100%; max-height: 100%; }
+.tcard .name { font-size: 11.5px; font-weight: 800; line-height: 1.25; }
+.tcard .tag { align-self: flex-start; font-size: 9.5px; font-weight: 800; padding: 1px 6px; border-radius: 5px; background: rgba(212,255,50,.12); color: var(--accent); }
+.tcard .badge { position: absolute; top: 12px; right: 12px; background: var(--accent); color: var(--accent-ink); font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 999px; z-index: 1; }
+.grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; }
+.grid2 .tcard { width: 100%; }
+.chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; font-size: 12px; font-weight: 800; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); white-space: nowrap; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.tdesc { margin-top: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; }
+.tdesc strong { font-size: 14px; }
+.tdesc .muted { color: var(--muted); }
+.beats { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.beats span { font-size: 10.5px; font-weight: 700; color: var(--accent); background: rgba(212,255,50,.08); border: 1px solid rgba(212,255,50,.2); padding: 2px 7px; border-radius: 6px; }
+
+/* 스타일 카드 */
+.stylecard { text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 11px; color: var(--ink); display: flex; flex-direction: column; gap: 4px; }
+.stylecard b { font-size: 13px; }
+.stylecard span { font-size: 10.5px; color: var(--muted); line-height: 1.4; }
+.stylecard em { font-style: normal; font-size: 10px; font-weight: 800; color: var(--accent); }
+.stylecard:active { border-color: var(--accent); }
+
+/* ---------- 폰트 ---------- */
+.fontlist { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; }
+.fitem { position: relative; display: flex; min-width: 0; }
+.fchip { flex: 1; min-width: 0; text-align: left; padding: 9px; border-radius: 11px; border: 1.5px solid var(--line); background: var(--surface-2); display: flex; flex-direction: column; gap: 1px; }
+.fchip .sample { font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fchip .fname { font-size: 10.5px; font-weight: 800; }
+.fchip .fnote { font-size: 9.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fchip .fnote.best { color: var(--accent); }
+.fchip[aria-pressed="true"] { border-color: var(--accent); background: rgba(212,255,50,.06); }
+.fdel { position: absolute; top: -6px; right: -6px; width: 21px; height: 21px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--muted); font-size: 10px; display: grid; place-items: center; padding: 0; }
+
+/* ---------- 세그/슬라이더 ---------- */
+.seg { display: flex; gap: 5px; flex-wrap: wrap; }
+.segbtn { flex: 1; font-size: 12px; font-weight: 700; padding: 8px 6px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-2); color: var(--muted); white-space: nowrap; }
+.segbtn[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.slider-row { display: grid; grid-template-columns: 66px 1fr 42px; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--muted); margin-top: 8px; }
+.slider-row output { text-align: right; font-size: 11px; }
+input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 26px; background: transparent; padding: 0; border: 0; min-height: 26px; }
+input[type="range"]::-webkit-slider-runnable-track { height: 5px; border-radius: 999px; background: var(--line); }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; margin-top: -7.5px; border-radius: 50%; background: var(--accent); border: 3px solid var(--surface); }
+input[type="range"]::-moz-range-track { height: 5px; border-radius: 999px; background: var(--line); }
+input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border: 3px solid var(--surface); border-radius: 50%; background: var(--accent); }
+.swatches { display: flex; gap: 6px; margin-top: 8px; }
+.swatch { flex: 1; font-size: 11.5px; font-weight: 800; padding: 7px 4px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface-2); display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+.swatch i { width: 11px; height: 11px; border-radius: 50%; display: block; }
+.swatch[aria-pressed="true"] { border-color: var(--ink); }
+
+/* ---------- BGM ---------- */
+.bgm-item { display: flex; align-items: center; gap: 9px; padding: 9px 11px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); margin-top: 6px; }
+.bgm-item.on { border-color: rgba(212,255,50,.6); background: rgba(212,255,50,.05); }
+.bgm-item .bmain { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.bgm-item b { font-size: 13px; }
+.bgm-item small { font-size: 10.5px; color: var(--muted); }
+.playbtn { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); font-size: 12px; display: grid; place-items: center; }
+.playbtn.playing { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.audiofile { flex: 1; display: flex; gap: 9px; align-items: center; padding: 10px 11px; border-radius: 12px; border: 1px dashed var(--line); background: var(--surface-2); }
+.audiofile.has { border-style: solid; border-color: rgba(212,255,50,.5); }
+.audiofile strong { display: block; font-size: 12.5px; }
+.audiofile small { font-size: 10.5px; color: var(--muted); }
+
+/* ---------- 분석 ---------- */
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 9px; }
+.kpi { background: var(--surface-2); border: 1px solid var(--line); border-radius: 11px; padding: 9px 8px; text-align: center; }
+.kpi b { display: block; font-size: 17px; font-variant-numeric: tabular-nums; }
+.kpi span { font-size: 9.5px; color: var(--muted); }
+.est { display: inline-block; font-size: 10px; font-weight: 900; letter-spacing: .02em; color: var(--accent-ink); background: var(--accent); border-radius: 5px; padding: 1px 5px; margin-right: 5px; vertical-align: 1px; }
+.timeline { position: relative; height: 34px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--line); margin-top: 9px; overflow: hidden; }
+.timeline i { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--accent); }
+.timeline .seg { position: absolute; top: 6px; bottom: 6px; background: rgba(212,255,50,.18); border-right: 1px solid rgba(212,255,50,.45); }
+.timeline .hook-zone { position: absolute; left: 0; top: 0; bottom: 0; background: rgba(255,90,95,.16); border-right: 2px dashed rgba(255,90,95,.9); z-index: 2; pointer-events: none; }
+.progressbar { height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; margin-top: 8px; }
+.progressbar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+.arcpick { display: flex; gap: 5px; margin-top: 9px; }
+.arcpick span { flex: 1; text-align: center; font-size: 10px; font-weight: 800; color: var(--muted); padding: 5px 2px; border-radius: 7px; border: 1px solid var(--line); }
+.arcpick span.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.minelist { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.minelist .mine { display: flex; gap: 8px; align-items: center; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+.minelist b { font-size: 12px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.minelist small { font-size: 10px; color: var(--muted); }
+
+/* ---------- 올리기 ---------- */
+.result video { width: 100%; max-height: 52vh; background: #000; border-radius: 12px; }
+.filespec { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.filespec span { font-size: 10.5px; font-weight: 700; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 3px 8px; }
+.filespec b { color: var(--ink); }
+.capcard { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 11px; margin-top: 9px; }
+.capcard header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.capcard h3 { font-size: 12.5px; }
+.capcard textarea { font-size: 12px; min-height: 92px; background: var(--bg); }
+.copybtn { font-size: 11px; font-weight: 800; border: 1px solid var(--line); background: var(--surface-2); border-radius: 8px; padding: 5px 9px; }
+.rtabs { display: flex; gap: 5px; margin-bottom: 10px; }
+.rtab { flex: 1; font-size: 12px; font-weight: 800; padding: 8px 6px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-2); color: var(--muted); }
+.rtab.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.kv { display: flex; flex-direction: column; gap: 5px; font-size: 12px; color: var(--muted); }
+.kv span { display: flex; justify-content: space-between; gap: 8px; }
+.kv b { color: var(--ink); font-weight: 800; }
+.channel-badge { display: flex; align-items: center; gap: 7px; font-size: 12px; }
+.channel-badge img { width: 22px; height: 22px; border-radius: 50%; }
+.trending-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.trend-item { display: flex; flex-direction: column; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 6px; color: var(--ink); }
+.trend-item img { width: 100%; border-radius: 6px; aspect-ratio: 16/9; object-fit: cover; }
+.trend-item b { font-size: 10.5px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.trend-item span { font-size: 9.5px; color: var(--muted); }
+.projectlist { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.projectrow { display: flex; align-items: center; gap: 8px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+.projectrow div { flex: 1; min-width: 0; }
+.projectrow b { display: block; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.projectrow small { font-size: 10px; color: var(--muted); }
+
+/* ---------- 토스트/코치 ---------- */
+.toast { position: fixed; left: 50%; transform: translateX(-50%); z-index: 90;
+  bottom: calc(var(--tab-h) + 92px + env(safe-area-inset-bottom, 0px));
+  background: var(--ink); color: var(--bg); padding: 10px 15px; border-radius: 999px;
+  font-weight: 800; font-size: 12.5px; max-width: calc(100vw - 28px); text-align: center; }
+.coach { margin: 0 0 10px; }
+.coach div { background: var(--surface-2); border: 1px solid rgba(212,255,50,.35); border-radius: 14px; padding: 11px 13px; display: flex; gap: 10px; align-items: center; }
+.coach b { font-size: 12px; }
+.coach small { display: block; font-size: 10.5px; color: var(--muted); }
+.coach button { flex: none; border: 0; background: transparent; color: var(--muted); font-size: 15px; }
+
+dialog { border: 0; padding: 0; background: transparent; width: min(92vw, 460px); }
+dialog::backdrop { background: rgba(0,0,0,.65); }
+.dlg { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 12px; max-height: 82vh; overflow: auto; }
+.dlg h3 { font-size: 15px; }
+.dlg .sec { border-top: 1px solid var(--line); padding-top: 11px; display: flex; flex-direction: column; gap: 7px; }
+.dlg .sec h4 { font-size: 12px; color: var(--muted); }
+.dlg .end { display: flex; justify-content: flex-end; gap: 7px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand"><span class="dot"></span>틀편집 <small>2.0</small></div>
+    <div class="proj">
+      <input id="projName" value="새 프로젝트" aria-label="프로젝트 이름" maxlength="40">
+      <span id="saveState">자동 저장 준비</span>
+    </div>
+    <button class="iconbtn" id="btnSettings" aria-label="설정">⚙</button>
+  </header>
+
+  <main>
+    <!-- ================= 만들기 ================= -->
+    <section class="view" id="view-create">
+      <div class="coach" id="coach" hidden>
+        <div>
+          <span style="font-size:18px">📲</span>
+          <span style="flex:1"><b>홈 화면에 추가하면 앱처럼 열려요</b><small>공유 → “홈 화면에 추가” · 잠시 뒤 사라져요</small></span>
+          <button id="coachClose" aria-label="닫기">✕</button>
+        </div>
+      </div>
+      <div class="stepchips" role="tablist" aria-label="편집 단계">
+        <button class="stepchip on" data-go="sec-media">1 미디어</button>
+        <button class="stepchip" data-go="sec-tpl">2 틀</button>
+        <button class="stepchip" data-go="sec-text">3 글자</button>
+        <button class="stepchip" data-go="sec-style">4 스타일</button>
+        <button class="stepchip" data-go="sec-sound">5 소리</button>
+      </div>
+
+      <section id="sec-media">
+        <div class="sec-head"><h2><span class="n">1</span>미디어</h2><span class="side" id="mediaCount">영상 또는 사진 2~6장</span></div>
+        <label class="pick" id="pick">
+          <input id="fileInput" type="file" accept="video/*,image/*" multiple hidden>
+          <span class="icon" aria-hidden="true">＋</span>
+          <span><strong id="pickTitle">영상 · 사진 고르기</strong><small id="pickSub">영상은 여러 개 이어 붙이고, 사진은 2~6장으로 릴스를 만들어요</small></span>
+        </label>
+        <div class="clips" id="clips"></div>
+        <div class="row" style="margin-top:9px">
+          <label class="field" style="flex:0 0 44%">사진 길이
+            <select id="photoLen">
+              <option value="10">10초</option>
+              <option value="15" selected>15초</option>
+              <option value="20">20초</option>
+              <option value="30">30초</option>
+            </select>
+          </label>
+          <button class="btn btn-ghost btn-sm" id="btnClearAll" style="align-self:flex-end;flex:1">선택 초기화</button>
+        </div>
+        <div class="subtools">
+          <button class="btn btn-ghost btn-sm" id="btnSrtSave">자막 .srt 저장</button>
+          <label class="btn btn-ghost btn-sm" id="srtPick">자막 .srt·txt 불러오기
+            <input id="srtInput" type="file" accept=".srt,.txt,text/plain,application/x-subrip" hidden>
+          </label>
+        </div>
+        <p class="hint" id="clipTotal" style="margin-top:7px"></p>
+        <p class="warn" id="lengthWarn" hidden></p>
+      </section>
+
+      <section id="sec-tpl">
+        <div class="sec-head"><h2><span class="n">2</span>틀</h2><span class="side" id="tplNow">—</span></div>
+        <div class="stage-wrap">
+          <div class="stage">
+            <canvas id="preview" width="360" height="640"></canvas>
+            <span class="note" id="sampleNote">샘플 미리보기</span>
+          </div>
+          <button class="safebtn" id="btnSafe" type="button" aria-pressed="false">세이프존</button>
+        </div>
+        <div class="stage-meta">
+          <span id="stageMeta">9:16 · 세이프존은 미리보기에만 보여요</span>
+          <button class="btn btn-line btn-sm" id="btnGoTemplates">틀 바꾸기 →</button>
+        </div>
+        <div class="rail" id="rail" style="margin-top:9px"></div>
+        <div class="tdesc" id="tdesc"></div>
+      </section>
+
+      <section id="sec-text">
+        <div class="sec-head"><h2><span class="n">3</span>글자 · 자막</h2><span class="side">*별표*는 포인트 컬러</span></div>
+        <div class="card fields">
+          <label class="field">첫 3초 훅 <small>1:1 썸네일 안전 영역 · 줄바꿈 2줄까지</small>
+            <textarea id="fHook" rows="2" maxlength="56" placeholder="자취 5년차,&#10;*이건 진짜* 정착템"></textarea>
+          </label>
+          <label class="field" id="titleField">배지 · 제목 <small>예: 재구매 3회 · 내돈내산</small>
+            <input id="fTitle" maxlength="40">
+          </label>
+          <label class="field" id="priceField" hidden>가격 비교 <small>예: 39,900 → 19,900</small>
+            <input id="fPrice" maxlength="26">
+          </label>
+          <label class="field" id="itemsField" hidden>체크리스트 <small>한 줄에 하나씩 (최대 3개)</small>
+            <textarea id="fItems" rows="3"></textarea>
+          </label>
+          <label class="field">채널 이름 <input id="fChannel" maxlength="24" placeholder="living.pick"></label>
+          <button class="btn btn-ghost btn-sm" id="btnExample">이 틀의 예시 문구로 채우기</button>
+          <p class="hint">자막은 위 클립 카드마다 따로 적어요. 한 클립에 여러 줄을 쓰면 그 영상 길이 안에서 순서대로 넘어가요.</p>
+        </div>
+
+        <div class="card" id="dealBox" style="margin-top:10px">
+          <div class="sec-head" style="margin-bottom:6px"><h2 style="font-size:13px">🔥 딜 정보 <span class="side">(핫딜·가격 틀에서 사용)</span></h2></div>
+          <div class="fields">
+            <label class="field">상품명 <input id="fName" maxlength="40" placeholder="무선 미니 마사지건"></label>
+            <div class="row3">
+              <label class="field">정가 <input id="fOld" maxlength="12" placeholder="$359" inputmode="text"></label>
+              <label class="field">할인가 <input id="fNew" maxlength="12" placeholder="$169" inputmode="text"></label>
+              <label class="field">할인율 % <input id="fOff" maxlength="3" placeholder="53" inputmode="numeric"></label>
+            </div>
+            <p class="hint">정가·할인가를 숫자로 적으면 할인율이 자동 계산돼요. 직접 고쳐도 됩니다.</p>
+            <div class="row">
+              <label class="field">딜 배지 <input id="fBadge" maxlength="18" placeholder="블프 역대가"></label>
+              <label class="field">CTA 키워드 <input id="fKeyword" maxlength="10" placeholder="링크"></label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="sec-style">
+        <div class="sec-head"><h2><span class="n">4</span>스타일</h2><span class="side">폰트 · 두께 · 자간 · 컬러</span></div>
+        <div class="card">
+          <div class="sec-head" style="margin-bottom:7px"><h2 style="font-size:13px">자막 글씨체</h2><span class="side">인플루언서 추천</span></div>
+          <div class="fontlist" id="fontList" role="group" aria-label="자막 글씨체"></div>
+          <div class="row" style="margin-top:8px">
+            <label class="btn btn-ghost btn-sm" id="fontPick">＋ 내 폰트 파일
+              <input id="fontInput" type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" multiple hidden>
+            </label>
+          </div>
+          <p class="hint" id="fontNote" style="margin-top:6px">가진 폰트 파일(ttf·otf·woff2)을 올리면 바로 그 글씨로 그려요</p>
+        </div>
+
+        <div class="card">
+          <div class="sec-head" style="margin-bottom:7px"><h2 style="font-size:13px">글씨 두께 · 자간</h2><span class="side">훅·자막·라벨 공통</span></div>
+          <div class="seg" id="weightRow" role="group" aria-label="글씨 두께">
+            <button class="segbtn" data-weight="400" aria-pressed="false">보통 400</button>
+            <button class="segbtn" data-weight="500" aria-pressed="false">중간 500</button>
+            <button class="segbtn" data-weight="700" aria-pressed="true">굵게 700</button>
+            <button class="segbtn" data-weight="900" aria-pressed="false">아주 굵게 900</button>
+          </div>
+          <div class="slider-row"><span>자간</span><input type="range" id="trackRange" min="-4" max="6" step="1" value="0" aria-label="자간"><output id="trackOut">0px</output></div>
+          <div class="seg" id="trackChips" role="group" aria-label="자간 빠른 설정">
+            <button class="segbtn" data-track="-2" aria-pressed="false">좁게 -2</button>
+            <button class="segbtn" data-track="0" aria-pressed="true">기본 0</button>
+            <button class="segbtn" data-track="2" aria-pressed="false">넓게 +2</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="sec-head" style="margin-bottom:7px"><h2 style="font-size:13px">자막 스타일</h2><span class="side">릴스 가독성 기준</span></div>
+          <div class="seg" id="capStyle" role="group" aria-label="자막 스타일">
+            <button class="segbtn" data-style="outline" aria-pressed="true">흰 글자 + 외곽선</button>
+            <button class="segbtn" data-style="bar" aria-pressed="false">반투명 바</button>
+          </div>
+          <div class="swatches" id="accentRow" role="group" aria-label="포인트 컬러">
+            <button class="swatch" data-accent="lime" aria-pressed="true"><i style="background:#D7FF3E"></i>라임</button>
+            <button class="swatch" data-accent="yellow" aria-pressed="false"><i style="background:#FFD84D"></i>노랑</button>
+            <button class="swatch" data-accent="pink" aria-pressed="false"><i style="background:#FF5FA2"></i>핑크</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="sec-sound">
+        <div class="sec-head"><h2><span class="n">5</span>보이스 · 배경음악</h2><span class="side">영상 길이에 맞춰 믹싱</span></div>
+        <div class="card">
+          <div class="sec-head" style="margin-bottom:7px"><h2 style="font-size:13px">보이스 톤</h2><span class="side">샤갈 포함 3종</span></div>
+          <div class="chips" id="voiceChips" role="group" aria-label="보이스 톤">
+            <button class="chip" data-voice="chagal" aria-pressed="true">샤갈(애덤) 톤 · 1.4x</button>
+            <button class="chip" data-voice="calm" aria-pressed="false">차분 나레이션 · 1.1x</button>
+            <button class="chip" data-voice="hype" aria-pressed="false">하이텐션 리액션 · 1.5x</button>
+          </div>
+          <label class="field" style="margin-top:8px">대본 <small>템포 미리듣기에 쓰는 문장</small><textarea id="fScript" rows="3"></textarea></label>
+          <div class="row" style="margin-top:8px">
+            <button class="btn btn-ghost btn-sm" id="btnTempo">▶ 템포 미리듣기</button>
+          </div>
+          <p class="hint" style="margin-top:6px">기기 음성으로 <b>말 빠르기만</b> 미리 들어보는 기능이에요. 실제 샤갈(애덤) 보이스는 아래에 음성 파일을 올리면 그대로 입혀져요.</p>
+          <div class="row" style="margin-top:8px;align-items:stretch">
+            <label class="audiofile" id="voicePick">
+              <input id="voiceInput" type="file" accept="audio/*,.mp3,.m4a,.wav,.aac,.ogg" hidden>
+              <span class="af-main"><strong id="voiceName">AI 보이스 파일 올리기</strong><small id="voiceSub">캡컷(애덤)·타입캐스트·브루에서 뽑은 MP3/M4A</small></span>
+            </label>
+            <button class="btn btn-line btn-sm" id="btnVoiceClear" hidden>빼기</button>
+          </div>
+          <div class="slider-row"><span>보이스 배속</span><input type="range" id="voiceRate" min="0.8" max="1.6" step="0.05" value="1"><output id="voiceRateOut">1.0x</output></div>
+          <div class="slider-row"><span>보이스 볼륨</span><input type="range" id="voiceVol" min="0" max="1.5" step="0.01" value="1"><output id="voiceVolOut">100%</output></div>
+        </div>
+
+        <div class="card">
+          <div class="sec-head" style="margin-bottom:7px"><h2 style="font-size:13px">배경음악</h2><span class="side">무료 4곡 + 페이드</span></div>
+          <div id="bgmList"></div>
+          <div class="slider-row"><span>BGM 볼륨</span><input type="range" id="bgmVol" min="0" max="1" step="0.01" value="0.25"><output id="bgmVolOut">25%</output></div>
+          <p class="hint" style="margin-top:6px">모든 곡은 직접 만든 15~18초 루프예요. 저장할 때 영상 길이에 맞춰 반복되고, 클립 원음·보이스와 한 트랙으로 섞여요.</p>
+        </div>
+      </section>
+    </section>
+
+    <!-- ================= 틀 ================= -->
+    <section class="view" id="view-templates" hidden>
+      <div class="sec-head"><h2>틀 13종 · 크리에이터 스타일</h2><span class="side">한 번에 적용</span></div>
+      <div class="chips" id="arcChips" role="group" aria-label="아키타입">
+        <button class="chip" data-arc="all" aria-pressed="true">전체</button>
+        <button class="chip" data-arc="R1" aria-pressed="false">R1 솔직 리뷰</button>
+        <button class="chip" data-arc="R2" aria-pressed="false">R2 리스트·하울</button>
+        <button class="chip" data-arc="R3" aria-pressed="false">R3 비포애프터</button>
+        <button class="chip" data-arc="R4" aria-pressed="false">R4 가격비교</button>
+        <button class="chip" data-arc="R5" aria-pressed="false">R5 감성루틴</button>
+      </div>
+      <p class="hint" style="margin-top:7px">R1~R5는 리빙·리뷰 릴스의 다섯 가지 흐름이에요. 틀·폰트·컬러·보이스·BGM·컷 길이가 함께 바뀝니다.</p>
+
+      <div class="sec-head" style="margin-top:14px"><h2>크리에이터 스타일</h2><span class="side">6종 원클릭</span></div>
+      <div class="grid2" id="stylesGrid"></div>
+
+      <div class="sec-head" style="margin-top:14px"><h2>전체 프리셋</h2><span class="side" id="tplCount">13개</span></div>
+      <div class="grid2" id="templateGrid"></div>
+      <div class="tdesc" id="tdesc2"></div>
+
+      <div class="sec-head" style="margin-top:14px"><h2>내 프리셋</h2><span class="side">분석 탭에서 추가</span></div>
+      <div class="minelist" id="mineList"><p class="hint">아직 없어요. 분석 탭에서 AI 답변(JSON)을 붙여넣으면 여기에 쌓여요.</p></div>
+    </section>
+
+    <!-- ================= 분석 ================= -->
+    <section class="view" id="view-analyze" hidden>
+      <div class="sec-head"><h2>영상 분석</h2><span class="side">휴대폰 안에서만</span></div>
+
+      <div class="card">
+        <div class="sec-head" style="margin-bottom:6px"><h2 style="font-size:14px">① 컷 감지 · 틀 추정</h2><span class="side">실측 + 틀은 추정</span></div>
+        <p class="hint">영상 파일을 올리면 브라우저 캔버스(64×114)에 프레임을 줄여 그려 <b>RGB 히스토그램 차이</b>로 <b>장면 전환(컷) 시점과 평균 컷 길이</b>를 재고, 그 평균 컷 길이로 가장 가까운 R1~R5 틀을 <b>추정</b>해요. 타임라인의 <span style="color:#ff5a5f">빨간 구간은 0~3초 훅 체크</span>예요. 영상은 업로드되지 않아요.</p>
+        <label class="btn btn-ghost btn-sm" id="cutPick" style="margin-top:9px">영상 파일 고르기
+          <input id="cutFile" type="file" accept="video/*" hidden>
+        </label>
+        <div class="progressbar" id="cutBarWrap" hidden><i id="cutBar"></i></div>
+        <p class="hint" id="cutStatus" style="margin-top:6px">아직 분석한 영상이 없어요.</p>
+        <div id="cutResult" hidden>
+          <div class="kpis" id="cutKpis"></div>
+          <div class="arcpick" id="cutArc"><span>R1</span><span>R2</span><span>R3</span><span>R4</span><span>R5</span></div>
+          <div class="timeline" id="cutTimeline"></div>
+          <p class="hint" id="cutCuts" style="margin-top:6px"></p>
+          <p class="hint" id="cutWhy" style="margin-top:4px"></p>
+          <button class="btn btn-accent" id="btnApplyCut" style="width:100%;margin-top:9px">이 틀로 바로 편집</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-head" style="margin-bottom:6px"><h2 style="font-size:14px">② 참고 영상 → 프리셋</h2><span class="side">프롬프트 왕복</span></div>
+        <p class="hint">정적 웹앱이라 <b>링크의 영상은 직접 재생·분석할 수 없어요.</b> 링크와 자막·캡션을 적고 ①프롬프트를 복사해 클로드·GPT에 붙여넣은 뒤, ②돌아온 JSON을 붙여넣으면 커스텀 프리셋이 만들어져요. <b>P2</b>는 만들기 탭의 딜 정보(상품명·정가·할인가)를 함께 보냅니다.</p>
+        <div class="seg" id="promptTabs" role="group" aria-label="AI 프롬프트" style="margin-top:9px">
+          <button class="segbtn" data-prompt="p1" aria-pressed="true">P1 영상 분석</button>
+          <button class="segbtn" data-prompt="p2" aria-pressed="false">P2 편집안 3개</button>
+          <button class="segbtn" data-prompt="p3" aria-pressed="false">P3 링크→프리셋</button>
+        </div>
+        <label class="field" style="margin-top:8px">참고 영상 링크 <small>YouTube·인스타·틱톡 주소</small>
+          <input id="refUrl" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off">
+        </label>
+        <label class="field" style="margin-top:8px">자막 · 캡션 · 대본 <small>.srt를 열어 복사해도 돼요</small>
+          <textarea id="refText" rows="4" placeholder="0-3초: 이거 사기 전에 3초만 보세요&#10;3-8초: 정가 39,900원인데..."></textarea>
+        </label>
+        <label class="field" style="margin-top:8px">보낼 프롬프트 <small>복사해서 클로드·GPT에 붙여넣으세요</small>
+          <textarea id="promptOut" rows="6" readonly style="font-size:12px"></textarea>
+        </label>
+        <div class="row" style="margin-top:8px">
+          <button class="btn btn-accent btn-sm" id="btnCopyPrompt">① 프롬프트 복사</button>
+          <button class="btn btn-line btn-sm" id="btnLocalGuess">텍스트로 빠른 추정</button>
+        </div>
+        <p class="hint" id="guessOut" style="margin-top:6px"></p>
+        <label class="field" style="margin-top:8px">AI 답변(JSON) 붙여넣기
+          <textarea id="jsonIn" rows="5" placeholder='{ "name": "다이소 BEST5", "cat": "R2", "dur_target": 30, "hook": "...", "number_beat": "5", "beats": ["0-1 ..."], "caption": "...", "bgm": "upbeat", "cta": "..." }'></textarea>
+        </label>
+        <button class="btn btn-accent" id="btnMakePreset" style="width:100%;margin-top:8px">커스텀 프리셋 만들기</button>
+        <p class="hint" id="jsonOut" style="margin-top:6px"></p>
+        <div id="shootList" class="minelist"></div>
+      </div>
+
+      <div class="card">
+        <div class="sec-head" style="margin-bottom:6px"><h2 style="font-size:14px">③ 인기 급상승 <span class="side">참고용</span></h2></div>
+        <p class="hint">YouTube 연결(올리기 탭) 후 불러올 수 있어요. 어떤 제목이 잘 되는지 참고만 하고, 남의 영상을 가져다 쓰지는 마세요.</p>
+        <button class="btn btn-ghost btn-sm" id="btnTrend" style="margin-top:8px">인기 영상 불러오기</button>
+        <div class="trending-grid" id="trendingGrid" style="margin-top:9px"></div>
+      </div>
+    </section>
+
+    <!-- ================= 올리기 ================= -->
+    <section class="view" id="view-publish" hidden>
+      <div class="sec-head"><h2>올리기</h2><span class="side" id="pubState">—</span></div>
+
+      <div class="card result">
+        <div id="resultEmpty">
+          <p class="hint">아직 만든 영상이 없어요. <b>만들기</b> 탭에서 영상을 넣고 <b>영상 만들기</b>를 눌러 주세요.</p>
+        </div>
+        <div id="resultBox" hidden>
+          <video id="resultVideo" controls playsinline webkit-playsinline loop></video>
+          <div class="filespec" id="resultSpec"></div>
+          <div class="row" style="margin-top:9px">
+            <button class="btn btn-accent" id="btnSave">폰에 저장</button>
+            <button class="btn btn-ghost" id="btnShare">공유</button>
+          </div>
+          <p class="hint" id="codecNote" style="margin-top:7px"></p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="rtabs" role="tablist">
+          <button class="rtab on" data-pane="ig">📱 릴스 캡션 · DM</button>
+          <button class="rtab" data-pane="yt">📺 YouTube 업로드</button>
+        </div>
+        <div id="paneIg">
+          <div class="capcard">
+            <header><h3>📝 릴스 캡션</h3><button class="copybtn" data-copy="capText">복사</button></header>
+            <textarea id="capText" spellcheck="false"></textarea>
+          </div>
+          <div class="capcard">
+            <header><h3>#️⃣ 해시태그</h3><button class="copybtn" data-copy="hashText">복사</button></header>
+            <textarea id="hashText" class="mono" spellcheck="false"></textarea>
+          </div>
+          <div class="capcard">
+            <header><h3>💌 자동 DM 답장</h3><button class="copybtn" data-copy="dmText">복사</button></header>
+            <textarea id="dmText" spellcheck="false"></textarea>
+          </div>
+          <div class="capcard">
+            <header><h3>📋 한 번에 복사</h3><button class="copybtn" data-copy="allText">전체 복사</button></header>
+            <textarea id="allText" class="mono" spellcheck="false"></textarea>
+          </div>
+          <p class="hint" style="margin-top:8px">인스타: ＋ → 릴스 → 방금 저장한 영상 → 캡션·해시태그 붙여넣기. 제휴 고지는 캡션 맨 아래에 그대로 남겨두세요(공정위 표시 요건).</p>
+        </div>
+        <div id="paneYt" hidden>
+          <div class="row" style="align-items:center;margin-bottom:9px">
+            <button class="btn btn-ghost btn-sm" id="btnConnect">YouTube 연결</button>
+            <div class="channel-badge" id="channelBadge" hidden></div>
+          </div>
+          <div class="fields">
+            <label class="field">YouTube 제목 <input id="ytTitle" maxlength="100"></label>
+            <label class="field">설명 <textarea id="ytDesc" rows="4"></textarea></label>
+            <label class="field">태그 <small>쉼표로 구분</small><input id="ytTags" placeholder="꿀팁, 자취, 리뷰"></label>
+            <div class="row">
+              <label class="field">공개 설정
+                <select id="ytPrivacy">
+                  <option value="private">비공개</option>
+                  <option value="unlisted">일부 공개</option>
+                  <option value="public">공개</option>
+                </select>
+              </label>
+              <label class="field">예약 공개 <small>선택</small><input id="ytPublishAt" type="datetime-local"></label>
+            </div>
+            <p class="hint">Google 검수 전 앱은 업로드가 <b>비공개</b>로 잠겨요 — 올린 뒤 YouTube 스튜디오에서 공개로 바꾸면 돼요. API 할당량 때문에 하루 업로드는 약 6개까지예요.</p>
+            <button class="btn btn-accent" id="btnUpload">YouTube에 업로드</button>
+            <div class="progressbar" id="ytBarWrap" hidden><i id="ytBar"></i></div>
+            <p class="hint" id="ytResult" hidden></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-head" style="margin-bottom:6px"><h2 style="font-size:14px">프로젝트</h2><span class="side" id="autosaveInfo">자동 저장</span></div>
+        <p class="hint">글자·틀·스타일 설정은 IndexedDB에 자동 저장돼요. 영상 파일 자체는 브라우저에 저장되지 않아 다시 고르셔야 해요.</p>
+        <div class="row" style="margin-top:8px">
+          <button class="btn btn-ghost btn-sm" id="btnSnapshot">지금 프로젝트 저장</button>
+          <button class="btn btn-line btn-sm" id="btnExport">JSON 내보내기</button>
+        </div>
+        <div class="projectlist" id="projectList"></div>
+        <div class="row" style="margin-top:8px">
+          <label class="btn btn-line btn-sm" style="width:100%">프로젝트 JSON 불러오기
+            <input id="importInput" type="file" accept=".json,application/json" hidden>
+          </label>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="dock">
+    <div class="dock-inner" id="dock">
+      <button class="btn btn-accent" id="btnRender" type="button">영상을 먼저 골라 주세요</button>
+    </div>
+  </div>
+
+  <nav class="tabbar" role="tablist" aria-label="주요 화면">
+    <button class="tab" role="tab" data-view="create" aria-selected="true"><i>✏️</i>만들기</button>
+    <button class="tab" role="tab" data-view="templates" aria-selected="false"><i>🧩</i>틀</button>
+    <button class="tab" role="tab" data-view="analyze" aria-selected="false"><i>📊</i>분석</button>
+    <button class="tab" role="tab" data-view="publish" aria-selected="false"><i>⬆️</i>올리기</button>
+  </nav>
+
+  <div class="toast" id="toast" hidden></div>
+</div>
+
+<dialog id="settingsDialog">
+  <form method="dialog" class="dlg">
+    <h3>⚙️ 설정</h3>
+    <div class="sec" style="border-top:0;padding-top:0">
+      <h4>YouTube 연결</h4>
+      <label class="field">Google OAuth 클라이언트 ID
+        <input id="clientIdInput" placeholder="1234-xxxx.apps.googleusercontent.com" autocomplete="off" spellcheck="false">
+      </label>
+      <p class="hint">Google Cloud 콘솔 → API 및 서비스 → 라이브러리에서 <b>YouTube Data API v3</b> 사용 설정 → OAuth 클라이언트 ID(웹 애플리케이션)를 만들고, 승인된 자바스크립트 원본에 이 앱 주소를 넣어 주세요. ID는 이 기기에만 저장돼요.</p>
+      <p class="hint" id="fileNotice" hidden>⚠️ 지금은 <b>파일(file://)</b>로 열려 있어요. Google 로그인은 https:// 주소나 http://localhost 에서만 동작해요. 편집·저장은 파일로도 그대로 됩니다.</p>
+      <button class="btn btn-ghost btn-sm" id="btnSaveClient" type="button">클라이언트 ID 저장</button>
+    </div>
+    <div class="sec">
+      <h4>이 기기의 저장 형식 (코덱 점검)</h4>
+      <div class="kv" id="codecDiag"></div>
+      <p class="hint">MP4 · H.264로 저장돼야 인스타그램·유튜브에 바로 올라가요. WEBM만 되면 아이폰 <b>사파리</b>에서 열어 다시 만들어 주세요.</p>
+    </div>
+    <div class="sec">
+      <h4>앱 정보</h4>
+      <p class="hint">틀편집 스튜디오 2.0 · 틀 13종 · 프리셋 <span id="presetCount">13</span>개 · 모든 처리는 이 브라우저 안에서만 이뤄져요.</p>
+    </div>
+    <div class="end">
+      <button value="close" class="btn btn-ghost btn-sm">닫기</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="engine.js"></script>
+<script src="presets.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

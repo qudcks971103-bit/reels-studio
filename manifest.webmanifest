@@ -1,0 +1,49 @@
+{
+  "name": "틀편집 스튜디오 2.0",
+  "short_name": "틀편집",
+  "description": "인스타 릴스·유튜브 쇼츠를 13개 틀과 크리에이터 스타일로 한 번에 만드는 편집 스튜디오",
+  "id": "./studio2.html",
+  "start_url": "./studio2.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "portrait",
+  "background_color": "#0d0e12",
+  "theme_color": "#0d0e12",
+  "lang": "ko",
+  "dir": "ltr",
+  "categories": [
+    "video",
+    "productivity",
+    "photo"
+  ],
+  "icons": [
+    {
+      "src": "studio2_icon_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "studio2_icon_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "studio2_icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "studio2_icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

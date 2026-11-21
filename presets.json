@@ -1,0 +1,1399 @@
+{
+  "version": "2026.11.21-1",
+  "canvas": {
+    "w": 1080,
+    "h": 1920,
+    "fps": 30,
+    "videoBps": 8000000,
+    "audioBps": 192000
+  },
+  "safe": {
+    "top": 230,
+    "bottom": 330,
+    "rail": {
+      "x": 870,
+      "y": 1060,
+      "w": 210,
+      "h": 640
+    },
+    "feedSquare": {
+      "y": 420,
+      "h": 1080
+    },
+    "captionLine": 1540
+  },
+  "type": {
+    "families": [
+      {
+        "id": "pretendard",
+        "family": "Pretendard",
+        "name": "프리텐다드",
+        "badge": "인기 1위 · 깔끔 리뷰",
+        "top": true
+      },
+      {
+        "id": "gmarket",
+        "family": "GmarketSans",
+        "name": "G마켓 산스",
+        "badge": "후킹·가격 1위"
+      },
+      {
+        "id": "score",
+        "family": "S-CoreDream",
+        "name": "에스코어 드림",
+        "badge": "세련된 모던"
+      },
+      {
+        "id": "paperlogy",
+        "family": "Paperlogy",
+        "name": "페이퍼로지",
+        "badge": "요즘 감성"
+      },
+      {
+        "id": "jua",
+        "family": "Jua",
+        "name": "배민 주아체",
+        "badge": "친근한 살림",
+        "single": true
+      },
+      {
+        "id": "nanumsquare",
+        "family": "NanumSquareNeo",
+        "name": "나눔스퀘어 네오",
+        "badge": "모던 정보형"
+      },
+      {
+        "id": "maruburi",
+        "family": "MaruBuri",
+        "name": "마루 부리",
+        "badge": "감성 무드"
+      },
+      {
+        "id": "dohyeon",
+        "family": "Do Hyeon",
+        "name": "배민 도현체",
+        "badge": "강한 제목 훅",
+        "single": true
+      }
+    ],
+    "weights": [
+      400,
+      500,
+      700,
+      900
+    ],
+    "tracking": {
+      "min": -4,
+      "max": 6,
+      "step": 1
+    },
+    "scale": {
+      "hook": 96,
+      "caption": 58,
+      "label": 30,
+      "steps": [
+        120,
+        96,
+        72,
+        58,
+        44,
+        36,
+        30
+      ]
+    }
+  },
+  "accents": [
+    {
+      "id": "lime",
+      "name": "라임",
+      "hex": "#D7FF3E"
+    },
+    {
+      "id": "yellow",
+      "name": "노랑",
+      "hex": "#FFD84D"
+    },
+    {
+      "id": "pink",
+      "name": "핑크",
+      "hex": "#FF5FA2"
+    }
+  ],
+  "captionStyles": [
+    "outline",
+    "bar"
+  ],
+  "audio": {
+    "voices": [
+      {
+        "id": "chagal",
+        "name": "샤갈(애덤) 톤",
+        "rate": 1.4,
+        "pitch": 0.82
+      },
+      {
+        "id": "calm",
+        "name": "차분 나레이션",
+        "rate": 1.1,
+        "pitch": 1.0
+      },
+      {
+        "id": "hype",
+        "name": "하이텐션 리액션",
+        "rate": 1.5,
+        "pitch": 1.18
+      }
+    ],
+    "bgm": [
+      {
+        "id": "none",
+        "name": "없음"
+      },
+      {
+        "id": "chill",
+        "name": "로파이 칠",
+        "file": "bgm_chill.mp3",
+        "defaultVol": 0.25
+      },
+      {
+        "id": "upbeat",
+        "name": "경쾌 리뷰",
+        "file": "bgm_upbeat.mp3",
+        "defaultVol": 0.3
+      },
+      {
+        "id": "vlog",
+        "name": "감성 피아노",
+        "file": "bgm_vlog.mp3",
+        "defaultVol": 0.3
+      },
+      {
+        "id": "hook",
+        "name": "정보형 텐션",
+        "file": "bgm_hook.mp3",
+        "defaultVol": 0.25
+      }
+    ],
+    "fade": {
+      "in": 0.35,
+      "outRatio": 0.12
+    }
+  },
+  "categories": {
+    "R1": {
+      "name": "단일 제품 솔직 리뷰",
+      "len": 30,
+      "cut": 1.8,
+      "accent": "yellow",
+      "font": "pretendard",
+      "voice": "calm",
+      "bgm": "chill",
+      "beats": [
+        {
+          "t": "0-1.5",
+          "role": "불만·후회 훅",
+          "text": "불만·후회 훅"
+        },
+        {
+          "t": "1.5-3",
+          "role": "가격 라벨",
+          "text": "가격 라벨"
+        },
+        {
+          "t": "3-8",
+          "role": "언박싱",
+          "text": "언박싱"
+        },
+        {
+          "t": "8-20",
+          "role": "실사용 3장면",
+          "text": "실사용 3장면"
+        },
+        {
+          "t": "20-30",
+          "role": "단점+대상",
+          "text": "단점+대상"
+        },
+        {
+          "t": "30-35",
+          "role": "CTA",
+          "text": "CTA"
+        }
+      ]
+    },
+    "R2": {
+      "name": "N가지 리스트·하울",
+      "len": 30,
+      "cut": 1.2,
+      "accent": "lime",
+      "font": "gmarket",
+      "voice": "chagal",
+      "bgm": "upbeat",
+      "beats": [
+        {
+          "t": "0-1.0",
+          "role": "수량+장소",
+          "text": "수량+장소"
+        },
+        {
+          "t": "1.0-3.0",
+          "role": "비교 배수",
+          "text": "비교 배수"
+        },
+        {
+          "t": "3-25",
+          "role": "아이템×3비트(가격·사용·한줄평)",
+          "text": "아이템×3비트(가격·사용·한줄평)"
+        },
+        {
+          "t": "25-30",
+          "role": "저장 CTA",
+          "text": "저장 CTA"
+        }
+      ]
+    },
+    "R3": {
+      "name": "문제해결 비포애프터",
+      "len": 35,
+      "cut": 2.5,
+      "accent": "yellow",
+      "font": "nanumsquare",
+      "voice": "calm",
+      "bgm": "vlog",
+      "beats": [
+        {
+          "t": "0-2",
+          "role": "결과 먼저",
+          "text": "결과 먼저"
+        },
+        {
+          "t": "2-4",
+          "role": "비포+문제",
+          "text": "비포+문제"
+        },
+        {
+          "t": "4-15",
+          "role": "3스텝",
+          "text": "3스텝"
+        },
+        {
+          "t": "15-25",
+          "role": "애프터 비교",
+          "text": "애프터 비교"
+        },
+        {
+          "t": "25-35",
+          "role": "재발방지+CTA",
+          "text": "재발방지+CTA"
+        }
+      ]
+    },
+    "R4": {
+      "name": "가격·가성비 비교",
+      "len": 25,
+      "cut": 1.8,
+      "accent": "pink",
+      "font": "gmarket",
+      "voice": "chagal",
+      "bgm": "hook",
+      "beats": [
+        {
+          "t": "0-1.5",
+          "role": "손해 프레임",
+          "text": "손해 프레임"
+        },
+        {
+          "t": "1.5-3",
+          "role": "A/B 카드",
+          "text": "A/B 카드"
+        },
+        {
+          "t": "3-18",
+          "role": "3기준 비교",
+          "text": "3기준 비교"
+        },
+        {
+          "t": "18-25",
+          "role": "승자+절감액",
+          "text": "승자+절감액"
+        },
+        {
+          "t": "25-30",
+          "role": "CTA",
+          "text": "CTA"
+        }
+      ]
+    },
+    "R5": {
+      "name": "감성 루틴 브이로그",
+      "len": 20,
+      "cut": 3.0,
+      "accent": "lime",
+      "font": "maruburi",
+      "voice": null,
+      "bgm": "vlog",
+      "beats": [
+        {
+          "t": "0-2",
+          "role": "ASMR/손끝",
+          "text": "ASMR/손끝"
+        },
+        {
+          "t": "2-3",
+          "role": "시간·상황",
+          "text": "시간·상황"
+        },
+        {
+          "t": "3-25",
+          "role": "루틴 3-4장면",
+          "text": "루틴 3-4장면"
+        },
+        {
+          "t": "25-27",
+          "role": "여백",
+          "text": "여백"
+        }
+      ]
+    }
+  },
+  "beats": {
+    "R1": [
+      "0-1.5 불만·후회 훅",
+      "1.5-3 가격 라벨",
+      "3-8 언박싱",
+      "8-20 실사용 3장면",
+      "20-30 단점+대상",
+      "30-35 CTA"
+    ],
+    "R2": [
+      "0-1.0 수량+장소",
+      "1.0-3.0 비교 배수",
+      "3-25 아이템×3비트(가격·사용·한줄평)",
+      "25-30 저장 CTA"
+    ],
+    "R3": [
+      "0-2 결과 먼저",
+      "2-4 비포+문제",
+      "4-15 3스텝",
+      "15-25 애프터 비교",
+      "25-35 재발방지+CTA"
+    ],
+    "R4": [
+      "0-1.5 손해 프레임",
+      "1.5-3 A/B 카드",
+      "3-18 3기준 비교",
+      "18-25 승자+절감액",
+      "25-30 CTA"
+    ],
+    "R5": [
+      "0-2 ASMR/손끝",
+      "2-3 시간·상황",
+      "3-25 루틴 3-4장면",
+      "25-27 여백"
+    ]
+  },
+  "presets": [
+    {
+      "id": "P01",
+      "name": "직구 핫딜 릴스형",
+      "src": "index.html/reels-deal",
+      "cat": "R4",
+      "frame": "9:16",
+      "dur_target": 22,
+      "hook": "정가 주고 사면 후회",
+      "number_beat": "53% OFF",
+      "bgm": "hook",
+      "cta": "댓글에 '링크' 남기면 DM",
+      "font": "gmarket",
+      "accent": "pink",
+      "voice": "chagal",
+      "beats": [
+        {
+          "t": "0-1.5",
+          "role": "손해 프레임",
+          "text": "정가 주고 사면 후회"
+        },
+        {
+          "t": "1.5-3",
+          "role": "A/B 카드",
+          "text": "$359 → $169"
+        },
+        {
+          "t": "3-18",
+          "role": "3기준 비교",
+          "text": "3기준 비교"
+        },
+        {
+          "t": "18-25",
+          "role": "승자+절감액",
+          "text": "승자+절감액"
+        },
+        {
+          "t": "25-30",
+          "role": "CTA",
+          "text": "CTA"
+        }
+      ],
+      "caption": {
+        "top_label": "53% OFF · 블프 역대가",
+        "bottom_sub": "정가 $359 → 지금 $169",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "가격·가성비 비교"
+    },
+    {
+      "id": "P02",
+      "name": "훅 자막형",
+      "src": "index.html/shorts-hook",
+      "cat": "R1",
+      "frame": "9:16",
+      "dur_target": 30,
+      "hook": "이거 모르면 손해",
+      "number_beat": "3가지",
+      "bgm": "chill",
+      "cta": "저장해두고 비교해보세요",
+      "font": "pretendard",
+      "accent": "yellow",
+      "voice": "calm",
+      "beats": [
+        {
+          "t": "0-1.5",
+          "role": "불만·후회 훅",
+          "text": "불만·후회 훅"
+        },
+        {
+          "t": "1.5-3",
+          "role": "가격 라벨",
+          "text": "가격 라벨"
+        },
+        {
+          "t": "3-8",
+          "role": "언박싱",
+          "text": "언박싱"
+        },
+        {
+          "t": "8-20",
+          "role": "실사용 3장면",
+          "text": "실사용 3장면"
+        },
+        {
+          "t": "20-30",
+          "role": "단점+대상",
+          "text": "단점+대상"
+        },
+        {
+          "t": "30-35",
+          "role": "CTA",
+          "text": "CTA"
+        }
+      ],
+      "caption": {
+        "top_label": "자취 5년차",
+        "bottom_sub": "사기 전에 3초만 보세요",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "단일 제품 솔직 리뷰"
+    },
+    {
+      "id": "P03",
+      "name": "브이로그 카드형",
+      "src": "index.html/shorts-vlog",
+      "cat": "R5",
+      "frame": "9:16",
+      "dur_target": 20,
+      "hook": "일요일 아침 7시",
+      "number_beat": "3장면",
+      "bgm": "vlog",
+      "cta": "저장해두세요",
+      "font": "maruburi",
+      "accent": "lime",
+      "voice": null,
+      "beats": [
+        {
+          "t": "0-2",
+          "role": "ASMR/손끝",
+          "text": "ASMR/손끝"
+        },
+        {
+          "t": "2-3",
+          "role": "시간·상황",
+          "text": "시간·상황"
+        },
+        {
+          "t": "3-25",
+          "role": "루틴 3-4장면",
+          "text": "루틴 3-4장면"
+        },
+        {
+          "t": "25-27",
+          "role": "여백",
+          "text": "여백"
+        }
+      ],
+      "caption": {
+        "top_label": "08:00 AM · HOME ROUTINE",
+        "bottom_sub": "창가에 두니까 공간이 달라짐",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "감성 루틴 브이로그"
+    },
+    {
+      "id": "P04",
+      "name": "정보 TOP 리스트형",
+      "src": "index.html/shorts-list",
+      "cat": "R2",
+      "frame": "9:16",
+      "dur_target": 30,
+      "hook": "다이소 3천원템 5개",
+      "number_beat": "5",
+      "bgm": "upbeat",
+      "cta": "몇 번 쓸지 댓글로",
+      "font": "gmarket",
+      "accent": "yellow",
+      "voice": "chagal",
+      "beats": [
+        {
+          "t": "0-1.0",
+          "role": "수량+장소",
+          "text": "수량+장소"
+        },
+        {
+          "t": "1.0-3.0",
+          "role": "비교 배수",
+          "text": "비교 배수"
+        },
+        {
+          "t": "3-25",
+          "role": "아이템×3비트(가격·사용·한줄평)",
+          "text": "아이템×3비트(가격·사용·한줄평)"
+        },
+        {
+          "t": "25-30",
+          "role": "저장 CTA",
+          "text": "저장 CTA"
+        }
+      ],
+      "caption": {
+        "top_label": "TOP 3 · 다이소 3천원템",
+        "bottom_sub": "1. 실리콘 수납봉",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "N가지 리스트·하울"
+    },
+    {
+      "id": "P05",
+      "name": "롱폼 기본형",
+      "src": "index.html/youtube-classic",
+      "cat": "R1",
+      "frame": "16:9",
+      "dur_target": 60,
+      "hook": "자취 5년차 정착템",
+      "number_beat": "3가지",
+      "bgm": "chill",
+      "cta": "구독과 좋아요",
+      "font": "pretendard",
+      "accent": "yellow",
+      "voice": "calm",
+      "beats": [
+        {
+          "t": "0-1.5",
+          "role": "불만·후회 훅",
+          "text": "불만·후회 훅"
+        },
+        {
+          "t": "1.5-3",
+          "role": "가격 라벨",
+          "text": "가격 라벨"
+        },
+        {
+          "t": "3-8",
+          "role": "언박싱",
+          "text": "언박싱"
+        },
+        {
+          "t": "8-20",
+          "role": "실사용 3장면",
+          "text": "실사용 3장면"
+        },
+        {
+          "t": "20-30",
+          "role": "단점+대상",
+          "text": "단점+대상"
+        },
+        {
+          "t": "30-35",
+          "role": "CTA",
+          "text": "CTA"
+        }
+      ],
+      "caption": {
+        "top_label": "자취 5년차 정착템",
+        "bottom_sub": "재료는 딱 세 가지",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "단일 제품 솔직 리뷰"
+    },
+    {
+      "id": "P06",
+      "name": "시네마틱 하이라이트형",
+      "src": "index.html/youtube-cinema",
+      "cat": "R5",
+      "frame": "16:9",
+      "dur_target": 45,
+      "hook": "주말의 기록",
+      "number_beat": "4장면",
+      "bgm": "vlog",
+      "cta": "저장",
+      "font": "maruburi",
+      "accent": "lime",
+      "voice": null,
+      "beats": [
+        {
+          "t": "0-2",
+          "role": "ASMR/손끝",
+          "text": "ASMR/손끝"
+        },
+        {
+          "t": "2-3",
+          "role": "시간·상황",
+          "text": "시간·상황"
+        },
+        {
+          "t": "3-25",
+          "role": "루틴 3-4장면",
+          "text": "루틴 3-4장면"
+        },
+        {
+          "t": "25-27",
+          "role": "여백",
+          "text": "여백"
+        }
+      ],
+      "caption": {
+        "top_label": "주말의 기록",
+        "bottom_sub": "천천히 걷는 길",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "감성 루틴 브이로그"
+    },
+    {
+      "id": "P11",
+      "name": "30만 정보형 · 정석",
+      "src": "studio.html/info30",
+      "cat": "R1",
+      "frame": "9:16",
+      "dur_target": 30,
+      "hook": "자취 5년차,\n*이건 진짜* 정착템",
+      "number_beat": "재구매 3회",
+      "bgm": "chill",
+      "cta": "프로필 링크",
+      "font": "pretendard",
+      "accent": "lime",
+      "voice": "calm",
+      "beats": [
+        {
+          "t": "0-1.5",
+          "role": "불만·후회 훅",
+          "text": "불만·후회 훅"
+        },
+        {
+          "t": "1.5-3",
+          "role": "가격 라벨",
+          "text": "가격 라벨"
+        },
+        {
+          "t": "3-8",
+          "role": "언박싱",
+          "text": "언박싱"
+        },
+        {
+          "t": "8-20",
+          "role": "실사용 3장면",
+          "text": "실사용 3장면"
+        },
+        {
+          "t": "20-30",
+          "role": "단점+대상",
+          "text": "단점+대상"
+        },
+        {
+          "t": "30-35",
+          "role": "CTA",
+          "text": "CTA"
+        }
+      ],
+      "caption": {
+        "top_label": "재구매 3회",
+        "bottom_sub": "주방 물때 3년 고민 끝났어요",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "단일 제품 솔직 리뷰"
+    },
+    {
+      "id": "P12",
+      "name": "리뷰 · 가격 비교",
+      "src": "studio.html/deal-review",
+      "cat": "R4",
+      "frame": "9:16",
+      "dur_target": 25,
+      "hook": "쿠팡 3만원대\n*이거* 왜 이제 샀지",
+      "number_beat": "39,900 → 19,900",
+      "bgm": "hook",
+      "cta": "댓글에 '가격'",
+      "font": "gmarket",
+      "accent": "pink",
+      "voice": "chagal",
+      "beats": [
+        {
+          "t": "0-1.5",
+          "role": "손해 프레임",
+          "text": "손해 프레임"
+        },
+        {
+          "t": "1.5-3",
+          "role": "A/B 카드",
+          "text": "A/B 카드"
+        },
+        {
+          "t": "3-18",
+          "role": "3기준 비교",
+          "text": "3기준 비교"
+        },
+        {
+          "t": "18-25",
+          "role": "승자+절감액",
+          "text": "승자+절감액"
+        },
+        {
+          "t": "25-30",
+          "role": "CTA",
+          "text": "CTA"
+        }
+      ],
+      "caption": {
+        "top_label": "리뷰 2주차 · 내돈내산",
+        "bottom_sub": "39,900 → 19,900",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "가격·가성비 비교"
+    },
+    {
+      "id": "P13",
+      "name": "댓글·DM 질문 훅",
+      "src": "studio.html/qna",
+      "cat": "R1",
+      "frame": "9:16",
+      "dur_target": 22,
+      "hook": "이거 어디서 사셨어요?",
+      "number_beat": "댓글 200개",
+      "bgm": "chill",
+      "cta": "댓글 질문 받아요",
+      "font": "pretendard",
+      "accent": "lime",
+      "voice": "calm",
+      "beats": [
+        {
+          "t": "0-1.5",
+          "role": "불만·후회 훅",
+          "text": "불만·후회 훅"
+        },
+        {
+          "t": "1.5-3",
+          "role": "가격 라벨",
+          "text": "가격 라벨"
+        },
+        {
+          "t": "3-8",
+          "role": "언박싱",
+          "text": "언박싱"
+        },
+        {
+          "t": "8-20",
+          "role": "실사용 3장면",
+          "text": "실사용 3장면"
+        },
+        {
+          "t": "20-30",
+          "role": "단점+대상",
+          "text": "단점+대상"
+        },
+        {
+          "t": "30-35",
+          "role": "CTA",
+          "text": "CTA"
+        }
+      ],
+      "caption": {
+        "top_label": "댓글 200개 · 같은 질문",
+        "bottom_sub": "링크는 *프로필*에 정리했어요",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "단일 제품 솔직 리뷰"
+    },
+    {
+      "id": "P14",
+      "name": "3스텝 체크 요약",
+      "src": "studio.html/step3",
+      "cat": "R3",
+      "frame": "9:16",
+      "dur_target": 35,
+      "hook": "설치 전에 *이 3개*만 보세요",
+      "number_beat": "3 STEP",
+      "bgm": "vlog",
+      "cta": "저장해두고 체크",
+      "font": "nanumsquare",
+      "accent": "yellow",
+      "voice": "calm",
+      "beats": [
+        {
+          "t": "0-2",
+          "role": "결과 먼저",
+          "text": "결과 먼저"
+        },
+        {
+          "t": "2-4",
+          "role": "비포+문제",
+          "text": "비포+문제"
+        },
+        {
+          "t": "4-15",
+          "role": "3스텝",
+          "text": "3스텝"
+        },
+        {
+          "t": "15-25",
+          "role": "애프터 비교",
+          "text": "애프터 비교"
+        },
+        {
+          "t": "25-35",
+          "role": "재발방지+CTA",
+          "text": "재발방지+CTA"
+        }
+      ],
+      "caption": {
+        "top_label": "STEP 1/3",
+        "bottom_sub": "첫째, 설치 10초",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "문제해결 비포애프터"
+    },
+    {
+      "id": "P15",
+      "name": "감성 리빙 브이로그",
+      "src": "studio.html/vlog-film",
+      "cat": "R5",
+      "frame": "9:16",
+      "dur_target": 20,
+      "hook": "08:00 AM · HOME ROUTINE",
+      "number_beat": "3장면",
+      "bgm": "vlog",
+      "cta": "팔로우",
+      "font": "maruburi",
+      "accent": "lime",
+      "voice": null,
+      "beats": [
+        {
+          "t": "0-2",
+          "role": "ASMR/손끝",
+          "text": "ASMR/손끝"
+        },
+        {
+          "t": "2-3",
+          "role": "시간·상황",
+          "text": "시간·상황"
+        },
+        {
+          "t": "3-25",
+          "role": "루틴 3-4장면",
+          "text": "루틴 3-4장면"
+        },
+        {
+          "t": "25-27",
+          "role": "여백",
+          "text": "여백"
+        }
+      ],
+      "caption": {
+        "top_label": "08:00 AM · HOME ROUTINE",
+        "bottom_sub": "아침 햇살 좋은 날",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "감성 루틴 브이로그"
+    },
+    {
+      "id": "P16",
+      "name": "네온 빅타이포 훅",
+      "src": "studio.html/neon-hook",
+      "cat": "R2",
+      "frame": "9:16",
+      "dur_target": 18,
+      "hook": "*만원대*인데\n호텔 수건 같음",
+      "number_beat": "1개",
+      "bgm": "hook",
+      "cta": "댓글에 링크",
+      "font": "dohyeon",
+      "accent": "yellow",
+      "voice": "hype",
+      "beats": [
+        {
+          "t": "0-1.0",
+          "role": "수량+장소",
+          "text": "수량+장소"
+        },
+        {
+          "t": "1.0-3.0",
+          "role": "비교 배수",
+          "text": "비교 배수"
+        },
+        {
+          "t": "3-25",
+          "role": "아이템×3비트(가격·사용·한줄평)",
+          "text": "아이템×3비트(가격·사용·한줄평)"
+        },
+        {
+          "t": "25-30",
+          "role": "저장 CTA",
+          "text": "저장 CTA"
+        }
+      ],
+      "caption": {
+        "top_label": "욕실 리셋",
+        "bottom_sub": "*만원대*인데 호텔 수건 같음",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "N가지 리스트·하울"
+    },
+    {
+      "id": "P17",
+      "name": "형광라벨 템소개",
+      "src": "studio.html/label-item",
+      "cat": "R2",
+      "frame": "9:16",
+      "dur_target": 30,
+      "hook": "1. 로프 수납바구니",
+      "number_beat": "1/5 + 가격",
+      "bgm": "upbeat",
+      "cta": "댓글에 번호",
+      "font": "gmarket",
+      "accent": "lime",
+      "voice": "chagal",
+      "beats": [
+        {
+          "t": "0-1.0",
+          "role": "수량+장소",
+          "text": "수량+장소"
+        },
+        {
+          "t": "1.0-3.0",
+          "role": "비교 배수",
+          "text": "비교 배수"
+        },
+        {
+          "t": "3-25",
+          "role": "아이템×3비트(가격·사용·한줄평)",
+          "text": "가격 라벨 → 사용 1컷 → 한 줄 평"
+        },
+        {
+          "t": "25-30",
+          "role": "저장 CTA",
+          "text": "저장 CTA"
+        }
+      ],
+      "caption": {
+        "top_label": "1. 로프 수납바구니",
+        "bottom_sub": "수납도 예쁘게 하고 싶다면 추천!",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "N가지 리스트·하울"
+    }
+  ],
+  "creatorStyles": [
+    {
+      "id": "S1",
+      "name": "다이소 BEST5 · 30초",
+      "cat": "R2",
+      "preset": "P17",
+      "font": "gmarket",
+      "accent": "lime",
+      "voice": "chagal",
+      "bgm": "upbeat",
+      "label": "1/5 + 가격 파우치",
+      "dur_target": 30,
+      "number_beat": "5",
+      "hook": "다이소 3천원템 5개",
+      "cta": "'다이소' 댓글 → DM",
+      "beats": [
+        {
+          "t": "0-1.0",
+          "role": "수량+장소",
+          "text": "다이소 3천원템 5개"
+        },
+        {
+          "t": "1.0-3.0",
+          "role": "비교 배수",
+          "text": "쿠팡보다 10배 싼"
+        },
+        {
+          "t": "3-25",
+          "role": "아이템×3비트(가격·사용·한줄평)",
+          "text": "아이템×3비트(가격·사용·한줄평)"
+        },
+        {
+          "t": "25-30",
+          "role": "저장 CTA",
+          "text": "저장 CTA"
+        }
+      ],
+      "caption": {
+        "top_label": "1/5 · 3,000원",
+        "bottom_sub": "수납도 예쁘게 하고 싶다면 추천!",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "N가지 리스트·하울"
+    },
+    {
+      "id": "S2",
+      "name": "테무 하울 · 22초",
+      "cat": "R2",
+      "preset": "P04",
+      "font": "gmarket",
+      "accent": "yellow",
+      "voice": "chagal",
+      "bgm": "upbeat",
+      "label": "장바구니 총액",
+      "dur_target": 22,
+      "number_beat": "총액 2.9만원",
+      "hook": "테무에서 2만원대만 골랐어요",
+      "cta": "댓글에 링크",
+      "beats": [
+        {
+          "t": "0-1.0",
+          "role": "수량+장소",
+          "text": "수량+장소"
+        },
+        {
+          "t": "1.0-3.0",
+          "role": "비교 배수",
+          "text": "개당 5,880원"
+        },
+        {
+          "t": "3-25",
+          "role": "아이템×3비트(가격·사용·한줄평)",
+          "text": "아이템×3비트(가격·사용·한줄평)"
+        },
+        {
+          "t": "25-30",
+          "role": "저장 CTA",
+          "text": "저장 CTA"
+        }
+      ],
+      "caption": {
+        "top_label": "장바구니 총액",
+        "bottom_sub": "총액 29,400원 · 개당 5,880원",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "N가지 리스트·하울"
+    },
+    {
+      "id": "S3",
+      "name": "내돈내산 1년 후기",
+      "cat": "R1",
+      "preset": "P11",
+      "font": "pretendard",
+      "accent": "lime",
+      "voice": "calm",
+      "bgm": "chill",
+      "label": "사용 개월 수",
+      "dur_target": 30,
+      "number_beat": "12개월",
+      "hook": "1년 써보고 남은 것만 말할게요",
+      "cta": "저장",
+      "beats": [
+        {
+          "t": "0-1.5",
+          "role": "불만·후회 훅",
+          "text": "불만·후회 훅"
+        },
+        {
+          "t": "1.5-3",
+          "role": "가격 라벨",
+          "text": "가격 라벨"
+        },
+        {
+          "t": "3-8",
+          "role": "언박싱",
+          "text": "언박싱"
+        },
+        {
+          "t": "8-20",
+          "role": "실사용 3장면",
+          "text": "실사용 3장면"
+        },
+        {
+          "t": "20-30",
+          "role": "단점+대상",
+          "text": "이런 사람에게만 추천"
+        },
+        {
+          "t": "30-35",
+          "role": "CTA",
+          "text": "CTA"
+        }
+      ],
+      "caption": {
+        "top_label": "12개월 사용",
+        "bottom_sub": "재구매 의사 있음",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "단일 제품 솔직 리뷰"
+    },
+    {
+      "id": "S4",
+      "name": "물때·곰팡이 비포애프터",
+      "cat": "R3",
+      "preset": "P14",
+      "font": "nanumsquare",
+      "accent": "yellow",
+      "voice": "calm",
+      "bgm": "vlog",
+      "label": "STEP 1/3",
+      "dur_target": 35,
+      "number_beat": "3 STEP",
+      "hook": "이거 3년 몰랐어요",
+      "cta": "저장해두고 따라하기",
+      "beats": [
+        {
+          "t": "0-2",
+          "role": "결과 먼저",
+          "text": "결과 먼저"
+        },
+        {
+          "t": "2-4",
+          "role": "비포+문제",
+          "text": "비포+문제"
+        },
+        {
+          "t": "4-15",
+          "role": "3스텝",
+          "text": "3스텝"
+        },
+        {
+          "t": "15-25",
+          "role": "애프터 비교",
+          "text": "애프터 비교"
+        },
+        {
+          "t": "25-35",
+          "role": "재발방지+CTA",
+          "text": "재발방지+CTA"
+        }
+      ],
+      "caption": {
+        "top_label": "STEP 1/3",
+        "bottom_sub": "물때 제거 → 헹굼 → 건조",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "문제해결 비포애프터"
+    },
+    {
+      "id": "S5",
+      "name": "쿠팡 vs 다이소 가격비교",
+      "cat": "R4",
+      "preset": "P12",
+      "font": "gmarket",
+      "accent": "pink",
+      "voice": "chagal",
+      "bgm": "hook",
+      "label": "정가 → 할인가",
+      "dur_target": 25,
+      "number_beat": "10배 차이",
+      "hook": "쿠팡 vs 다이소, 10배 차이",
+      "cta": "'정답' 댓글",
+      "beats": [
+        {
+          "t": "0-1.5",
+          "role": "손해 프레임",
+          "text": "손해 프레임"
+        },
+        {
+          "t": "1.5-3",
+          "role": "A/B 카드",
+          "text": "A/B 카드"
+        },
+        {
+          "t": "3-18",
+          "role": "3기준 비교",
+          "text": "3기준 비교"
+        },
+        {
+          "t": "18-25",
+          "role": "승자+절감액",
+          "text": "승자+절감액"
+        },
+        {
+          "t": "25-30",
+          "role": "CTA",
+          "text": "CTA"
+        }
+      ],
+      "caption": {
+        "top_label": "정가 → 할인가",
+        "bottom_sub": "12,900 → 3,000",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "가격·가성비 비교"
+    },
+    {
+      "id": "S6",
+      "name": "일요일 살림루틴",
+      "cat": "R5",
+      "preset": "P15",
+      "font": "maruburi",
+      "accent": "lime",
+      "voice": null,
+      "bgm": "vlog",
+      "label": "시간 표시",
+      "dur_target": 20,
+      "number_beat": "4장면",
+      "hook": "일요일 아침 7시",
+      "cta": "팔로우",
+      "beats": [
+        {
+          "t": "0-2",
+          "role": "ASMR/손끝",
+          "text": "ASMR/손끝"
+        },
+        {
+          "t": "2-3",
+          "role": "시간·상황",
+          "text": "시간·상황"
+        },
+        {
+          "t": "3-25",
+          "role": "루틴 3-4장면",
+          "text": "루틴 3-4장면"
+        },
+        {
+          "t": "25-27",
+          "role": "여백",
+          "text": "여백"
+        }
+      ],
+      "caption": {
+        "top_label": "08:00 AM",
+        "bottom_sub": "오늘도 천천히",
+        "anchor": {
+          "top_label": 230,
+          "bottom_sub": 330,
+          "captionLine": 1540
+        }
+      },
+      "arc_name": "감성 루틴 브이로그"
+    }
+  ],
+  "caption_anchor": {
+    "top_label": 230,
+    "bottom_sub": 330,
+    "captionLine": 1540
+  },
+  "schema": {
+    "version": "2026.11.21-1",
+    "note": "클로드가 같은 스키마로 답하면 분석 탭에 붙여넣어 커스텀 프리셋으로 쓸 수 있어요.",
+    "preset_fields": [
+      "id",
+      "name",
+      "cat",
+      "dur_target",
+      "hook",
+      "number_beat",
+      "beats",
+      "caption.top_label",
+      "caption.bottom_sub",
+      "bgm",
+      "cta"
+    ],
+    "beats_item": {
+      "t": "0-1.5",
+      "role": "R1~R5 표준 beat 이름",
+      "text": "이 프리셋의 실제 문구"
+    },
+    "caption_anchor": {
+      "top_label": 230,
+      "bottom_sub": 330,
+      "captionLine": 1540
+    }
+  }
+}
