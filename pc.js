@@ -52,6 +52,10 @@
     { id: 'kukdae', family: 'SDKukdetopokki' },
   ];
 
+  /* P5 음식(omuk_food)·P6 리빙(living_pill·living_hand·living_editorial) 자막 스타일 — p56.js 가 정의합니다.
+     엔진의 CAPTION_STYLES 뒤에 붙여 인스펙터 드롭다운·스타일 목록·렌더러에 그대로 쓰입니다. */
+  if (window.P56 && Array.isArray(window.P56.EXTRA_STYLES)) CAPTION_STYLES.push(...window.P56.EXTRA_STYLES);
+
   const state = {
     name: '새 프로젝트',
     ratio: '9:16',
@@ -64,6 +68,7 @@
     blocks: [],
     media: [],
     frame: { top: '', footer: '' },
+    p56: null,
     exporting: false,
     exportResult: null,
     audioSummary: null,
@@ -193,10 +198,14 @@
     return b;
   }
   function addTextBlock(styleId = 'pinkPuff', at = state.t, dur = 2.4, opts = {}) {
+    const st = capStyleOf(styleId) || CAPTION_STYLES[0];
+    const geo = (st && st.geo) || {};   /* 스타일별 기본 위치·크기 (예: omuk_food 는 상단 22%) */
     const b = baseBlock('text', at, dur, {
-      text: '자막을 입력하세요', styleId,
+      text: '자막을 입력하세요', styleId: st.id || styleId,
       font: 'pretendard', size: 62, weight: 800, spacing: 2,
       x: 0.5, y: 0.76, align: 'center', maxLines: 2,
+      ...geo,
+      ...(st.subDefault ? { sub: st.subDefault } : {}),
       ...opts,
     });
     pushHistory();
@@ -321,19 +330,32 @@
     }
     return drew;
   }
+  /* living_hand 의 [직접 써보고 고른] 처럼 자막 위에 얹는 작은 태그 */
+  function drawCaptionTag(g, text, x, y, size, opacity) {
+    g.save();
+    g.globalAlpha *= opacity;
+    g.font = `600 ${Math.max(12, Math.round(size * 0.38))}px "Pretendard","Noto Sans KR",sans-serif`;
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
+    g.shadowColor = 'rgba(0,0,0,.45)';
+    g.shadowBlur = 10;
+    g.fillStyle = 'rgba(255,255,255,.88)';
+    g.fillText(text, x, y);
+    g.restore();
+  }
   function drawTextLayer(g, t, w, h) {
     const marker = fxAt('fx', t).some((b) => b.effect === 'marker');
     const texts = state.blocks.filter((b) => b.track === 'text' && t >= b.start && t < b.start + b.dur).sort((a, b) => a.y - b.y);
     for (const b of texts) {
-      const style = capStyleOf(marker ? 'lime' : b.styleId);
+      const style = capStyleOf(marker ? 'lime' : b.styleId) || CAPTION_STYLES[0];
       const p = clamp((t - b.start) / 0.16, 0, 1);
       const prevFont = UI.font, prevWeight = UI.weight;
       UI.font = b.font || 'pretendard';
       UI.weight = b.weight || 800;
       const size = Math.max(16, Math.round((b.size || 62) * (h / 1920)));
-      drawRich(g, String(b.text || ''), {
-        x: b.x * w,
-        y: (b.y || 0.76) * h,
+      const x = (b.x == null ? 0.5 : b.x) * w;
+      const y = (b.y == null ? 0.76 : b.y) * h;
+      const common = {
         size,
         weight: b.weight || 800,
         align: b.align || 'center',
@@ -354,7 +376,31 @@
         barPadY: (style.bar && style.bar.padY) || 14,
         opacity: p,
         tracking: num(b.spacing, 0),
-      });
+      };
+      const txt = String(b.text || '');
+      if (style.tag) drawCaptionTag(g, style.tag, x, y - size * 1.12, size, p);
+      if (style.rot || style.italic) {
+        /* 손글씨 기울기(rot) · 영문 이탤릭(italic: 글꼴 대신 살짝 비트는 변형) */
+        g.save();
+        g.translate(x, y);
+        if (style.rot) g.rotate(style.rot);
+        if (style.italic) g.transform(1, 0, -0.18, 1, 0, 0);
+        drawRich(g, txt, { ...common, x: 0, y: -size * 0.55, maxW: w * 0.8 });
+        g.restore();
+      } else {
+        drawRich(g, txt, { ...common, x, y });
+      }
+      if (style.subLine) {
+        const sub = String(b.sub || '').trim();
+        if (sub) {
+          drawRich(g, sub, {
+            x, y: y + size * 1.18, size: Math.max(13, Math.round(size * 0.36)), weight: 500,
+            align: common.align, maxW: w * 0.8, maxLines: 1, lineHeight: 1.2,
+            color: style.ink, stroke: false, shadow: 12, shadowCol: 'rgba(0,0,0,.5)',
+            opacity: Math.min(1, p * 0.92), tracking: 2,
+          });
+        }
+      }
       UI.font = prevFont; UI.weight = prevWeight;
     }
   }
@@ -492,7 +538,7 @@
       const b = state.blocks.find((x) => x.track === 'video' && x.mediaId === m.id);
       const inRange = !!b && playing && t >= b.start && t < b.start + b.dur;
       if (inRange) {
-        const target = Math.max(0, t - b.start);
+        const target = Math.max(0, t - b.start + num(b.in, 0));
         if (Math.abs(m.el.currentTime - target) > 0.45) { try { m.el.currentTime = target; } catch { /* 무시 */ } }
         if (m.el.paused) m.el.play().catch(() => {});
       } else if (!m.el.paused) {
@@ -564,8 +610,9 @@
   }
   function blockLabel(b) {
     if (b.track === 'text') return b.text || '자막';
-    if (b.track === 'video') return (mediaById(b.mediaId) || {}).name || '영상';
+    if (b.track === 'video') return (mediaById(b.mediaId) || {}).name || b.label || '영상';
     if (b.track === 'fx') return (FX.find((f) => f.id === b.effect) || {}).name || '효과';
+    if (b.track === 'voice' && b.text && !b.mediaId) return `멘트 · ${String(b.text).slice(0, 16)}`;
     const m = mediaById(b.mediaId);
     return b.name || (m && m.name) || '오디오';
   }
@@ -706,6 +753,7 @@
       body = `
         <div class="section">
           <label class="fld">자막 <textarea data-fld="text" rows="3">${esc(b.text)}</textarea></label>
+          ${(capStyleOf(b.styleId) || {}).subLine ? `<label class="fld">한글 부제 (작게) <input data-fld="sub" value="${esc(b.sub || '')}" placeholder="예: 우리집 기록"></label>` : ''}
           <label class="fld">스타일
             <select data-fld="styleId">${CAPTION_STYLES.map((s) => `<option value="${s.id}" ${s.id === b.styleId ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}</select>
           </label>
@@ -726,11 +774,17 @@
           </label>
         </div>`;
     } else if (b.track === 'video') {
+      const picks = state.media.filter((m) => m.kind === 'image' || m.kind === 'video');
+      const known = picks.some((m) => m.id === b.mediaId);
       body = `
         <div class="section">
           <label class="fld">미디어
-            <select data-fld="mediaId">${state.media.filter((m) => m.kind === 'image' || m.kind === 'video').map((m) => `<option value="${m.id}" ${m.id === b.mediaId ? 'selected' : ''}>${esc(m.name)}</option>`).join('')}</select>
+            <select data-fld="mediaId">
+              ${known ? '' : `<option value="" selected>— ${esc(b.label || '컷')} · 영상 연결 필요 —</option>`}
+              ${picks.map((m) => `<option value="${m.id}" ${m.id === b.mediaId ? 'selected' : ''}>${esc(m.name)}</option>`).join('')}
+            </select>
           </label>
+          ${known ? '' : `<p class="hint" style="color:#8fc0ff">📥 JSON으로 깔린 <b>${esc(b.label || '컷')}</b> 자리예요. 왼쪽 <b>미디어</b>에서 파일을 누르면 이 컷에 바로 연결됩니다.</p>`}
           <div class="sliderline"><span>줌(켄번즈)</span><input type="range" min="0" max="0.3" step="0.01" data-fld="zoom" value="${b.zoom || 0}"><output>${Math.round((b.zoom || 0) * 100)}%</output></div>
           <p class="hint">블록이 길면 그만큼 천천히 확대돼요. 다음 블록과는 0.45초 겹치며 부드럽게 넘어갑니다.</p>
         </div>`;
@@ -743,15 +797,26 @@
           <div class="sliderline"><span>강도</span><input type="range" min="0" max="1" step="0.01" data-fld="intensity" value="${b.intensity}"><output>${Math.round(b.intensity * 100)}%</output></div>
         </div>`;
     } else {
+      const isVoice = b.track === 'voice';
       body = `
         <div class="section">
+          ${isVoice ? `<label class="fld">읽을 문장 <textarea data-fld="text" rows="3" placeholder="보이스 대본">${esc(b.text || '')}</textarea></label>
+          <button class="btn" id="inspVoice" type="button" style="width:100%;justify-content:center">🎙 이 대본으로 보이스 만들기</button>` : ''}
           <div class="sliderline"><span>볼륨</span><input type="range" min="0" max="1" step="0.01" data-fld="volume" value="${num(b.volume, 0.5)}"><output>${Math.round(num(b.volume, 0.5) * 100)}%</output></div>
           <div class="sliderline"><span>페이드인</span><input type="range" min="0" max="2" step="0.05" data-fld="fadeIn" value="${num(b.fadeIn, 0)}"><output>${num(b.fadeIn, 0).toFixed(2)}s</output></div>
           <div class="sliderline"><span>페이드아웃</span><input type="range" min="0" max="2" step="0.05" data-fld="fadeOut" value="${num(b.fadeOut, 0)}"><output>${num(b.fadeOut, 0).toFixed(2)}s</output></div>
-          <p class="hint">${esc((mediaById(b.mediaId) || {}).name || b.name || '')}</p>
+          <p class="hint">${isVoice && !b.mediaId ? 'JSON에서 온 대본이에요. 오디오 탭의 TTS로 목소리를 만들거나 녹음 파일을 올리면 같은 자리에 붙일 수 있어요.' : esc((mediaById(b.mediaId) || {}).name || b.name || '')}</p>
         </div>`;
     }
     host.innerHTML = `<h3>속성 <span class="badge" style="background:${tr.color}">${esc(tr.name)}</span></h3>${common}${body}`;
+    const inspVoice = host.querySelector('#inspVoice');
+    if (inspVoice) {
+      inspVoice.onclick = async () => {
+        inspVoice.disabled = true;
+        try { await voiceFromScript(b.text, b); } catch (e) { toast('⚠ ' + ((e && e.message) || e)); }
+        finally { inspVoice.disabled = false; }
+      };
+    }
     host.querySelectorAll('[data-fld]').forEach((el) => {
       const fld = el.dataset.fld;
       const apply = (commit) => {
@@ -774,6 +839,7 @@
         renderTracks();
         renderPreview();
         scheduleSave();
+        if (fld === 'styleId') renderInspector();   /* 스타일마다 다른 입력(한글 부제 등)을 다시 그림 */
       };
       el.addEventListener('input', () => apply(false));
       el.addEventListener('change', () => apply(true));
@@ -824,6 +890,8 @@
   function renderStylesPanel() {
     const wrap = $('styleTags');
     if (!wrap) return;
+    const count = $('styleCount');
+    if (count) count.textContent = `${CAPTION_STYLES.length}종`;
     wrap.innerHTML = CAPTION_STYLES.map((s) => {
       const sw = s.bar ? s.bar.color : s.ink;
       const ring = s.stroke || 'transparent';
@@ -1045,7 +1113,7 @@
   function saveNow() {
     try {
       const data = {
-        name: state.name, ratio: state.ratio, blocks: state.blocks, frame: state.frame,
+        name: state.name, ratio: state.ratio, blocks: state.blocks, frame: state.frame, p56: state.p56,
         media: state.media.filter((m) => m.url && !m.url.startsWith('blob:')).map((m) => ({ id: m.id, kind: m.kind, name: m.name, url: m.url, dur: m.dur })),
       };
       localStorage.setItem('studio2.pc.project', JSON.stringify(data));
@@ -1064,6 +1132,7 @@
         if (m.kind === 'image') { const img = new Image(); img.src = m.url; state.media.push({ ...m, el: img, w: 1080, h: 1920 }); }
       }
       state.blocks = (d.blocks || []).map((b) => ({ ...b, id: uid() }));
+      state.p56 = d.p56 || null;
       $('projName').value = state.name;
       return true;
     } catch { return false; }
@@ -1227,11 +1296,27 @@
       toast('보이스 파일을 올렸어요');
     });
     $('btnSampleMedia').onclick = () => addSamples();
+    /* JSON으로 깔린 컷(미디어 없는 영상 블록)이 선택돼 있으면 새 블록을 만들지 않고 그 자리에 연결 */
+    const putVideo = (mediaId) => {
+      const sel = state.selected ? blockById(state.selected) : null;
+      if (sel && sel.track === 'video' && !sel.mediaId) {
+        const m = mediaById(mediaId);
+        if (!m) return;
+        pushHistory();
+        sel.mediaId = m.id;
+        sel.label = m.name;
+        renderAll();
+        scheduleSave();
+        toast(`${m.name} 을(를) ${sel.src ? '컷 ' + sel.src : '고른 컷'} 자리에 연결했어요`);
+        return;
+      }
+      addVideoBlock(mediaId);
+    };
     $('mediaList').addEventListener('click', (e) => {
       const add = e.target.closest('[data-add]');
-      if (add) { addVideoBlock(add.dataset.add); return; }
+      if (add) { putVideo(add.dataset.add); return; }
       const item = e.target.closest('[data-media]');
-      if (item) addVideoBlock(item.dataset.media);
+      if (item) putVideo(item.dataset.media);
     });
     $('voiceList').addEventListener('click', (e) => {
       const b = e.target.closest('[data-add-voice]');
@@ -1400,7 +1485,7 @@
       toast(ok ? '복사했어요 ✅' : '길게 눌러 복사해 주세요');
     }
   }
-  async function voiceFromScript(text) {
+  async function voiceFromScript(text, target) {
     const cfg = window.__tts ? window.__tts.ttsLoad() : null;
     if (!cfg || (!cfg.key && cfg.provider !== 'custom')) {
       toast('오디오 탭의 외부 TTS에 키를 넣으면 대본으로 목소리를 만들어요');
@@ -1417,6 +1502,18 @@
       m.dur = buf.duration;
       await ac.close();
     } catch { /* 길이를 못 재면 기본값 */ }
+    if (target && target.track === 'voice') {
+      /* JSON으로 깔린 보이스 대본 블록에 바로 붙입니다(같은 자리·같은 타이밍) */
+      pushHistory();
+      target.mediaId = m.id;
+      target.name = `TTS · ${res.providerName}`;
+      target.dur = Math.max(num(target.dur, 1), m.dur);
+      renderAll();
+      renderVoiceList();
+      scheduleSave();
+      toast('보이스 대본 자리에 목소리를 붙였어요');
+      return true;
+    }
     addVoiceBlock(m.id, 0);
     renderVoiceList();
     toast('보이스 트랙에 넣었어요 · 타임라인에서 길이를 맞춰 보세요');
@@ -1533,6 +1630,335 @@
     }
   }
 
+  /* ================================================ 📥 JSON 불러오기 / 📤 내보내기 · P5·P6
+     셋톡에서 클로드가 제안한 공통 5트랙 스키마를 그대로 읽고, 지금 편집한 타임라인을 같은
+     스키마로 돌려줍니다. 클로드·GPT는 copy 프롬프트(P5/P6)로 타임라인 JSON만 만들면 됩니다. */
+  const P56 = window.P56 || null;
+  let p56StyleId = 'living_pill';
+
+  function jsonStatus(msg) {
+    const el = $('jsonStatus');
+    if (el) el.textContent = String(msg || '');
+  }
+
+  /* ---------- 불러오기 ---------- */
+  function applyTimelineObj(raw, opts = {}) {
+    if (!P56) throw new Error('p56.js 를 불러오지 못했어요');
+    const parsed = P56.parse(raw);
+    if (parsed.error) throw new Error(parsed.error);
+    const t = parsed.tracks;
+    pushHistory();
+    state.blocks = [];
+    state.selected = null;
+    const imgs = state.media.filter((m) => m.kind !== 'audio');
+    const autoLink = opts.autoLink !== false && imgs.length > 0;
+    let vi = 0;
+    let linked = 0;
+    for (const c of t.video) {
+      const m = autoLink && vi < imgs.length ? imgs[vi] : null;
+      vi += 1;
+      if (m) linked += 1;
+      const label = c.src ? (/^[0-9.]+$/.test(c.src) ? `컷 ${c.src}` : c.src) : `컷 ${vi}`;
+      state.blocks.push(baseBlock('video', c.start, c.dur, {
+        mediaId: m ? m.id : null, src: c.src, zoom: 0.05, fit: 'cover',
+        label: m ? m.name : label, in: c.in || 0,
+      }));
+    }
+    for (const c of t.caption) {
+      const st = capStyleOf(c.style) || CAPTION_STYLES[0];
+      const geo = st.geo || {};
+      state.blocks.push(baseBlock('text', c.start, c.dur, {
+        text: c.text,
+        sub: c.sub || st.subDefault || '',
+        styleId: st.id || 'boldOutline',
+        font: geo.font || 'pretendard',
+        size: geo.size || 62,
+        weight: geo.weight || 800,
+        spacing: geo.spacing == null ? 2 : geo.spacing,
+        x: 0.5,
+        y: geo.y == null ? 0.24 : geo.y,
+        align: geo.align || 'center',
+        maxLines: geo.maxLines || 2,
+      }));
+    }
+    for (const c of t.voice) {
+      state.blocks.push(baseBlock('voice', c.start, c.dur, {
+        mediaId: null, text: c.text, name: `멘트 · ${c.text.slice(0, 18)}`,
+        volume: 1, fadeIn: 0.05, fadeOut: 0.15,
+      }));
+    }
+    for (const c of t.bgm) {
+      const bgm = BGMS.find((b) => b.id === c.bgm) || BGMS[0];
+      const m = addAudioMedia(bgm.name, bgm.file, 'audio', c.dur);
+      m.el.loop = true;
+      state.blocks.push(baseBlock('bgm', c.start, c.dur, {
+        mediaId: m.id, volume: clamp(num(c.vol, 0.2), 0, 1), fadeIn: 0.4, fadeOut: 0.6, name: bgm.name,
+      }));
+    }
+    for (const c of t.fx) {
+      state.blocks.push(baseBlock('fx', c.start, c.dur, {
+        effect: c.effect, intensity: c.effect === 'vignette' ? 0.4 : 0.7,
+      }));
+    }
+    if (!state.blocks.length) throw new Error('채울 블록을 찾지 못했어요');
+    if (opts.ratio) state.ratio = opts.ratio;
+    if (parsed.name && opts.useName !== false) {
+      state.name = parsed.name.slice(0, 40);
+      $('projName').value = state.name;
+    }
+    const kindLabel = parsed.kind === 'p5' ? 'P5 음식' : parsed.kind === 'p6' ? 'P6 리빙' : 'JSON';
+    state.p56 = {
+      kind: parsed.kind,
+      need: parsed.need_from_user,
+      checked: [],
+      caption: parsed.caption_insta,
+      hashtags: parsed.hashtags,
+      summary: `${kindLabel} · ${parsed.tracks.video.length}컷 · 자막 ${parsed.tracks.caption.length} · 보이스 ${parsed.tracks.voice.length} · BGM ${parsed.tracks.bgm.length} · 효과 ${parsed.tracks.fx.length} · 총 ${parsed.dur}초`,
+    };
+    paintRatio();
+    renderAll();
+    paintP56Hosts();
+    scheduleSave();
+    parsed.autoLinked = linked;
+    return parsed;
+  }
+
+  function importJsonText(text) {
+    if (!P56) throw new Error('p56.js 를 불러오지 못했어요');
+    const obj = P56.parseText(text);
+    return applyTimelineObj(obj, { autoLink: true });
+  }
+
+  /* ---------- 내보내기 ---------- */
+  function exportTimeline() {
+    if (!P56) return null;
+    const m = state.p56 || {};
+    return P56.toJSON(state.blocks, {
+      name: state.name,
+      need: m.need || [],
+      caption: m.caption || '',
+      hashtags: m.hashtags || [],
+      mediaName: (id) => (mediaById(id) || {}).name || '',
+    });
+  }
+  function exportJsonText() {
+    const o = exportTimeline();
+    return o ? JSON.stringify(o, null, 2) : '';
+  }
+  function copyTimelineJson() {
+    const txt = exportJsonText();
+    if (!txt) { toast('내보낼 타임라인이 없어요'); return ''; }
+    copyAny(txt);
+    return txt;
+  }
+  function saveTimelineJson() {
+    const txt = exportJsonText();
+    if (!txt) { toast('내보낼 타임라인이 없어요'); return ''; }
+    const blob = new Blob([txt], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${(state.name || 'timeline').replace(/[^\w가-힣-]+/g, '_')}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    toast('타임라인 JSON을 파일로 저장했어요', 3600);
+    return txt;
+  }
+  function autoLinkMedia() {
+    const imgs = state.media.filter((m) => m.kind !== 'audio');
+    if (!imgs.length) {
+      toast('먼저 왼쪽 미디어에서 영상·사진을 올려 주세요');
+      return 0;
+    }
+    const vids = state.blocks.filter((b) => b.track === 'video').sort((a, b) => a.start - b.start);
+    if (!vids.length) { toast('영상 트랙에 연결할 컷이 없어요'); return 0; }
+    const holes = vids.filter((b) => !b.mediaId);
+    const list = holes.length ? holes : vids;
+    pushHistory();
+    let n = 0;
+    list.forEach((b, i) => {
+      const m = imgs[i];                 /* 파일 수만큼만 1:1로 연결 · 남는 컷은 자리로 남깁니다 */
+      if (!m) return;
+      b.mediaId = m.id;
+      b.label = m.name;
+      n += 1;
+    });
+    renderAll();
+    scheduleSave();
+    toast(n ? `${n}개 컷에 미디어를 순서대로 연결했어요${n < list.length ? ` · ${list.length - n}컷은 아직 비어 있어요` : ''}`
+      : '연결할 미디어가 부족해요 · 영상·사진을 더 올려 주세요', 3600);
+    return n;
+  }
+
+  /* ---------- need_from_user · 캡션 · 태그 카드 ---------- */
+  function p56MetaHtml(pre) {
+    const m = state.p56;
+    if (!m) return '';
+    const need = m.need || [];
+    const left = need.filter((_, i) => !(m.checked || [])[i]).length;
+    const rows = need.length
+      ? need.map((s, i) => `<label class="pcheck${(m.checked || [])[i] ? ' on' : ''}"><input type="checkbox" data-need="${i}" ${(m.checked || [])[i] ? 'checked' : ''}><span>${esc(s)}</span></label>`).join('')
+      : '<p class="ahint">찍어야 할 컷 없음 · 촬영 끝!</p>';
+    const kindLabel = m.kind === 'p5' ? 'P5 음식' : m.kind === 'p6' ? 'P6 리빙' : 'JSON';
+    const cap = String(m.caption || '');
+    const capRows = clamp(pre === 'm' ? cap.split('\n').length + 1 : cap.split('\n').length + 3, 3, 14);
+    const tagRows = clamp(String((m.hashtags || []).join(' ')).length > 34 ? 3 : 2, 2, 4);
+    return `<h3>📥 ${esc(kindLabel)} 타임라인 메모</h3>
+      <p class="ahint">${esc(m.summary || '')}</p>
+      <div class="alabel">찍어야 할 컷 ${need.length ? `(${left}/${need.length} 남음)` : ''}</div>
+      ${rows}
+      <div class="alabel">인스타 캡션</div>
+      <textarea id="${pre}Caption" rows="${capRows}" readonly spellcheck="false">${esc(cap)}</textarea>
+      <div class="alabel">해시태그 ${(m.hashtags || []).length}개</div>
+      <textarea id="${pre}Tags" rows="${tagRows}" readonly spellcheck="false">${esc((m.hashtags || []).join(' '))}</textarea>
+      <div class="arow">
+        <button class="btn" type="button" data-copy="${pre}Caption">캡션 복사</button>
+        <button class="btn" type="button" data-copy="${pre}Tags">태그 복사</button>
+        <button class="btn accent" type="button" data-copy-all="${pre}">캡션+태그</button>
+      </div>`;
+  }
+  function paintP56Hosts() {
+    const hosts = [[$('p56Box'), 's'], [$('jsonMeta'), 'm']];
+    for (const [host, pre] of hosts) {
+      if (!host) continue;
+      if (!state.p56) {
+        host.innerHTML = '';
+        if (host.id === 'p56Box') host.hidden = true;
+        continue;
+      }
+      host.innerHTML = p56MetaHtml(pre);
+      if (host.id === 'p56Box') host.hidden = false;
+      host.querySelectorAll('[data-copy]').forEach((b) => { b.onclick = () => copyAny($(b.dataset.copy).value); });
+      host.querySelectorAll('[data-copy-all]').forEach((b) => {
+        b.onclick = () => {
+          const m = state.p56 || {};
+          copyAny(`${m.caption || ''}\n\n${(m.hashtags || []).join(' ')}`.trim());
+        };
+      });
+      host.querySelectorAll('[data-need]').forEach((el) => {
+        el.onchange = () => {
+          const i = Number(el.dataset.need);
+          if (!state.p56.checked) state.p56.checked = [];
+          state.p56.checked[i] = el.checked;
+          paintP56Hosts();
+          scheduleSave();
+        };
+      });
+    }
+  }
+
+  /* ---------- P5 · P6 프롬프트 / 바로 채우기 ---------- */
+  function p56Input() {
+    return {
+      topic: ($('p56Topic').value || '').trim(),
+      price: ($('p56Price').value || '').trim(),
+      shots: P56 ? P56.splitShots($('p56Shots').value) : [],
+      style: p56StyleId,
+    };
+  }
+  function copyP56Prompt(kind) {
+    if (!P56) return '';
+    const txt = P56.buildPrompt(kind, p56Input());
+    copyAny(txt);
+    jsonStatus(`${kind === 'p6' ? 'P6 리빙' : 'P5 음식'} 프롬프트를 복사했어요 · GPT·클로드에 붙여넣으세요`);
+    return txt;
+  }
+  async function p56Fill(kind) {
+    if (!P56) throw new Error('p56.js 를 불러오지 못했어요');
+    const input = p56Input();
+    if (!input.topic) {
+      toast('주제·제품명을 먼저 적어 주세요');
+      $('p56Topic').focus();
+      return null;
+    }
+    const btn = kind === 'p6' ? $('btnP6Fill') : $('btnP5Fill');
+    const label = btn ? btn.textContent : '';
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ 채우는 중…'; }
+    try {
+      let obj = null;
+      let usedAI = false;
+      if ($('chkP56AI') && $('chkP56AI').checked) {
+        try {
+          obj = await P56.generateAI(kind, input);
+          usedAI = !!obj;
+        } catch (e) {
+          toast(`AI 생성 실패 · 내장 생성기로 채웁니다 (${String((e && e.message) || e).slice(0, 90)})`, 4200);
+        }
+      }
+      if (!obj) obj = P56.local(kind, input);
+      const parsed = applyTimelineObj(obj, { autoLink: true });
+      const msg = `${kind === 'p6' ? '🪴 P6 리빙' : '🍜 P5 음식'} · ${parsed.tracks.video.length}컷 · 5트랙 완성${usedAI ? ' (AI)' : ' (내장 생성기)'}${parsed.autoLinked ? ` · 미디어 ${parsed.autoLinked}개 연결` : ''}`;
+      jsonStatus(msg);
+      toast(msg, 4200);
+      return parsed;
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = label; }
+    }
+  }
+
+  function openJsonPanel() {
+    const ov = $('jsonOverlay');
+    if (!ov) return;
+    ov.hidden = false;
+    paintP56Hosts();
+    if (P56) jsonStatus(P56.aiAvailable() ? 'OpenAI 키가 있어 AI 생성도 가능해요 · 키 없이도 내장 생성기로 채워집니다' : 'OpenAI 키가 없어도 내장 P5/P6 생성기로 바로 채워요');
+    setTimeout(() => { if ($('p56Topic') && !$('p56Topic').value && $('autoTopic') && $('autoTopic').value) $('p56Topic').value = $('autoTopic').value; }, 0);
+  }
+
+  function bindP56() {
+    if (!P56) return;
+    $('btnJsonOpen').onclick = openJsonPanel;
+    $('btnJsonClose').onclick = () => { $('jsonOverlay').hidden = true; };
+    $('jsonOverlay').addEventListener('click', (e) => { if (e.target === $('jsonOverlay')) $('jsonOverlay').hidden = true; });
+    $('btnJsonQuick').onclick = () => { saveTimelineJson(); };
+    $('btnJsonApply').onclick = () => {
+      try {
+        const parsed = importJsonText($('jsonInput').value);
+        jsonStatus(`5트랙에 채웠어요 · ${parsed.tracks.video.length}컷 · ${parsed.dur}초`);
+        toast(`타임라인에 채웠어요${parsed.autoLinked ? ` · 올린 미디어 ${parsed.autoLinked}개를 컷 순서대로 연결` : ' · 컷 자리에는 나중에 영상을 연결해 보세요'}`, 4200);
+      } catch (e) {
+        const msg = String((e && e.message) || e);
+        jsonStatus('⚠ ' + msg);
+        toast('⚠ ' + msg, 4200);
+      }
+    };
+    $('fileJson').addEventListener('change', async (e) => {
+      const f = e.target.files && e.target.files[0];
+      e.target.value = '';
+      if (!f) return;
+      try {
+        const text = await f.text();
+        $('jsonInput').value = text;
+        const parsed = importJsonText(text);
+        jsonStatus(`${f.name} · ${parsed.tracks.video.length}컷 · ${parsed.dur}초`);
+        toast('JSON 파일을 타임라인에 채웠어요', 3800);
+      } catch (err) {
+        const msg = String((err && err.message) || err);
+        jsonStatus('⚠ ' + msg);
+        toast('⚠ ' + msg, 4200);
+      }
+    });
+    $('btnJsonClear').onclick = () => { $('jsonInput').value = ''; jsonStatus('입력을 비웠어요'); };
+    $('btnJsonAutoLink').onclick = () => autoLinkMedia();
+    $('btnJsonExport').onclick = () => {
+      const txt = copyTimelineJson();
+      if (txt) jsonStatus(`타임라인 JSON 복사됨 · ${txt.length.toLocaleString()}자 · 붙여넣어 보관하세요`);
+    };
+    $('btnJsonSave').onclick = () => saveTimelineJson();
+    document.querySelectorAll('[data-pstyle]').forEach((b) => {
+      b.onclick = () => {
+        p56StyleId = b.dataset.pstyle;
+        document.querySelectorAll('[data-pstyle]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      };
+    });
+    $('btnP5Prompt').onclick = () => copyP56Prompt('p5');
+    $('btnP6Prompt').onclick = () => copyP56Prompt('p6');
+    $('btnP5Fill').onclick = () => p56Fill('p5').catch((e) => toast('⚠ ' + ((e && e.message) || e), 4200));
+    $('btnP6Fill').onclick = () => p56Fill('p6').catch((e) => toast('⚠ ' + ((e && e.message) || e), 4200));
+  }
+
   /* ---------------------------------------------------------------- 시작 */
   async function init() {
     renderHeads();
@@ -1542,6 +1968,7 @@
     bindUI();
     initMediaButtons();
     initTts();
+    bindP56();
     const restored = await loadSaved();
     paintRatio();
     if (!restored) {
@@ -1554,6 +1981,7 @@
       $('autoTopic').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); autoCompose(); } });
     }
     renderAll();
+    paintP56Hosts();
     fitCanvas();
     // 글꼴이 늦게 열려도 한 번 더 그립니다
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => renderPreview()).catch(() => {});
@@ -1567,5 +1995,7 @@
     addTextBlock, addFxBlock, addBgmBlock, addVideoBlock, addSamples, splitAt, deleteSelected,
     pickMime, blockById, select, renderAll, CAPTION_STYLES, snapTime, FX_ON: FX,
     Autogen: AG, autoCompose, showAutoBox, voiceFromScript,
+    P56, applyTimelineObj, importJsonText, exportTimeline, exportJsonText, copyTimelineJson, saveTimelineJson,
+    autoLinkMedia, p56Fill, copyP56Prompt, p56Input, openJsonPanel, paintP56Hosts, jsonStatus,
   };
 })();

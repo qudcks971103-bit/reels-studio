@@ -136,16 +136,22 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 15p
   border-radius: 8px; padding: 7px 10px; font-size: 12.5px; font-weight: 700; }
 .auto-row #autoTopic:focus { outline: 1px solid var(--accent); }
 .auto-row select.mini { flex: 0 0 164px; }
-#autoBox { border: 1px solid rgba(212,255,50,.35); border-radius: 10px; padding: 10px; margin-bottom: 12px;
+#autoBox, #p56Box { border: 1px solid rgba(212,255,50,.35); border-radius: 10px; padding: 10px; margin-bottom: 12px;
   background: rgba(212,255,50,.05); }
-#autoBox[hidden] { display: none; }
-#autoBox h3 { font-size: 12px; margin: 0 0 4px; color: var(--accent); }
-#autoBox .alabel { font-size: 10.5px; font-weight: 900; color: var(--muted); margin: 8px 0 4px; }
-#autoBox textarea { display: block; width: 100%; background: var(--panel-2); border: 1px solid var(--line);
+#p56Box { border-color: rgba(90,141,255,.45); background: rgba(90,141,255,.06); }
+#autoBox[hidden], #p56Box[hidden] { display: none; }
+#autoBox h3, #p56Box h3 { font-size: 12px; margin: 0 0 4px; color: var(--accent); }
+#p56Box h3 { color: #7ea6ff; }
+#autoBox .alabel, #p56Box .alabel { font-size: 10.5px; font-weight: 900; color: var(--muted); margin: 8px 0 4px; }
+#autoBox textarea, #p56Box textarea { display: block; width: 100%; background: var(--panel-2); border: 1px solid var(--line);
   border-radius: 8px; padding: 7px 8px; font-size: 11.5px; line-height: 1.45; color: var(--ink); resize: vertical; }
-#autoBox .arow { display: flex; gap: 6px; margin-top: 6px; }
-#autoBox .arow .btn { flex: 1; justify-content: center; font-size: 11px; padding: 6px 6px; }
-#autoBox .ahint { font-size: 10px; color: var(--muted); line-height: 1.45; margin: 5px 0 0; }
+#autoBox .arow, #p56Box .arow { display: flex; gap: 6px; margin-top: 6px; }
+#autoBox .arow .btn, #p56Box .arow .btn { flex: 1; justify-content: center; font-size: 11px; padding: 6px 6px; }
+#autoBox .ahint, #p56Box .ahint { font-size: 10px; color: var(--muted); line-height: 1.45; margin: 5px 0 0; }
+.pcheck { display: flex; align-items: flex-start; gap: 7px; font-size: 11px; font-weight: 600;
+  line-height: 1.45; padding: 4px 0; color: var(--ink); cursor: pointer; }
+.pcheck input { margin: 2px 0 0; accent-color: var(--accent); }
+.pcheck.on span { color: var(--muted); text-decoration: line-through; }
 .tl-tools { display: flex; align-items: center; gap: 7px; padding: 7px 10px; border-bottom: 1px solid var(--line); }
 .tl-tools .vsep { width: 1px; height: 20px; background: var(--line); margin: 0 3px; }
 .tl-tools .grow { flex: 1; }
@@ -192,6 +198,31 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 15p
 .progress i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .15s; }
 .expcard video { width: 100%; max-height: 300px; margin-top: 10px; border-radius: 10px; background: #000; }
 .expcard .row { display: flex; gap: 7px; margin-top: 10px; }
+
+/* ---------- JSON · AI 프롬포트 ---------- */
+.jcard { width: min(1080px, 95vw); max-height: 90vh; overflow: auto; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px 18px; }
+.jcard > header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.jcard h2 { font-size: 15px; margin: 0; }
+.jcard h2 small { font-size: 10.5px; font-weight: 700; color: var(--muted); margin-left: 6px; }
+.jcols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+.jsec { border: 1px solid var(--line); border-radius: 12px; padding: 12px; background: var(--panel-2); min-width: 0; }
+.jsec h3 { font-size: 12.5px; margin: 0 0 8px; }
+.jsec textarea { display: block; width: 100%; background: #0f1116; border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px; font-size: 11px; line-height: 1.5; color: var(--ink); resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.jsec #jsonInput { min-height: 168px; }
+.jrow { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.jrow .btn { flex: 1 1 auto; justify-content: center; font-size: 11.5px; padding: 7px 9px; }
+.jcard footer { display: flex; gap: 8px; align-items: center; margin-top: 12px;
+  border-top: 1px solid var(--line); padding-top: 10px; }
+.jcard footer .grow { flex: 1; }
+.jcard .jstatus { font-size: 11px; color: var(--muted); font-weight: 700; }
+.jmeta { margin-top: 10px; border-top: 1px dashed var(--line); padding-top: 8px; }
+.jmeta:empty { display: none; }
+.jtabs { display: inline-flex; background: var(--panel-2); border: 1px solid var(--line); border-radius: 9px; padding: 2px; gap: 2px; margin-bottom: 8px; }
+.jtabs button { font-size: 11.5px; font-weight: 800; padding: 5px 9px; border-radius: 7px; color: var(--muted); }
+.jtabs button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 .toast { position: fixed; left: 50%; top: 64px; transform: translateX(-50%); background: var(--ink); color: var(--bg);
   font-size: 12px; font-weight: 800; padding: 8px 14px; border-radius: 999px; z-index: 70; }
 </style>
@@ -211,6 +242,8 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 15p
       <button data-ratio="16:9" aria-pressed="false">16:9 롱폼</button>
     </div>
     <span class="grow"></span>
+    <button class="btn" id="btnJsonOpen" title="클로드·GPT 타임라인 JSON 불러오기 · P5/P6 프롬프트">📥 JSON · AI</button>
+    <button class="btn" id="btnJsonQuick" title="지금 타임라인을 JSON 파일로 내보내기">📤 JSON</button>
     <select id="expFormat" class="mini" aria-label="내보내기 형식">
       <option value="mp4">MP4</option>
       <option value="webm">WebM</option>
@@ -265,7 +298,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 15p
           <small>자막 없이 제품만 · 클로즈업 줌인 · 경쾌한 팝 BGM</small>
           <span class="demo" style="font-family:'Jua',sans-serif;color:#fff;text-shadow:0 2px 6px #0009">한입에 반으로</span>
         </button>
-        <div class="ptitle">자막 스타일 13종</div>
+        <div class="ptitle">자막 스타일 <span id="styleCount"></span></div>
         <div class="styletags" id="styleTags"></div>
         <p class="hint">스타일을 누르면 재생 헤드 위치에 자막 블록이 생겨요. 오른쪽 인스펙터에서 글씨·자간·위치를 바로 바꿀 수 있어요.</p>
       </div>
@@ -313,6 +346,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 15p
 
     <!-- 우측 인스펙터 -->
     <aside class="right">
+      <div id="p56Box" hidden></div>
       <div id="autoBox" hidden></div>
       <div id="inspector"></div>
     </aside>
@@ -369,11 +403,73 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 15p
   </div>
 </div>
 
+<!-- 📥 JSON 불러오기 · P5/P6 프롬프트 -->
+<div class="overlay" id="jsonOverlay" hidden>
+  <div class="jcard">
+    <header>
+      <h2>📥 JSON 불러오기 · AI 프롬프트<small>클로드·GPT가 만든 5트랙 타임라인을 그대로 채웁니다</small></h2>
+      <span class="grow" style="flex:1"></span>
+      <button class="btn ghost" id="btnJsonClose">닫기</button>
+    </header>
+    <div class="jcols">
+      <section class="jsec">
+        <h3>① 타임라인 JSON 붙여넣기</h3>
+        <textarea id="jsonInput" spellcheck="false" placeholder='{"fps":30,"dur":0,"tracks":[{"kind":"video","clips":[{"src":"1","start":0,"in":0,"out":1.3}]},{"kind":"caption","clips":[{"text":"뜯자마자 소리","start":0,"out":1.3,"style":"omuk_food"}]}],"need_from_user":[],"caption_insta":"","hashtags":[]}'></textarea>
+        <div class="jrow">
+          <label class="btn" for="fileJson">📄 .json 파일 올리기</label>
+          <input id="fileJson" type="file" accept=".json,application/json,text/plain" hidden>
+          <button class="btn accent" id="btnJsonApply">타임라인에 채우기</button>
+        </div>
+        <div class="jrow">
+          <button class="btn" id="btnJsonAutoLink">🎬 컷 순서대로 미디어 연결</button>
+          <button class="btn ghost" id="btnJsonClear">입력 비우기</button>
+        </div>
+        <p class="hint">영상 클립은 <b>컷번호 플레이스홀더</b>로 깔립니다. 왼쪽 미디어 목록에서 파일을 누르면 고른 컷에 바로 연결되고, 리스트에서 드래그 없이 교체할 수 있어요. BGM·보이스는 인스펙터에서 음량·타이밍을 고치면 됩니다.</p>
+        <div class="jmeta" id="jsonMeta"></div>
+      </section>
+      <section class="jsec">
+        <h3>② P5 음식 · P6 리빙 프롬프트</h3>
+        <label class="fld">주제 · 제품명
+          <input id="p56Topic" maxlength="60" placeholder="예: 편의점 신상 크림빵 · 다이소 욕실 수납 3단" autocomplete="off">
+        </label>
+        <label class="fld">가격 (선택 · 없으면 지어내지 않아요)
+          <input id="p56Price" maxlength="20" placeholder="예: 1,800원" autocomplete="off">
+        </label>
+        <label class="fld">찍은 컷 (한 줄에 하나 · 비우면 찍어야 할 컷을 제안)
+          <textarea id="p56Shots" rows="4" placeholder="뜯는 손 클로즈업&#10;단면 컷&#10;한입 먹는 컷"></textarea>
+        </label>
+        <div class="jtabs" role="group" aria-label="P6 자막 스타일">
+          <button data-pstyle="living_pill" aria-pressed="true">알약</button>
+          <button data-pstyle="living_hand" aria-pressed="false">손글씨</button>
+          <button data-pstyle="living_editorial" aria-pressed="false">에디토리얼</button>
+        </div>
+        <div class="jrow">
+          <button class="btn" id="btnP5Prompt">📋 P5 음식 프롬프트 복사</button>
+          <button class="btn" id="btnP6Prompt">📋 P6 리빙 프롬프트 복사</button>
+        </div>
+        <label class="snap" style="margin-top:8px"><input type="checkbox" id="chkP56AI"> OpenAI 키로 바로 생성 <span class="hint" style="margin:0">(없으면 내장 생성기)</span></label>
+        <div class="jrow">
+          <button class="btn accent" id="btnP5Fill">🍜 P5 바로 채우기</button>
+          <button class="btn accent" id="btnP6Fill">🪴 P6 바로 채우기</button>
+        </div>
+        <p class="hint" id="p56Hint">프롬프트를 GPT·클로드에 붙여넣으면 5트랙 JSON만 돌아옵니다 → ①에 붙여넣고 <b>타임라인에 채우기</b>. 키가 없어도 <b>바로 채우기</b>는 내장 생성기로 즉시 채워 줍니다.</p>
+      </section>
+    </div>
+    <footer>
+      <button class="btn accent" id="btnJsonExport">📤 타임라인 JSON 내보내기</button>
+      <button class="btn" id="btnJsonSave">💾 .json 저장</button>
+      <span class="grow"></span>
+      <span class="jstatus" id="jsonStatus">지금 타임라인은 내보내기로 언제든 JSON이 됩니다.</span>
+    </footer>
+  </div>
+</div>
+
 <div class="toast" id="toast" hidden></div>
 
 <script src="engine.js"></script>
 <script src="tts.js"></script>
 <script src="autogen.js"></script>
+<script src="p56.js"></script>
 <script src="pc.js"></script>
 </body>
 </html>
